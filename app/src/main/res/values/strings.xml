@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Libro de Esher</string>
+
+    <!-- Bottom navigation -->
+    <string name="navigation_character">Personaje</string>
+    <string name="navigation_random">Aleatorio</string>
+    <string name="navigation_visualization">Hoja</string>
+    <string name="navigation_wiki">Ayuda</string>
+
+    <!-- Character creation -->
+    <string name="character_creation_title">Creación de personaje</string>
+    <string name="character_name">Nombre</string>
+    <string name="character_sex">Sexo</string>
+    <string name="character_race">Raza</string>
+    <string name="character_culture">Cultura</string>
+    <string name="character_profession">Profesión</string>
+    <string name="character_level">Nivel</string>
+    <string name="character_age">Edad</string>
+    <string name="character_generate">Generar personaje</string>
+    <string name="character_random">Generar aleatoriamente</string>
+    <string name="character_reset">Nuevo personaje</string>
+    <string name="character_summary">Resumen</string>
+    <string name="character_not_created">Configura raza, cultura y profesión para crear el personaje.</string>
+    <string name="character_created">Personaje creado</string>
+
+    <!-- Random creation -->
+    <string name="random_creation_title">Creación aleatoria</string>
+    <string name="random_creation_hint">Genera un personaje completamente aleatorio usando las reglas de LibroDeEsher.</string>
+
+    <!-- Placeholder -->
+    <string name="placeholder_title">Próximamente</string>
+    <string name="placeholder_text">Esta sección todavía no está implementada.</string>
+
+    <!-- Errors -->
+    <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>
+    <string name="error_creating_character">No se pudo generar el personaje: %1$s</string>
+
+    <string name="settings">Ajustes</string>
+    <string name="close">Cerrar</string>
+</resources>

@@ -1,0 +1,42 @@
+<resources>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/md_theme_primaryContainer</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>
+        <item name="postSplashScreenTheme">@style/Theme.LibroDeEsher</item>
+    </style>
+
+    <style name="CharacterInfo" parent="@android:style/Widget.TextView">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextSubtitle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">15sp</item>
+    </style>
+
+    <style name="InputData">
+        <item name="android:fontFamily">@font/selection</item>
+    </style>
+
+    <style name="LayoutPadding">
+        <item name="android:padding">5sp</item>
+    </style>
+
+    <style name="SettingsTitle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_theme_onSecondaryContainer</item>
+        <item name="android:paddingBottom">15sp</item>
+    </style>
+
+    <style name="SectionTitle" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">@font/section_title</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop">10sp</item>
+        <item name="android:paddingBottom">6sp</item>
+    </style>
+
+</resources>

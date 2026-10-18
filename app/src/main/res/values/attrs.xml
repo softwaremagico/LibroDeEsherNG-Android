@@ -1,0 +1,16 @@
+<resources>
+    <declare-styleable name="TranslatedEditText">
+        <attr name="translation" format="string" localization="suggested" />
+    </declare-styleable>
+    <declare-styleable name="SearchableSpinner">
+        <attr name="hintText" format="string"/>
+    </declare-styleable>
+    <attr name="colorWarning" format="color" />
+    <attr name="colorOnWarning" format="color" />
+    <attr name="colorWarningContainer" format="color" />
+    <attr name="colorOnWarningContainer" format="color" />
+    <attr name="colorInfo" format="color" />
+    <attr name="colorOnInfo" format="color" />
+    <attr name="colorInfoContainer" format="color" />
+    <attr name="colorOnInfoContainer" format="color" />
+</resources>

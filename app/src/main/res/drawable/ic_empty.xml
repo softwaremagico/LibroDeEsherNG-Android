@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="53.406dp"
+    android:height="52.113dp"
+    android:viewportWidth="53.406"
+    android:viewportHeight="52.113">
+  <!-- Empty placeholder used when a character has no faction logo available. -->
+  <path
+      android:pathData="M0,0L0,0"
+      android:fillColor="#00000000"/>
+</vector>

@@ -1,0 +1,65 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.softwaremagico.librodeesher.android'
+    compileSdk 37
+
+    defaultConfig {
+        applicationId "com.softwaremagico.librodeesher.android"
+        minSdk 31
+        targetSdk 37
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
+    implementation libs.recyclerview
+    implementation libs.cardview
+    implementation libs.core.splashscreen
+
+    // LibroDeEsher rules engine (published to the local Maven repository).
+    // Note: `librodeesher-random` must also be installed with `mvn install`.
+    implementation libs.librodeesher.rules
+    implementation libs.librodeesher.random
+
+    // Jackson XML/JSON (transitively from the rules module) needs the StAX API on Android.
+    implementation libs.stax.api
+
+    implementation libs.room.runtime
+    annotationProcessor libs.room.compiler
+
+    // Support for desugaring Java 11+ APIs (String#isBlank, java.time, ...).
+    coreLibraryDesugaring libs.desugar.jdk.libs
+
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
