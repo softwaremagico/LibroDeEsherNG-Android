@@ -28,9 +28,33 @@
     <string name="random_creation_title">Creación aleatoria</string>
     <string name="random_creation_hint">Genera un personaje completamente aleatorio usando las reglas de LibroDeEsher.</string>
 
+    <!-- Character sheet -->
+    <string name="sheet_save">Guardar</string>
+    <string name="sheet_load">Cargar</string>
+    <string name="sheet_saved">Personaje guardado.</string>
+    <string name="sheet_save_error">No se pudo guardar el personaje.</string>
+    <string name="sheet_no_saved_characters">No hay personajes guardados.</string>
+    <string name="sheet_load_error">No se pudo cargar el personaje.</string>
+    <string name="sheet_no_character">No hay ningún personaje. Créalo en la pestaña Personaje.</string>
+
     <!-- Placeholder -->
     <string name="placeholder_title">Próximamente</string>
     <string name="placeholder_text">Esta sección todavía no está implementada.</string>
+
+    <!-- Wiki / help -->
+    <string name="wiki_title">Ayuda</string>
+    <string name="wiki_races">Razas</string>
+    <string name="wiki_cultures">Culturas</string>
+    <string name="wiki_professions">Profesiones</string>
+    <string name="wiki_categories">Categorías</string>
+    <string name="wiki_skills">Habilidades</string>
+    <string name="wiki_weapons">Armas</string>
+    <string name="wiki_perks">Dotes</string>
+    <string name="wiki_spell_lists">Listas de hechizos</string>
+    <string name="wiki_count">%1$d elementos</string>
+    <string name="wiki_detail_id">ID: %1$s</string>
+    <string name="wiki_detail_module">Módulo: %1$s</string>
+    <string name="wiki_detail_group">Grupo: %1$s</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>

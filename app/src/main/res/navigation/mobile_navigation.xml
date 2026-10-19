@@ -26,12 +26,12 @@
         android:name="com.softwaremagico.librodeesher.android.ui.sheet.SheetFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_placeholder" />
+        tools:layout="@layout/fragment_sheet" />
 
     <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_placeholder" />
+        tools:layout="@layout/fragment_wiki" />
 </navigation>
