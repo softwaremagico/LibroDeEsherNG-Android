@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.softwaremagico.librodeesher.android.BuildConfig;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
 import com.softwaremagico.librodeesher.language.Translator;
@@ -62,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
         final int id = item.getItemId();
         if (id == R.id.action_settings) {
             showLanguageDialog();
+            return true;
+        }
+        if (id == R.id.action_about) {
+            showAboutDialog();
             return true;
         }
         if (id == R.id.action_skills) {
@@ -123,6 +128,15 @@ public class MainActivity extends AppCompatActivity {
                     recreate();
                 })
                 .setNegativeButton(R.string.close, null)
+                .show();
+    }
+
+    private void showAboutDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.about_title, getString(R.string.app_name)))
+                .setMessage(getString(R.string.about_version, BuildConfig.VERSION_NAME)
+                        + "\n\n" + getString(R.string.about_message))
+                .setPositiveButton(R.string.close, null)
                 .show();
     }
 }

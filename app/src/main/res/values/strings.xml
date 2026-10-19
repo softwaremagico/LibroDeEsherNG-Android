@@ -148,4 +148,8 @@
 
     <string name="settings">Ajustes</string>
     <string name="close">Cerrar</string>
+    <string name="about">Acerca de</string>
+    <string name="about_title">Acerca de %1$s</string>
+    <string name="about_version">Versión %1$s</string>
+    <string name="about_message">Gestor de personajes para el juego de rol Rolemaster / El Libro de Esher.\n\nMotor de reglas: LibroDeEsherNG.\n\nEsta aplicación es una herramienta no oficial y no está afiliada a los titulares de los derechos.</string>
 </resources>
