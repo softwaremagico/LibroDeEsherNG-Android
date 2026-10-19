@@ -9,6 +9,7 @@
     <string name="navigation_wiki">Ayuda</string>
     <string name="navigation_characteristics">Características</string>
     <string name="navigation_skills">Habilidades</string>
+    <string name="navigation_spells">Conjuros</string>
 
     <!-- Character creation -->
     <string name="character_creation_title">Creación de personaje</string>
@@ -45,6 +46,7 @@
     <string name="sheet_level_up_max">Nivel máximo alcanzado.</string>
     <string name="sheet_level_up_error">No se pudo subir de nivel.</string>
     <string name="sheet_skills">Habilidades</string>
+    <string name="sheet_spells">Conjuros</string>
     <string name="sheet_level_up_title">Subir de nivel</string>
     <string name="sheet_level_up_auto">Desarrollo automático</string>
     <string name="sheet_level_up_manual">Gastar puntos manualmente</string>
@@ -87,6 +89,25 @@
     <string name="skills_rank_cost">%1$d rangos · coste %2$s</string>
     <string name="skills_empty">No hay habilidades disponibles para desarrollar.</string>
     <string name="skills_error">No se pudo actualizar la habilidad.</string>
+
+    <!-- Spells development -->
+    <string name="spells_remaining">Puntos de desarrollo restantes: %1$d</string>
+    <string name="spells_rank_cost">%1$d rangos · coste %2$s</string>
+    <string name="spells_empty">No hay listas de hechizos disponibles para desarrollar.</string>
+    <string name="spells_no_magic">El personaje no puede desarrollar conjuros.</string>
+    <string name="spells_error">No se pudo actualizar la lista de hechizos.</string>
+    <string name="spells_type_basic">Listas Básicas</string>
+    <string name="spells_type_open">Listas Abiertas</string>
+    <string name="spells_type_closed">Listas Cerradas</string>
+    <string name="spells_type_other_profession">Listas Básicas de Otras Profesiones</string>
+    <string name="spells_type_other_realm_open">Listas Abiertas de Otros Reinos</string>
+    <string name="spells_type_other_realm_closed">Listas Cerradas de Otros Reinos</string>
+    <string name="spells_type_other_realm_other_profession">Listas Básicas de Otros Reinos</string>
+    <string name="spells_type_archanum">Listas Abiertas Arcanas</string>
+    <string name="spells_type_triad">Listas Básicas de la Tríada</string>
+    <string name="spells_type_complementary_triad">Listas Básicas Elementales Complementarias</string>
+    <string name="spells_type_training">Listas de Adiestramiento</string>
+    <string name="spells_type_other_realm_training">Listas de Adiestramiento de Otros Reinos</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>

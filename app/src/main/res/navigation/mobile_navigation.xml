@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_sheet_to_skills"
             app:destination="@id/navigation_skills" />
+        <action
+            android:id="@+id/action_sheet_to_spells"
+            app:destination="@id/navigation_spells" />
     </fragment>
 
     <fragment
@@ -50,6 +53,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_skills" />
+
+    <fragment
+        android:id="@+id/navigation_spells"
+        android:name="com.softwaremagico.librodeesher.android.ui.spells.SpellsFragment"
+        android:label="@string/navigation_spells"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_spells" />
 
     <fragment
         android:id="@+id/navigation_wiki"
