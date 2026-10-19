@@ -31,6 +31,10 @@
                 android:id="@+id/action_equipment"
                 android:title="@string/navigation_equipment"
                 app:showAsAction="never" />
+            <item
+                android:id="@+id/action_weapon_tiers"
+                android:title="@string/navigation_weapon_tiers"
+                app:showAsAction="never" />
         </menu>
     </item>
 

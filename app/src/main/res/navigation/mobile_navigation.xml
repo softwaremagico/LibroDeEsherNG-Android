@@ -88,6 +88,14 @@
         tools:layout="@layout/fragment_equipment" />
 
     <fragment
+        android:id="@+id/navigation_weapon_tiers"
+        android:name="com.softwaremagico.librodeesher.android.ui.weapontiers.WeaponTiersFragment"
+        android:label="@string/navigation_weapon_tiers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_weapon_tiers" />
+
+    <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:label="@string/navigation_wiki"
