@@ -23,6 +23,7 @@ import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.export.txt.TxtSheet;
+import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ import java.util.List;
  * ({@link TxtSheet}) and allows saving it to / loading it from the local database.
  */
 public class SheetFragment extends Fragment {
+
+    private static final int MAX_LEVEL = 20;
 
     private TextView sheetText;
     private CharacterEntityDao characterDao;
@@ -51,10 +54,12 @@ public class SheetFragment extends Fragment {
         final Button loadButton = view.findViewById(R.id.sheet_load_button);
         final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
+        final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
+        levelUpButton.setOnClickListener(v -> levelUp());
     }
 
     @Override
@@ -174,6 +179,28 @@ public class SheetFragment extends Fragment {
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot share character sheet", exception);
             Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void levelUp() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (character.getLevel() >= MAX_LEVEL) {
+            Toast.makeText(requireContext(), R.string.sheet_level_up_max, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            character.increaseLevel();
+            new RandomCharacterPlayer(character).setDevelopmentPoints();
+            renderCharacter();
+            Toast.makeText(requireContext(), getString(R.string.sheet_level_up_done, character.getLevel()),
+                    Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot level up character", exception);
+            Toast.makeText(requireContext(), R.string.sheet_level_up_error, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -38,6 +38,10 @@
     <string name="sheet_no_character">No hay ningún personaje. Créalo en la pestaña Personaje.</string>
     <string name="sheet_delete">Eliminar</string>
     <string name="sheet_share">Compartir</string>
+    <string name="sheet_level_up">Subir de nivel</string>
+    <string name="sheet_level_up_done">Nivel %1$d alcanzado.</string>
+    <string name="sheet_level_up_max">Nivel máximo alcanzado.</string>
+    <string name="sheet_level_up_error">No se pudo subir de nivel.</string>
     <string name="sheet_delete_confirm">¿Eliminar el personaje \"%1$s\"?</string>
     <string name="sheet_deleted">Personaje eliminado.</string>
     <string name="sheet_delete_error">No se pudo eliminar el personaje.</string>
