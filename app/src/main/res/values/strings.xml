@@ -7,6 +7,7 @@
     <string name="navigation_random">Aleatorio</string>
     <string name="navigation_visualization">Hoja</string>
     <string name="navigation_wiki">Ayuda</string>
+    <string name="navigation_characteristics">Características</string>
 
     <!-- Character creation -->
     <string name="character_creation_title">Creación de personaje</string>
@@ -67,6 +68,13 @@
     <string name="wiki_detail_id">ID: %1$s</string>
     <string name="wiki_detail_module">Módulo: %1$s</string>
     <string name="wiki_detail_group">Grupo: %1$s</string>
+
+    <!-- Characteristics -->
+    <string name="characteristics_abbr">Caract.</string>
+    <string name="characteristics_temporal">Temp</string>
+    <string name="characteristics_potential">Pot</string>
+    <string name="characteristics_race">Raza</string>
+    <string name="characteristics_total">Total</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>

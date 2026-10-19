@@ -24,6 +24,14 @@
         tools:layout="@layout/fragment_random_character" />
 
     <fragment
+        android:id="@+id/navigation_characteristics"
+        android:name="com.softwaremagico.librodeesher.android.ui.characteristics.CharacteristicsFragment"
+        android:label="@string/navigation_characteristics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_characteristics" />
+
+    <fragment
         android:id="@+id/navigation_sheet"
         android:name="com.softwaremagico.librodeesher.android.ui.sheet.SheetFragment"
         android:label="@string/navigation_visualization"
