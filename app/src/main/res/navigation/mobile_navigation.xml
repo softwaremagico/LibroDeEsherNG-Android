@@ -10,6 +10,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.softwaremagico.librodeesher.android.ui.character.CharacterCreationFragment"
+        android:label="@string/navigation_character"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_character_creation" />
@@ -17,6 +18,7 @@
     <fragment
         android:id="@+id/navigation_random"
         android:name="com.softwaremagico.librodeesher.android.ui.random.RandomCharacterFragment"
+        android:label="@string/navigation_random"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_random_character" />
@@ -24,6 +26,7 @@
     <fragment
         android:id="@+id/navigation_sheet"
         android:name="com.softwaremagico.librodeesher.android.ui.sheet.SheetFragment"
+        android:label="@string/navigation_visualization"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_sheet" />
@@ -31,6 +34,7 @@
     <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
+        android:label="@string/navigation_wiki"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_wiki" />
