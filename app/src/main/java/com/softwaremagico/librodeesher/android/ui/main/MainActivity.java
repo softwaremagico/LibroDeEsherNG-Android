@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_history) {
             return navigate(R.id.navigation_history);
         }
+        if (id == R.id.action_equipment) {
+            return navigate(R.id.navigation_equipment);
+        }
         return super.onOptionsItemSelected(item);
     }
 

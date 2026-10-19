@@ -13,6 +13,7 @@
     <string name="navigation_perks">Dotes</string>
     <string name="navigation_resistances">Resistencias</string>
     <string name="navigation_history">Historial</string>
+    <string name="navigation_equipment">Equipo</string>
     <string name="development">Desarrollo</string>
 
     <!-- Character creation -->
@@ -141,6 +142,16 @@
     <string name="history_text_header">Historial</string>
     <string name="history_bonus">+%1$d</string>
     <string name="history_roll">%1$d → %2$d</string>
+
+    <!-- Equipment -->
+    <string name="equipment_standard_header">Equipo</string>
+    <string name="equipment_magic_header">Objetos mágicos</string>
+    <string name="equipment_add">Añadir objeto</string>
+    <string name="equipment_add_magic">Añadir objeto mágico</string>
+    <string name="equipment_none">Nada por aquí.</string>
+    <string name="equipment_name">Nombre</string>
+    <string name="equipment_description">Descripción (opcional)</string>
+    <string name="add">Añadir</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>
