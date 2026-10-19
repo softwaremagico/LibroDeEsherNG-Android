@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
@@ -56,20 +55,11 @@ public class SheetFragment extends Fragment {
         final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
-        final Button skillsButton = view.findViewById(R.id.sheet_skills_button);
-        final Button spellsButton = view.findViewById(R.id.sheet_spells_button);
-        final Button perksButton = view.findViewById(R.id.sheet_perks_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
         levelUpButton.setOnClickListener(v -> showLevelUpDialog());
-        skillsButton.setOnClickListener(v -> Navigation.findNavController(v)
-                .navigate(R.id.action_sheet_to_skills));
-        spellsButton.setOnClickListener(v -> Navigation.findNavController(v)
-                .navigate(R.id.action_sheet_to_spells));
-        perksButton.setOnClickListener(v -> Navigation.findNavController(v)
-                .navigate(R.id.action_sheet_to_perks));
     }
 
     @Override

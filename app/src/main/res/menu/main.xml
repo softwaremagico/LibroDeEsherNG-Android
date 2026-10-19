@@ -3,6 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_development"
+        android:title="@string/development"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/action_skills"
+                android:title="@string/navigation_skills"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_spells"
+                android:title="@string/navigation_spells"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_perks"
+                android:title="@string/navigation_perks"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_resistances"
+                android:title="@string/navigation_resistances"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never" />

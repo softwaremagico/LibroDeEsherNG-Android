@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -21,6 +22,7 @@ import com.softwaremagico.librodeesher.language.Translator;
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
+    private MenuItem developmentMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +42,39 @@ public class MainActivity extends AppCompatActivity {
             navController = navHostFragment.getNavController();
             NavigationUI.setupActionBarWithNavController(this, navController);
             NavigationUI.setupWithNavController(navView, navController);
+            navController.addOnDestinationChangedListener(
+                    (controller, destination, arguments) -> updateDevelopmentMenu(destination));
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        developmentMenu = menu.findItem(R.id.menu_development);
+        if (navController != null) {
+            updateDevelopmentMenu(navController.getCurrentDestination());
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
+        final int id = item.getItemId();
+        if (id == R.id.action_settings) {
             showLanguageDialog();
             return true;
+        }
+        if (id == R.id.action_skills) {
+            return navigate(R.id.navigation_skills);
+        }
+        if (id == R.id.action_spells) {
+            return navigate(R.id.navigation_spells);
+        }
+        if (id == R.id.action_perks) {
+            return navigate(R.id.navigation_perks);
+        }
+        if (id == R.id.action_resistances) {
+            return navigate(R.id.navigation_resistances);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -61,6 +82,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return (navController != null && navController.navigateUp()) || super.onSupportNavigateUp();
+    }
+
+    /** The development screens hang off the sheet, so their menu is only shown there. */
+    private void updateDevelopmentMenu(NavDestination destination) {
+        if (developmentMenu != null) {
+            developmentMenu.setVisible(destination != null
+                    && destination.getId() == R.id.navigation_sheet);
+        }
+    }
+
+    private boolean navigate(int destinationId) {
+        if (navController == null) {
+            return false;
+        }
+        navController.navigate(destinationId);
+        return true;
     }
 
     /** Lets the user switch the rules language; the activity is recreated to apply it everywhere. */
