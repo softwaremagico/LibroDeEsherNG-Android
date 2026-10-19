@@ -23,6 +23,10 @@
                 android:id="@+id/action_resistances"
                 android:title="@string/navigation_resistances"
                 app:showAsAction="never" />
+            <item
+                android:id="@+id/action_history"
+                android:title="@string/navigation_history"
+                app:showAsAction="never" />
         </menu>
     </item>
 

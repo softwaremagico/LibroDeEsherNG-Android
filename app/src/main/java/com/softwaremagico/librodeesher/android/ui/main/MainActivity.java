@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_resistances) {
             return navigate(R.id.navigation_resistances);
         }
+        if (id == R.id.action_history) {
+            return navigate(R.id.navigation_history);
+        }
         return super.onOptionsItemSelected(item);
     }
 

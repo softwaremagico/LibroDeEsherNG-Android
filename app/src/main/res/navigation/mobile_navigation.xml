@@ -72,6 +72,14 @@
         tools:layout="@layout/fragment_resistances" />
 
     <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.softwaremagico.librodeesher.android.ui.history.HistoryFragment"
+        android:label="@string/navigation_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:label="@string/navigation_wiki"

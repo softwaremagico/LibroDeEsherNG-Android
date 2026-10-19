@@ -12,6 +12,7 @@
     <string name="navigation_spells">Conjuros</string>
     <string name="navigation_perks">Dotes</string>
     <string name="navigation_resistances">Resistencias</string>
+    <string name="navigation_history">Historial</string>
     <string name="development">Desarrollo</string>
 
     <!-- Character creation -->
@@ -128,6 +129,18 @@
     <string name="resistances_armour_class">Clase de armadura</string>
     <string name="resistances_defensive_bonus">Bonificador defensivo</string>
     <string name="resistances_movement">Movimiento (pies/asaltos)</string>
+
+    <!-- History / background -->
+    <string name="history_points_header">Puntos de trasfondo</string>
+    <string name="history_points_spent">Gastados</string>
+    <string name="history_points_remaining">Restantes</string>
+    <string name="history_skills_header">Habilidades con bonificación</string>
+    <string name="history_categories_header">Categorías con bonificación</string>
+    <string name="history_languages_header">Idiomas</string>
+    <string name="history_characteristics_header">Características</string>
+    <string name="history_text_header">Historial</string>
+    <string name="history_bonus">+%1$d</string>
+    <string name="history_roll">%1$d → %2$d</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>
