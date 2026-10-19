@@ -10,6 +10,7 @@
     <string name="navigation_characteristics">Características</string>
     <string name="navigation_skills">Habilidades</string>
     <string name="navigation_spells">Conjuros</string>
+    <string name="navigation_perks">Dotes</string>
 
     <!-- Character creation -->
     <string name="character_creation_title">Creación de personaje</string>
@@ -47,6 +48,7 @@
     <string name="sheet_level_up_error">No se pudo subir de nivel.</string>
     <string name="sheet_skills">Habilidades</string>
     <string name="sheet_spells">Conjuros</string>
+    <string name="sheet_perks">Dotes</string>
     <string name="sheet_level_up_title">Subir de nivel</string>
     <string name="sheet_level_up_auto">Desarrollo automático</string>
     <string name="sheet_level_up_manual">Gastar puntos manualmente</string>
@@ -108,6 +110,15 @@
     <string name="spells_type_complementary_triad">Listas Básicas Elementales Complementarias</string>
     <string name="spells_type_training">Listas de Adiestramiento</string>
     <string name="spells_type_other_realm_training">Listas de Adiestramiento de Otros Reinos</string>
+
+    <!-- Perks management -->
+    <string name="perks_remaining">Puntos de dotes restantes: %1$d</string>
+    <string name="perks_cost">Coste %1$d</string>
+    <string name="perks_random">Aleatoria</string>
+    <string name="perks_selected_header">Seleccionadas</string>
+    <string name="perks_available_header">Disponibles</string>
+    <string name="perks_empty">No hay dotes disponibles.</string>
+    <string name="perks_error">No se pudo actualizar la dote.</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>

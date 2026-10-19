@@ -58,6 +58,7 @@ public class SheetFragment extends Fragment {
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
         final Button skillsButton = view.findViewById(R.id.sheet_skills_button);
         final Button spellsButton = view.findViewById(R.id.sheet_spells_button);
+        final Button perksButton = view.findViewById(R.id.sheet_perks_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
@@ -67,6 +68,8 @@ public class SheetFragment extends Fragment {
                 .navigate(R.id.action_sheet_to_skills));
         spellsButton.setOnClickListener(v -> Navigation.findNavController(v)
                 .navigate(R.id.action_sheet_to_spells));
+        perksButton.setOnClickListener(v -> Navigation.findNavController(v)
+                .navigate(R.id.action_sheet_to_perks));
     }
 
     @Override

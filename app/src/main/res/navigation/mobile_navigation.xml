@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_sheet_to_spells"
             app:destination="@id/navigation_spells" />
+        <action
+            android:id="@+id/action_sheet_to_perks"
+            app:destination="@id/navigation_perks" />
     </fragment>
 
     <fragment
@@ -61,6 +64,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_spells" />
+
+    <fragment
+        android:id="@+id/navigation_perks"
+        android:name="com.softwaremagico.librodeesher.android.ui.perks.PerksFragment"
+        android:label="@string/navigation_perks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_perks" />
 
     <fragment
         android:id="@+id/navigation_wiki"
