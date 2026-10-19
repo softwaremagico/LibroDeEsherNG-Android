@@ -8,6 +8,7 @@
     <string name="navigation_visualization">Hoja</string>
     <string name="navigation_wiki">Ayuda</string>
     <string name="navigation_characteristics">Características</string>
+    <string name="navigation_skills">Habilidades</string>
 
     <!-- Character creation -->
     <string name="character_creation_title">Creación de personaje</string>
@@ -43,6 +44,11 @@
     <string name="sheet_level_up_done">Nivel %1$d alcanzado.</string>
     <string name="sheet_level_up_max">Nivel máximo alcanzado.</string>
     <string name="sheet_level_up_error">No se pudo subir de nivel.</string>
+    <string name="sheet_skills">Habilidades</string>
+    <string name="sheet_level_up_title">Subir de nivel</string>
+    <string name="sheet_level_up_auto">Desarrollo automático</string>
+    <string name="sheet_level_up_manual">Gastar puntos manualmente</string>
+    <string name="sheet_level_up_manual_hint">Nivel %1$d creado sin desarrollar. Ve a Habilidades para gastar los puntos.</string>
     <string name="sheet_delete_confirm">¿Eliminar el personaje \"%1$s\"?</string>
     <string name="sheet_deleted">Personaje eliminado.</string>
     <string name="sheet_delete_error">No se pudo eliminar el personaje.</string>
@@ -75,6 +81,12 @@
     <string name="characteristics_potential">Pot</string>
     <string name="characteristics_race">Raza</string>
     <string name="characteristics_total">Total</string>
+
+    <!-- Skills development -->
+    <string name="skills_remaining">Puntos de desarrollo restantes: %1$d</string>
+    <string name="skills_rank_cost">%1$d rangos · coste %2$s</string>
+    <string name="skills_empty">No hay habilidades disponibles para desarrollar.</string>
+    <string name="skills_error">No se pudo actualizar la habilidad.</string>
 
     <!-- Errors -->
     <string name="error_no_rules">No se pudieron cargar las reglas: %1$s</string>

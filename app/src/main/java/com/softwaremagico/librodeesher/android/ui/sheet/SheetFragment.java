@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
@@ -55,11 +56,14 @@ public class SheetFragment extends Fragment {
         final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
+        final Button skillsButton = view.findViewById(R.id.sheet_skills_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
-        levelUpButton.setOnClickListener(v -> levelUp());
+        levelUpButton.setOnClickListener(v -> showLevelUpDialog());
+        skillsButton.setOnClickListener(v -> Navigation.findNavController(v)
+                .navigate(R.id.action_sheet_to_skills));
     }
 
     @Override
@@ -182,7 +186,7 @@ public class SheetFragment extends Fragment {
         }
     }
 
-    private void levelUp() {
+    private void showLevelUpDialog() {
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
@@ -192,12 +196,42 @@ public class SheetFragment extends Fragment {
             Toast.makeText(requireContext(), R.string.sheet_level_up_max, Toast.LENGTH_SHORT).show();
             return;
         }
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.sheet_level_up_title)
+                .setItems(new CharSequence[]{getString(R.string.sheet_level_up_auto),
+                        getString(R.string.sheet_level_up_manual)}, (dialog, which) -> {
+                    if (which == 0) {
+                        levelUpAuto();
+                    } else {
+                        levelUpManual();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void levelUpAuto() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         try {
             character.increaseLevel();
             new RandomCharacterPlayer(character).setDevelopmentPoints();
             renderCharacter();
             Toast.makeText(requireContext(), getString(R.string.sheet_level_up_done, character.getLevel()),
                     Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot level up character", exception);
+            Toast.makeText(requireContext(), R.string.sheet_level_up_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void levelUpManual() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        try {
+            character.increaseLevel();
+            renderCharacter();
+            Toast.makeText(requireContext(),
+                    getString(R.string.sheet_level_up_manual_hint, character.getLevel()),
+                    Toast.LENGTH_LONG).show();
         } catch (Exception exception) {
             AppLog.error("Cannot level up character", exception);
             Toast.makeText(requireContext(), R.string.sheet_level_up_error, Toast.LENGTH_SHORT).show();

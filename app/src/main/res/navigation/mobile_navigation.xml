@@ -37,7 +37,19 @@
         android:label="@string/navigation_visualization"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_sheet" />
+        tools:layout="@layout/fragment_sheet">
+        <action
+            android:id="@+id/action_sheet_to_skills"
+            app:destination="@id/navigation_skills" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_skills"
+        android:name="com.softwaremagico.librodeesher.android.ui.skills.SkillsFragment"
+        android:label="@string/navigation_skills"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_skills" />
 
     <fragment
         android:id="@+id/navigation_wiki"
