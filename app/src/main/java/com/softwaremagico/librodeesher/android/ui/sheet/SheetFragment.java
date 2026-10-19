@@ -1,5 +1,6 @@
 package com.softwaremagico.librodeesher.android.ui.sheet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +49,12 @@ public class SheetFragment extends Fragment {
         characterDao = AppDatabase.getInstance(requireContext()).getCharacterEntityDao();
         final Button saveButton = view.findViewById(R.id.sheet_save_button);
         final Button loadButton = view.findViewById(R.id.sheet_load_button);
+        final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
+        final Button shareButton = view.findViewById(R.id.sheet_share_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
+        deleteButton.setOnClickListener(v -> showDeleteDialog());
+        shareButton.setOnClickListener(v -> shareCharacter());
     }
 
     @Override
@@ -99,14 +104,9 @@ public class SheetFragment extends Fragment {
             Toast.makeText(requireContext(), R.string.sheet_no_saved_characters, Toast.LENGTH_SHORT).show();
             return;
         }
-        final String[] labels = new String[characters.size()];
-        for (int i = 0; i < characters.size(); i++) {
-            final CharacterEntity entity = characters.get(i);
-            labels[i] = entity.getName() + " (" + entity.getRace() + ", N" + entity.getLevel() + ")";
-        }
         new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.sheet_load)
-                .setItems(labels, (dialog, which) -> loadCharacter(characters.get(which)))
+                .setItems(labelsFor(characters), (dialog, which) -> loadCharacter(characters.get(which)))
                 .setNegativeButton(R.string.close, null)
                 .show();
     }
@@ -121,5 +121,68 @@ public class SheetFragment extends Fragment {
         manager.setSelectedCharacter(character);
         manager.setSelectedCharacterId(entity.getId());
         renderCharacter();
+    }
+
+    private void showDeleteDialog() {
+        final List<CharacterEntity> characters = characterDao.getAll();
+        if (characters.isEmpty()) {
+            Toast.makeText(requireContext(), R.string.sheet_no_saved_characters, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.sheet_delete)
+                .setItems(labelsFor(characters), (dialog, which) -> confirmDelete(characters.get(which)))
+                .setNegativeButton(R.string.close, null)
+                .show();
+    }
+
+    private void confirmDelete(CharacterEntity entity) {
+        final String name = entity.getName() == null ? "" : entity.getName();
+        new AlertDialog.Builder(requireContext())
+                .setMessage(getString(R.string.sheet_delete_confirm, name))
+                .setPositiveButton(R.string.accept, (dialog, which) -> deleteCharacter(entity))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void deleteCharacter(CharacterEntity entity) {
+        try {
+            characterDao.delete(entity);
+            if (CharacterManager.getInstance().getSelectedCharacterId() == entity.getId()) {
+                CharacterManager.getInstance().setSelectedCharacterId(CharacterManager.NO_ID);
+            }
+            Toast.makeText(requireContext(), R.string.sheet_deleted, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot delete character", exception);
+            Toast.makeText(requireContext(), R.string.sheet_delete_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareCharacter() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            final String text = TxtSheet.getCharacterStandardSheetAsText(character);
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, character.getName());
+            intent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(intent, getString(R.string.sheet_share_chooser)));
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot share character sheet", exception);
+            Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String[] labelsFor(List<CharacterEntity> characters) {
+        final String[] labels = new String[characters.size()];
+        for (int i = 0; i < characters.size(); i++) {
+            final CharacterEntity entity = characters.get(i);
+            labels[i] = entity.getName() + " (" + entity.getRace() + ", N" + entity.getLevel() + ")";
+        }
+        return labels;
     }
 }

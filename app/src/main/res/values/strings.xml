@@ -36,6 +36,14 @@
     <string name="sheet_no_saved_characters">No hay personajes guardados.</string>
     <string name="sheet_load_error">No se pudo cargar el personaje.</string>
     <string name="sheet_no_character">No hay ningún personaje. Créalo en la pestaña Personaje.</string>
+    <string name="sheet_delete">Eliminar</string>
+    <string name="sheet_share">Compartir</string>
+    <string name="sheet_delete_confirm">¿Eliminar el personaje \"%1$s\"?</string>
+    <string name="sheet_deleted">Personaje eliminado.</string>
+    <string name="sheet_delete_error">No se pudo eliminar el personaje.</string>
+    <string name="sheet_share_chooser">Compartir hoja de personaje</string>
+    <string name="accept">Eliminar</string>
+    <string name="cancel">Cancelar</string>
 
     <!-- Placeholder -->
     <string name="placeholder_title">Próximamente</string>
