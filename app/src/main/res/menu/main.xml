@@ -3,6 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_new_character"
+        android:title="@string/character_new"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_save_character"
+        android:title="@string/sheet_save"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_load_character"
+        android:title="@string/sheet_load"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_development"
         android:title="@string/development"
         app:showAsAction="never">
