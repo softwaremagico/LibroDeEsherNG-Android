@@ -188,7 +188,7 @@
     <string name="pdf_mode_one_column">Una columna</string>
     <string name="pdf_mode_two_columns">Dos columnas</string>
     <string name="pdf_mode_legacy">Habilidades combinadas</string>
-</resources>
     <string name="random_preferences">Preferencias aleatorias</string>
     <string name="random_specialization">Especialización</string>
     <string name="random_use_defaults">Usar valores por defecto</string>
+</resources>
