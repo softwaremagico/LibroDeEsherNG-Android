@@ -104,6 +104,14 @@
         tools:layout="@layout/fragment_weapon_tiers" />
 
     <fragment
+        android:id="@+id/navigation_load"
+        android:name="com.softwaremagico.librodeesher.android.ui.load.CharacterLoadFragment"
+        android:label="@string/sheet_load"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_character_list" />
+
+    <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:label="@string/navigation_wiki"
