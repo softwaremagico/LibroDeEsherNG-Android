@@ -5,6 +5,18 @@
     <!-- Bottom navigation -->
     <string name="navigation_character">Personaje</string>
     <string name="navigation_random">Aleatorio</string>
+    <string name="navigation_assistant">Asistente</string>
+    <string name="assistant_title">Asistente de Creación</string>
+    <string name="assistant_description">Creación guiada paso a paso</string>
+    <string name="random_config">Configuración aleatoria</string>
+    <string name="export_pdf">Exportar a PDF</string>
+    <string name="share_pdf">Compartir PDF</string>
+    <string name="save_character">Guardar personaje</string>
+    <string name="load_character">Cargar personaje</string>
+    <string name="character_saved">Personaje guardado</string>
+    <string name="character_loaded">Personaje cargado</string>
+    <string name="pdf_export_error">Error al exportar PDF</string>
+    <string name="pdf_export_success">PDF exportado correctamente</string>
     <string name="navigation_visualization">Hoja</string>
     <string name="navigation_wiki">Ayuda</string>
     <string name="navigation_characteristics">Características</string>

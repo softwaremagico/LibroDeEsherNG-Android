@@ -33,6 +33,7 @@ stax-api = { module = "javax.xml.stream:stax-api", version.ref = "staxApi" }
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
 librodeesher-rules = { module = "com.softwaremagico:librodeesher-rules", version.ref = "librodeesher" }
 librodeesher-random = { module = "com.softwaremagico:librodeesher-random", version.ref = "librodeesher" }
+librodeesher-pdf = { module = "com.softwaremagico:librodeesher-pdf", version.ref = "librodeesher" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

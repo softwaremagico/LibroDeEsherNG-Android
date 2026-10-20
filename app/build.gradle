@@ -49,6 +49,7 @@ dependencies {
     // Note: `librodeesher-random` must also be installed with `mvn install`.
     implementation libs.librodeesher.rules
     implementation libs.librodeesher.random
+    implementation libs.librodeesher.pdf
 
     // Jackson XML/JSON (transitively from the rules module) needs the StAX API on Android.
     implementation libs.stax.api

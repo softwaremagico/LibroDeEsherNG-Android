@@ -16,12 +16,20 @@
         tools:layout="@layout/fragment_character_creation" />
 
     <fragment
+        android:id="@+id/navigation_assistant"
+        android:name="com.softwaremagico.librodeesher.android.ui.assistant.CharacterAssistantFragment"
+        android:label="@string/navigation_assistant"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_assistant" />
+
+    <fragment
         android:id="@+id/navigation_random"
-        android:name="com.softwaremagico.librodeesher.android.ui.random.RandomCharacterFragment"
+        android:name="com.softwaremagico.librodeesher.android.ui.random.RandomCharacterEnhancedFragment"
         android:label="@string/navigation_random"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_random_character" />
+        tools:layout="@layout/fragment_random_character_enhanced" />
 
     <fragment
         android:id="@+id/navigation_characteristics"

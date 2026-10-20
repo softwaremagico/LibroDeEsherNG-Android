@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/random_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generación Aleatoria"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <Button
+            android:id="@+id/random_generate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generar personaje" />
+
+        <Button
+            android:id="@+id/random_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_character"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/random_export_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/export_pdf"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/random_share_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_pdf"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/random_summary_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:textIsSelectable="true" />
+
+    </LinearLayout>
+
+</ScrollView>
