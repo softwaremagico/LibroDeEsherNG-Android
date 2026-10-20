@@ -9,11 +9,11 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.softwaremagico.librodeesher.android.ui.character.CharacterCreationFragment"
+        android:name="com.softwaremagico.librodeesher.android.ui.character.tabbed.TabbedCharacterFragment"
         android:label="@string/navigation_character"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_character_creation" />
+        tools:layout="@layout/fragment_character_tabbed" />
 
     <fragment
         android:id="@+id/navigation_assistant"
