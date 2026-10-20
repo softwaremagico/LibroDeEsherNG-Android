@@ -42,7 +42,7 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
         } else if (position == 1) {
             return new CharacteristicsFragment();
         } else if (position == 2) {
-            return new SkillsFragment();
+            return new com.softwaremagico.librodeesher.android.ui.skills.SkillsDetailedFragment();
         } else if (position == 3) {
             return new SpellsFragment();
         } else if (position == 4) {
