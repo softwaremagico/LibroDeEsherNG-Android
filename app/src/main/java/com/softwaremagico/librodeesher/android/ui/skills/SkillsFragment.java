@@ -155,14 +155,22 @@ public class SkillsFragment extends Fragment {
     }
 
     private List<Skill> editableSkills(CharacterPlayer character) throws InvalidXmlElementException {
-        final Set<String> available = new HashSet<>(character.getAvailableSkillIds());
-        final List<Skill> skills = new ArrayList<>();
-        for (final Skill skill : RulesCatalog.getInstance().getSkills()) {
-            if (available.contains(skill.getId()) || character.getSkillCurrentLevelRanks(skill.getId()) > 0) {
-                skills.add(skill);
+        try {
+            final Set<String> available = new HashSet<>(character.getAvailableSkillIds());
+            final List<Skill> skills = new ArrayList<>();
+            for (final Skill skill : RulesCatalog.getInstance().getSkills()) {
+                if (available.contains(skill.getId()) || character.getSkillCurrentLevelRanks(skill.getId()) > 0
+                        || (character.getProfession() != null)) {
+                    skills.add(skill);
+                }
             }
+            if (skills.isEmpty()) {
+                skills.addAll(RulesCatalog.getInstance().getSkills());
+            }
+            return skills;
+        } catch (Exception e) {
+            return new ArrayList<>(RulesCatalog.getInstance().getSkills());
         }
-        return skills;
     }
 
     private void group(List<Skill> editable) {
