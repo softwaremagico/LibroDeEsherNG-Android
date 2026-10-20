@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -36,7 +37,6 @@ import com.softwaremagico.librodeesher.rules.RulesCatalog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CharacterAssistantFragment extends Fragment {
 
@@ -64,7 +64,6 @@ public class CharacterAssistantFragment extends Fragment {
     private final List<Race> races = new ArrayList<>();
     private final List<Culture> cultures = new ArrayList<>();
     private final List<Profession> professions = new ArrayList<>();
-    private final Random random = new Random();
 
     @Nullable
     @Override
@@ -110,6 +109,10 @@ public class CharacterAssistantFragment extends Fragment {
 
         nextButton.setOnClickListener(v -> {
             if (currentStep < STEPS.length - 1) {
+                if (needsSelection(currentStep)) {
+                    showSelectionDialog(currentStep);
+                    return;
+                }
                 applyStep();
                 currentStep++;
                 updateUI();
@@ -117,6 +120,10 @@ public class CharacterAssistantFragment extends Fragment {
         });
 
         finishButton.setOnClickListener(v -> {
+            if (needsSelection(currentStep)) {
+                showSelectionDialog(currentStep);
+                return;
+            }
             applyStep();
             finishCharacter();
         });
@@ -124,6 +131,53 @@ public class CharacterAssistantFragment extends Fragment {
         saveButton.setOnClickListener(v -> saveCharacter());
         exportButton.setOnClickListener(v -> exportPdf());
         shareButton.setOnClickListener(v -> sharePdf());
+    }
+
+    private boolean needsSelection(int step) {
+        return step == 0 || step == 1 || step == 2;
+    }
+
+    private void showSelectionDialog(int step) {
+        if (step == 0 && !races.isEmpty()) {
+            final String[] names = new String[races.size()];
+            for (int i = 0; i < races.size(); i++) {
+                names[i] = String.valueOf(races.get(i).getName());
+            }
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.character_race)
+                    .setItems(names, (dialog, which) -> {
+                        character.setRaceId(races.get(which).getId());
+                        currentStep++;
+                        updateUI();
+                    })
+                    .show();
+        } else if (step == 1 && !cultures.isEmpty()) {
+            final String[] names = new String[cultures.size()];
+            for (int i = 0; i < cultures.size(); i++) {
+                names[i] = String.valueOf(cultures.get(i).getName());
+            }
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.character_culture)
+                    .setItems(names, (dialog, which) -> {
+                        character.setCultureId(cultures.get(which).getId());
+                        currentStep++;
+                        updateUI();
+                    })
+                    .show();
+        } else if (step == 2 && !professions.isEmpty()) {
+            final String[] names = new String[professions.size()];
+            for (int i = 0; i < professions.size(); i++) {
+                names[i] = String.valueOf(professions.get(i).getName());
+            }
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.character_profession)
+                    .setItems(names, (dialog, which) -> {
+                        character.setProfessionId(professions.get(which).getId());
+                        currentStep++;
+                        updateUI();
+                    })
+                    .show();
+        }
     }
 
     private void updateUI() {
@@ -137,7 +191,7 @@ public class CharacterAssistantFragment extends Fragment {
         if (currentStep == 0) {
             summaryText.setText("Seleccione una raza para su personaje.");
         } else if (currentStep == 1) {
-            summaryText.setText("Seleccione una cultura para su personaje.");
+            summaryText.setText(character.getRaceId() != null ? "Raza: " + character.getRaceId() + "\nSeleccione una cultura." : "Seleccione una cultura.");
         } else if (currentStep == 2) {
             summaryText.setText("Seleccione una profesión para su personaje.");
         } else if (currentStep == 3) {
@@ -149,13 +203,7 @@ public class CharacterAssistantFragment extends Fragment {
 
     private void applyStep() {
         try {
-            if (currentStep == 0 && !races.isEmpty()) {
-                character.setRaceId(races.get(random.nextInt(races.size())).getId());
-            } else if (currentStep == 1 && !cultures.isEmpty()) {
-                character.setCultureId(cultures.get(random.nextInt(cultures.size())).getId());
-            } else if (currentStep == 2 && !professions.isEmpty()) {
-                character.setProfessionId(professions.get(random.nextInt(professions.size())).getId());
-            } else if (currentStep == 3) {
+            if (currentStep == 3) {
                 new RandomCharacterPlayer(character, 1).createRandomValues();
             }
         } catch (Exception exception) {
@@ -167,13 +215,13 @@ public class CharacterAssistantFragment extends Fragment {
     private void finishCharacter() {
         try {
             if (character.getRaceId() == null && !races.isEmpty()) {
-                character.setRaceId(races.get(random.nextInt(races.size())).getId());
+                character.setRaceId(races.get(0).getId());
             }
             if (character.getCultureId() == null && !cultures.isEmpty()) {
-                character.setCultureId(cultures.get(random.nextInt(cultures.size())).getId());
+                character.setCultureId(cultures.get(0).getId());
             }
             if (character.getProfessionId() == null && !professions.isEmpty()) {
-                character.setProfessionId(professions.get(random.nextInt(professions.size())).getId());
+                character.setProfessionId(professions.get(0).getId());
             }
             new RandomCharacterPlayer(character, 1).createRandomValues();
             CharacterManager.getInstance().setSelectedCharacter(character);
