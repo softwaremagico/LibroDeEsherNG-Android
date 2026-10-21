@@ -61,6 +61,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
+        if (id == R.id.action_new_character) {
+            com.softwaremagico.librodeesher.android.session.CharacterManager.getInstance().resetCharacter();
+            if (navController != null) {
+                navController.navigate(R.id.navigation_home);
+            }
+            return true;
+        }
+        if (id == R.id.action_load_character) {
+            if (navController != null) {
+                navController.navigate(R.id.navigation_load);
+            }
+            return true;
+        }
+        if (id == R.id.action_save_character) {
+            // Saving is handled by individual screens; just navigate to home/sheet for now.
+            if (navController != null) {
+                navController.navigate(R.id.navigation_home);
+            }
+            return true;
+        }
         if (id == R.id.action_settings) {
             showLanguageDialog();
             return true;
