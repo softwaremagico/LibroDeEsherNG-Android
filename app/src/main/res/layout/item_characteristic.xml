@@ -14,12 +14,39 @@
         android:layout_height="wrap_content"
         android:layout_weight="2.4" />
 
-    <TextView
-        android:id="@+id/item_characteristic_temporal"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="end" />
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/item_characteristic_minus"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="-" />
+
+        <TextView
+            android:id="@+id/item_characteristic_temporal"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/item_characteristic_plus"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="+" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/item_characteristic_potential"
