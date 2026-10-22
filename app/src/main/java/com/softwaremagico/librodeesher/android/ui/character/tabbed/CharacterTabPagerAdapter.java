@@ -14,6 +14,7 @@ import com.softwaremagico.librodeesher.android.ui.perks.PerksFragment;
 import com.softwaremagico.librodeesher.android.ui.resistances.ResistancesFragment;
 import com.softwaremagico.librodeesher.android.ui.skills.SkillsFragment;
 import com.softwaremagico.librodeesher.android.ui.spells.SpellsFragment;
+import com.softwaremagico.librodeesher.android.ui.categories.CategoriesFragment;
 import com.softwaremagico.librodeesher.android.ui.weapontiers.WeaponTiersFragment;
 
 public class CharacterTabPagerAdapter extends FragmentStateAdapter {
@@ -27,6 +28,7 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
             R.string.navigation_history,
             R.string.navigation_equipment,
             R.string.navigation_resistances,
+            R.string.navigation_categories,
             R.string.navigation_weapon_tiers
     };
 
@@ -54,6 +56,8 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
         } else if (position == 7) {
             return new ResistancesFragment();
         } else if (position == 8) {
+            return new CategoriesFragment();
+        } else if (position == 9) {
             return new WeaponTiersFragment();
         }
         return new CharacterCreationFragment();

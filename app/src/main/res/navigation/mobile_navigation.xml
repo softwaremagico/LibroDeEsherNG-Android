@@ -96,6 +96,14 @@
         tools:layout="@layout/fragment_equipment" />
 
     <fragment
+        android:id="@+id/navigation_categories"
+        android:name="com.softwaremagico.librodeesher.android.ui.categories.CategoriesFragment"
+        android:label="@string/navigation_categories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_categories" />
+
+    <fragment
         android:id="@+id/navigation_weapon_tiers"
         android:name="com.softwaremagico.librodeesher.android.ui.weapontiers.WeaponTiersFragment"
         android:label="@string/navigation_weapon_tiers"

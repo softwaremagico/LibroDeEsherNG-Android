@@ -26,6 +26,7 @@
     <string name="navigation_resistances">Resistencias</string>
     <string name="navigation_history">Historial</string>
     <string name="navigation_equipment">Equipo</string>
+    <string name="navigation_categories">Categorías</string>
     <string name="navigation_weapon_tiers">Coste de armas</string>
     <string name="development">Desarrollo</string>
 

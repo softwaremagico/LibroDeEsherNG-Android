@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_equipment) {
             return navigate(R.id.navigation_equipment);
         }
+        if (id == R.id.action_categories) {
+            return navigate(R.id.navigation_categories);
+        }
         if (id == R.id.action_weapon_tiers) {
             return navigate(R.id.navigation_weapon_tiers);
         }
