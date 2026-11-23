@@ -22,6 +22,8 @@ dependencyResolutionManagement {
         mavenCentral()
         mavenLocal()
         maven { url "https://jitpack.io" }
+        // OpenPDF 1.x needs java.awt on Android; android-awt provides the missing runtime classes.
+        maven { url "https://maven.andob.info/repository/open_source" }
     }
 }
 

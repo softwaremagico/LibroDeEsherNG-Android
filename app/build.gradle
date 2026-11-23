@@ -50,6 +50,8 @@ dependencies {
     implementation libs.librodeesher.rules
     implementation libs.librodeesher.random
     implementation libs.librodeesher.pdf
+    // OpenPDF 1.x (used by librodeesher-pdf) references java.awt classes at runtime.
+    implementation libs.android.awt
 
     // Jackson XML/JSON (transitively from the rules module) needs the StAX API on Android.
     implementation libs.stax.api

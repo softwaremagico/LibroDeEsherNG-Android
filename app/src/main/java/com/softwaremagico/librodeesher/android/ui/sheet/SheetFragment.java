@@ -23,8 +23,13 @@ import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.export.txt.TxtSheet;
+import com.softwaremagico.librodeesher.persistence.CharacterDataMapper;
+import com.softwaremagico.librodeesher.persistence.CharacterJsonManager;
+import com.softwaremagico.librodeesher.pdf.CharacterPdfExporter;
+import com.softwaremagico.librodeesher.pdf.StandardCharacterSheet;
 import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -37,6 +42,7 @@ public class SheetFragment extends Fragment {
 
     private TextView sheetText;
     private CharacterEntityDao characterDao;
+    private File lastPdfFile;
 
     @Nullable
     @Override
@@ -55,11 +61,13 @@ public class SheetFragment extends Fragment {
         final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
+        final Button exportPdfButton = view.findViewById(R.id.sheet_export_pdf_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
         levelUpButton.setOnClickListener(v -> showLevelUpDialog());
+        exportPdfButton.setOnClickListener(v -> exportPdf());
     }
 
     @Override
@@ -179,6 +187,29 @@ public class SheetFragment extends Fragment {
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot share character sheet", exception);
             Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /** Exports the currently selected character as a standard legacy-layout PDF. */
+    private void exportPdf() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            final String json = CharacterJsonManager.toJson(CharacterDataMapper.toData(character));
+            final File pdfDir = new File(requireContext().getCacheDir(), "pdf");
+            if (!pdfDir.exists() && !pdfDir.mkdirs()) {
+                throw new IllegalStateException("Cannot create " + pdfDir);
+            }
+            lastPdfFile = new File(pdfDir, "character_" + System.currentTimeMillis() + ".pdf");
+            CharacterPdfExporter.exportToFileFromJSON(json, new StandardCharacterSheet(),
+                    lastPdfFile.getAbsolutePath());
+            Toast.makeText(requireContext(), R.string.pdf_export_success, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Error exporting PDF", exception);
+            Toast.makeText(requireContext(), R.string.pdf_export_error, Toast.LENGTH_SHORT).show();
         }
     }
 

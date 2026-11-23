@@ -50,7 +50,7 @@ public class MorticiaEndToEndUiTest {
     }
 
     @Test
-    public void createMorticiaAtLevelTenAndVerifyEveryWindow() {
+    public void createMorticiaAtLevelTenAndVerifyEveryWindow() throws Exception {
         createMorticiaAtLevelTen();
 
         verifyCharacterTab();
@@ -65,7 +65,7 @@ public class MorticiaEndToEndUiTest {
         verifyWeaponTiersTab();
     }
 
-    private void createMorticiaAtLevelTen() {
+    private void createMorticiaAtLevelTen() throws Exception {
         onView(withId(R.id.action_new_character)).perform(click());
         onView(withId(R.id.name_input)).perform(replaceText("Morticia Innodan"));
 
@@ -98,6 +98,7 @@ public class MorticiaEndToEndUiTest {
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Silvana")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Elementalista")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Resistance rolls")));
+        PdfExportCheck.exportAndVerify("Morticia Innodan", 10, "Ilourianos", "Silvana", "Elementalista");
 
         onView(withId(R.id.navigation_home)).perform(click());
     }

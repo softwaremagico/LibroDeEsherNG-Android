@@ -76,5 +76,7 @@ public class NihalEndToEndUiTest {
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Laan")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Litoral Urbana (Clase Alta)")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Lord del Caos")));
+        PdfExportCheck.exportAndVerify("Nihal Dragoniana", 9, "Laan", "Litoral Urbana (Clase Alta)",
+                "Lord del Caos");
     }
 }
