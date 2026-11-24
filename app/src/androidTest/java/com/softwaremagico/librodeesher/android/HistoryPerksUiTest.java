@@ -6,12 +6,15 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSubstring;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 
@@ -73,6 +76,7 @@ public class HistoryPerksUiTest {
 
         onView(withId(R.id.perks_sort_cost)).perform(click());
         onView(withId(R.id.perks_random)).perform(click());
+        dismissPerkOptionDialogs();
         onView(withId(R.id.perks_container)).check(matches(hasMinimumChildCount(1)));
     }
 
@@ -103,6 +107,33 @@ public class HistoryPerksUiTest {
 
     private void openTab(String title) {
         onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs)))).perform(scrollTo(), click());
+    }
+
+    /** Random perks can now open the legacy weakness/choice dialogs; resolve them before checking the list. */
+    private static void dismissPerkOptionDialogs() {
+        for (int attempt = 0; attempt < 6; attempt++) {
+            try {
+                onView(allOf(withText(R.string.perks_no_weakness), isDisplayed()))
+                        .inRoot(isDialog()).perform(click());
+                continue;
+            } catch (RuntimeException ignored) {
+                // Not a weakness dialog.
+            }
+            try {
+                onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
+                onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
+                continue;
+            } catch (RuntimeException ignored) {
+                // Not a choice dialog either.
+            }
+            try {
+                onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
+                continue;
+            } catch (RuntimeException ignored) {
+                // No dialogs left.
+            }
+            break;
+        }
     }
 
     private static String textOf(int viewId) {

@@ -238,10 +238,19 @@ public class PerksFragment extends Fragment {
 
     /** Legacy "Opciones" flow: pair a weakness, then resolve every choice grant of the perk. */
     private void resolvePerkRequirements(String perkId) {
+        resolvePerkRequirements(perkId, null);
+    }
+
+    /**
+     * Resolves a perk's weakness and choice grants, then invokes {@code onDone}. The callback lets
+     * the random-perk flow chain several perks without opening overlapping dialogs.
+     */
+    private void resolvePerkRequirements(String perkId, Runnable onDone) {
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         try {
             final Perk perk = RulesCatalog.getInstance().getPerk(perkId);
             if (perk == null) {
+                finishRequirements(onDone);
                 return;
             }
             if (canPairWeakness(perk) && !character.hasWeakness(perkId)) {
@@ -260,14 +269,22 @@ public class PerksFragment extends Fragment {
                                         AppLog.error("Cannot pair weakness", exception);
                                     }
                                 }
-                                resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0);
+                                resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0, onDone);
                             });
                     return;
                 }
             }
-            resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0);
+            resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0, onDone);
         } catch (Exception exception) {
             AppLog.error("Cannot resolve perk options", exception);
+            finishRequirements(onDone);
+        }
+    }
+
+    private void finishRequirements(Runnable onDone) {
+        if (onDone != null) {
+            onDone.run();
+        } else {
             render();
         }
     }
@@ -279,9 +296,9 @@ public class PerksFragment extends Fragment {
 
     /** Resolves grants sequentially so only one selection dialog is visible at a time. */
     private void resolveChoiceGrants(CharacterPlayer character, String perkId, List<PerkChoiceGrant> grants,
-                                     int index) {
+                                     int index, Runnable onDone) {
         if (index >= grants.size()) {
-            render();
+            finishRequirements(onDone);
             return;
         }
         final PerkChoiceGrant grant = grants.get(index);
@@ -289,50 +306,50 @@ public class PerksFragment extends Fragment {
             if (grant.getCategoryId() != null || grant.getSkillId() != null) {
                 character.applyPerkChoiceGrant(perkId, index, grant,
                         grant.getCategoryId() != null ? grant.getCategoryId() : grant.getSkillId());
-                resolveChoiceGrants(character, perkId, grants, index + 1);
+                resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
                 return;
             }
             // A successful call with no candidate means the grant was already resolved; an
             // unresolved choice rejects a null candidate without recording a decision.
             try {
                 character.applyPerkChoiceGrant(perkId, index, grant, (String) null);
-                resolveChoiceGrants(character, perkId, grants, index + 1);
+                resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
                 return;
             } catch (RuntimeException alreadyUnresolved) {
                 // The player still has to choose below.
             }
             final List<String> optionIds = choiceScopeIds(character, grant.getScope());
             if (optionIds.isEmpty()) {
-                resolveChoiceGrants(character, perkId, grants, index + 1);
+                resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
                 return;
             }
             final List<String> optionLabels = displayNames(optionIds);
             final int choices = grant.getOptionsToChoose() == null ? 1 : grant.getOptionsToChoose();
             if (choices == -1) {
-                showFlexibleChoiceDialog(character, perkId, grants, index, grant, optionIds, optionLabels);
+                showFlexibleChoiceDialog(character, perkId, grants, index, grant, optionIds, optionLabels, onDone);
             } else {
                 ChoiceDialogs.selectMany(requireContext(), getString(R.string.perks_choice_title),
                         optionLabels, choices, selectedLabels -> {
                             try {
                                 character.applyPerkChoiceGrant(perkId, index, grant,
                                         idsFromLabels(optionIds, optionLabels, selectedLabels));
-                                resolveChoiceGrants(character, perkId, grants, index + 1);
+                                resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
                             } catch (Exception exception) {
                                 AppLog.error("Cannot apply perk choice", exception);
                                 Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
-                                render();
+                                finishRequirements(onDone);
                             }
                         });
             }
         } catch (Exception exception) {
             AppLog.error("Cannot resolve perk choice grant", exception);
-            resolveChoiceGrants(character, perkId, grants, index + 1);
+            resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
         }
     }
 
     private void showFlexibleChoiceDialog(CharacterPlayer character, String perkId,
                                           List<PerkChoiceGrant> grants, int index, PerkChoiceGrant grant,
-                                          List<String> optionIds, List<String> optionLabels) {
+                                          List<String> optionIds, List<String> optionLabels, Runnable onDone) {
         final boolean[] checked = new boolean[optionIds.size()];
         new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.perks_choice_flexible_title)
@@ -352,10 +369,11 @@ public class PerksFragment extends Fragment {
                     }
                     try {
                         character.applyPerkChoiceGrant(perkId, index, grant, selectedIds);
-                        resolveChoiceGrants(character, perkId, grants, index + 1);
+                        resolveChoiceGrants(character, perkId, grants, index + 1, onDone);
                     } catch (Exception exception) {
                         AppLog.error("Cannot apply flexible perk choice", exception);
                         Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+                        finishRequirements(onDone);
                     }
                 })
                 .show();
@@ -477,6 +495,7 @@ public class PerksFragment extends Fragment {
             Collections.shuffle(candidates);
             final boolean backgroundBudget = OptionsHandler.getInstance(requireContext())
                     .isPerksCostBackgroundPoints();
+            final List<String> pendingRequirements = new ArrayList<>();
             int added = 0;
             for (final String perkId : candidates) {
                 if (added >= 3) {
@@ -493,6 +512,9 @@ public class PerksFragment extends Fragment {
                     continue;
                 }
                 character.setPerkAsRandom(perkId, true);
+                if (hasPendingRequirements(character, perkId)) {
+                    pendingRequirements.add(perkId);
+                }
                 added++;
                 if (before <= 0) {
                     break;
@@ -501,11 +523,40 @@ public class PerksFragment extends Fragment {
             render();
             if (added == 0) {
                 Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+            } else if (!pendingRequirements.isEmpty()) {
+                resolvePendingPerks(pendingRequirements, 0);
             }
         } catch (Exception exception) {
             AppLog.error("Cannot add random perks", exception);
             Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /** Whether a randomly added perk still needs a weakness or a choice-grant decision. */
+    private boolean hasPendingRequirements(CharacterPlayer character, String perkId) {
+        try {
+            final Perk perk = RulesCatalog.getInstance().getPerk(perkId);
+            if (perk == null) {
+                return false;
+            }
+            if (!perk.getChoiceGrants().isEmpty()) {
+                return true;
+            }
+            return canPairWeakness(perk) && !character.hasWeakness(perkId)
+                    && !character.getAvailableWeaknessIds(perkId).isEmpty();
+        } catch (Exception exception) {
+            AppLog.error("Cannot inspect random perk requirements", exception);
+            return false;
+        }
+    }
+
+    /** Chains the resolution dialogs of the randomly selected perks one at a time. */
+    private void resolvePendingPerks(List<String> perkIds, int index) {
+        if (index >= perkIds.size()) {
+            render();
+            return;
+        }
+        resolvePerkRequirements(perkIds.get(index), () -> resolvePendingPerks(perkIds, index + 1));
     }
 
     private void removePerk(String perkId) {
