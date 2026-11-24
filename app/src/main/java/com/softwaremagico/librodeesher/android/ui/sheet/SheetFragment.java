@@ -1,6 +1,7 @@
 package com.softwaremagico.librodeesher.android.ui.sheet;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.softwaremagico.librodeesher.android.AppLog;
@@ -19,6 +21,7 @@ import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntityDao;
+import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
@@ -62,12 +65,14 @@ public class SheetFragment extends Fragment {
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
         final Button exportPdfButton = view.findViewById(R.id.sheet_export_pdf_button);
+        final Button sharePdfButton = view.findViewById(R.id.sheet_share_pdf_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
         levelUpButton.setOnClickListener(v -> showLevelUpDialog());
         exportPdfButton.setOnClickListener(v -> exportPdf());
+        sharePdfButton.setOnClickListener(v -> sharePdf());
     }
 
     @Override
@@ -91,24 +96,7 @@ public class SheetFragment extends Fragment {
     }
 
     private void saveCharacter() {
-        final CharacterManager manager = CharacterManager.getInstance();
-        final CharacterPlayer character = manager.getSelectedCharacter();
-        if (character.getRaceId() == null) {
-            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        try {
-            final CharacterEntity entity = new CharacterEntity(character);
-            if (manager.getSelectedCharacterId() != CharacterManager.NO_ID) {
-                entity.setId(manager.getSelectedCharacterId());
-            }
-            final long id = characterDao.insert(entity);
-            manager.setSelectedCharacterId(id);
-            Toast.makeText(requireContext(), R.string.sheet_saved, Toast.LENGTH_SHORT).show();
-        } catch (Exception exception) {
-            AppLog.error("Cannot save character", exception);
-            Toast.makeText(requireContext(), R.string.sheet_save_error, Toast.LENGTH_SHORT).show();
-        }
+        CharacterSaveHelper.save(requireContext());
     }
 
     private void showLoadDialog() {
@@ -153,7 +141,7 @@ public class SheetFragment extends Fragment {
         final String name = entity.getName() == null ? "" : entity.getName();
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.sheet_delete_confirm, name))
-                .setPositiveButton(R.string.accept, (dialog, which) -> deleteCharacter(entity))
+                .setPositiveButton(R.string.delete, (dialog, which) -> deleteCharacter(entity))
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
@@ -209,6 +197,27 @@ public class SheetFragment extends Fragment {
             Toast.makeText(requireContext(), R.string.pdf_export_success, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
             AppLog.error("Error exporting PDF", exception);
+            Toast.makeText(requireContext(), R.string.pdf_export_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sharePdf() {
+        if (lastPdfFile == null || !lastPdfFile.exists()) {
+            exportPdf();
+        }
+        if (lastPdfFile == null || !lastPdfFile.exists()) {
+            return;
+        }
+        try {
+            final Uri uri = FileProvider.getUriForFile(requireContext(),
+                    requireContext().getPackageName() + ".fileprovider", lastPdfFile);
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/pdf");
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(intent, getString(R.string.share_pdf)));
+        } catch (Exception exception) {
+            AppLog.error("Error sharing PDF", exception);
             Toast.makeText(requireContext(), R.string.pdf_export_error, Toast.LENGTH_SHORT).show();
         }
     }

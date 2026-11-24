@@ -12,7 +12,6 @@
     <string name="export_pdf">Exportar a PDF</string>
     <string name="share_pdf">Compartir PDF</string>
     <string name="save_character">Guardar personaje</string>
-    <string name="load_character">Cargar personaje</string>
     <string name="character_saved">Personaje guardado</string>
     <string name="character_loaded">Personaje cargado</string>
     <string name="pdf_export_error">Error al exportar PDF</string>
@@ -44,11 +43,6 @@
     <string name="character_reset">Nuevo personaje</string>
     <string name="character_summary">Resumen</string>
     <string name="character_not_created">Configura raza, cultura y profesión para crear el personaje.</string>
-    <string name="character_created">Personaje creado</string>
-
-    <!-- Random creation -->
-    <string name="random_creation_title">Creación aleatoria</string>
-    <string name="random_creation_hint">Genera un personaje completamente aleatorio usando las reglas de LibroDeEsher.</string>
 
     <!-- Character sheet -->
     <string name="sheet_save">Guardar</string>
@@ -64,9 +58,6 @@
     <string name="sheet_level_up_done">Nivel %1$d alcanzado.</string>
     <string name="sheet_level_up_max">Nivel máximo alcanzado.</string>
     <string name="sheet_level_up_error">No se pudo subir de nivel.</string>
-    <string name="sheet_skills">Habilidades</string>
-    <string name="sheet_spells">Conjuros</string>
-    <string name="sheet_perks">Dotes</string>
     <string name="sheet_level_up_title">Subir de nivel</string>
     <string name="sheet_level_up_auto">Desarrollo automático</string>
     <string name="sheet_level_up_manual">Gastar puntos manualmente</string>
@@ -75,12 +66,9 @@
     <string name="sheet_deleted">Personaje eliminado.</string>
     <string name="sheet_delete_error">No se pudo eliminar el personaje.</string>
     <string name="sheet_share_chooser">Compartir hoja de personaje</string>
-    <string name="accept">Eliminar</string>
+    <string name="accept">Aceptar</string>
+    <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
-
-    <!-- Placeholder -->
-    <string name="placeholder_title">Próximamente</string>
-    <string name="placeholder_text">Esta sección todavía no está implementada.</string>
 
     <!-- Wiki / help -->
     <string name="wiki_title">Ayuda</string>

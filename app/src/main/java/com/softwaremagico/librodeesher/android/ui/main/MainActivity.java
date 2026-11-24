@@ -75,10 +75,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_save_character) {
-            // Saving is handled by individual screens; just navigate to home/sheet for now.
-            if (navController != null) {
-                navController.navigate(R.id.navigation_home);
-            }
+            com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper.save(this);
             return true;
         }
         if (id == R.id.action_settings) {
