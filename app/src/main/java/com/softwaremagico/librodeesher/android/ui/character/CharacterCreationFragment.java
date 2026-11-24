@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,6 +57,7 @@ public class CharacterCreationFragment extends Fragment {
     private TextView summaryText;
     private Button generateButton;
     private Button randomButton;
+    private Button randomNameButton;
     private Button resetButton;
 
     private List<SexType> sexes = new ArrayList<>();
@@ -107,6 +109,7 @@ public class CharacterCreationFragment extends Fragment {
         summaryText = view.findViewById(R.id.summary_text);
         generateButton = view.findViewById(R.id.generate_button);
         randomButton = view.findViewById(R.id.random_button);
+        randomNameButton = view.findViewById(R.id.random_name_button);
         resetButton = view.findViewById(R.id.reset_button);
     }
 
@@ -209,6 +212,7 @@ public class CharacterCreationFragment extends Fragment {
 
         generateButton.setOnClickListener(v -> generateSelected());
         randomButton.setOnClickListener(v -> generateRandom());
+        randomNameButton.setOnClickListener(v -> randomizeName());
         resetButton.setOnClickListener(v -> resetCharacter());
     }
 
@@ -302,6 +306,24 @@ public class CharacterCreationFragment extends Fragment {
         CharacterManager.getInstance().setSelectedCharacter(character);
         nameInput.setText(character.getName());
         summaryText.setText(CharacterSummaryBuilder.build(character));
+    }
+
+    /** Regenerates only the name, keeping the rest of the character untouched. */
+    private void randomizeName() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.character_select_race_first, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            final SexType sex = character.getSex() == null ? SexType.FEMALE : character.getSex();
+            final String name = RulesCatalog.getInstance().getRace(character.getRaceId())
+                    .getRandomName(sex, random);
+            character.setName(name);
+            nameInput.setText(name);
+        } catch (InvalidXmlElementException exception) {
+            showError(exception);
+        }
     }
 
     private void resetCharacter() {

@@ -181,6 +181,13 @@
                 android:maxLines="1" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/random_name_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/character_random_name" />
+
         <!-- Actions -->
         <LinearLayout
             android:layout_width="match_parent"
