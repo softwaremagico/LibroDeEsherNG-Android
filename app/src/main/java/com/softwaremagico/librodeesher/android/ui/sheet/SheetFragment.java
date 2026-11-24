@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +23,7 @@ import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntityDao;
+import com.softwaremagico.librodeesher.android.persistence.CharacterFileHelper;
 import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
@@ -47,6 +50,15 @@ public class SheetFragment extends Fragment {
     private CharacterEntityDao characterDao;
     private File lastPdfFile;
 
+    private final ActivityResultLauncher<String> exportCharacterLauncher = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("application/json"), this::exportCharacterTo);
+    private final ActivityResultLauncher<String> exportLevelLauncher = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("application/json"), this::exportLevelTo);
+    private final ActivityResultLauncher<String[]> importCharacterLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), uri -> importFrom(uri, true));
+    private final ActivityResultLauncher<String[]> importLevelLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), uri -> importFrom(uri, false));
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -66,6 +78,10 @@ public class SheetFragment extends Fragment {
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
         final Button exportPdfButton = view.findViewById(R.id.sheet_export_pdf_button);
         final Button sharePdfButton = view.findViewById(R.id.sheet_share_pdf_button);
+        final Button exportCharacterButton = view.findViewById(R.id.sheet_export_character_button);
+        final Button importCharacterButton = view.findViewById(R.id.sheet_import_character_button);
+        final Button exportLevelButton = view.findViewById(R.id.sheet_export_level_button);
+        final Button importLevelButton = view.findViewById(R.id.sheet_import_level_button);
         saveButton.setOnClickListener(v -> saveCharacter());
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
@@ -73,6 +89,75 @@ public class SheetFragment extends Fragment {
         levelUpButton.setOnClickListener(v -> showLevelUpDialog());
         exportPdfButton.setOnClickListener(v -> exportPdf());
         sharePdfButton.setOnClickListener(v -> sharePdf());
+        exportCharacterButton.setOnClickListener(v -> launchExport(true));
+        importCharacterButton.setOnClickListener(v -> importCharacterLauncher.launch(new String[]{"*/*"}));
+        exportLevelButton.setOnClickListener(v -> launchExport(false));
+        importLevelButton.setOnClickListener(v -> importLevelLauncher.launch(new String[]{"*/*"}));
+    }
+
+    private void launchExport(boolean character) {
+        final CharacterPlayer selected = CharacterManager.getInstance().getSelectedCharacter();
+        if (selected.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final String name = selected.getName() == null ? "personaje" : selected.getName().replaceAll("[^a-zA-Z0-9_-]", "_");
+        if (character) {
+            exportCharacterLauncher.launch(name + ".json");
+        } else {
+            exportLevelLauncher.launch(name + "_nivel.json");
+        }
+    }
+
+    private void exportCharacterTo(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        try {
+            CharacterFileHelper.exportCharacter(requireContext(), uri,
+                    CharacterManager.getInstance().getSelectedCharacter());
+            Toast.makeText(requireContext(), R.string.sheet_file_exported, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot export character", exception);
+            Toast.makeText(requireContext(), R.string.sheet_file_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void exportLevelTo(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        try {
+            CharacterFileHelper.exportLevel(requireContext(), uri,
+                    CharacterManager.getInstance().getSelectedCharacter());
+            Toast.makeText(requireContext(), R.string.sheet_file_exported, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot export level", exception);
+            Toast.makeText(requireContext(), R.string.sheet_file_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void importFrom(Uri uri, boolean character) {
+        if (uri == null) {
+            return;
+        }
+        try {
+            if (character) {
+                final CharacterPlayer imported = CharacterFileHelper.importCharacter(requireContext(), uri);
+                CharacterManager.getInstance().setSelectedCharacter(imported);
+                Toast.makeText(requireContext(), R.string.sheet_file_imported, Toast.LENGTH_SHORT).show();
+            } else {
+                CharacterFileHelper.importLevel(requireContext(), uri,
+                        CharacterManager.getInstance().getSelectedCharacter());
+                Toast.makeText(requireContext(), R.string.sheet_file_imported, Toast.LENGTH_SHORT).show();
+            }
+            lastPdfFile = null;
+            renderCharacter();
+        } catch (Exception exception) {
+            AppLog.error("Cannot import file", exception);
+            Toast.makeText(requireContext(), character ? R.string.sheet_file_error
+                    : R.string.sheet_level_import_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

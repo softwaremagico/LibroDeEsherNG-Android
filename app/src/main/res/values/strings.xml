@@ -66,6 +66,14 @@
     <string name="sheet_deleted">Personaje eliminado.</string>
     <string name="sheet_delete_error">No se pudo eliminar el personaje.</string>
     <string name="sheet_share_chooser">Compartir hoja de personaje</string>
+    <string name="sheet_export_character">Exportar personaje</string>
+    <string name="sheet_import_character">Importar personaje</string>
+    <string name="sheet_export_level">Exportar nivel</string>
+    <string name="sheet_import_level">Importar nivel</string>
+    <string name="sheet_file_exported">Archivo exportado.</string>
+    <string name="sheet_file_imported">Archivo importado.</string>
+    <string name="sheet_file_error">No se pudo procesar el archivo.</string>
+    <string name="sheet_level_import_error">El nivel importado no es válido para este personaje.</string>
     <string name="accept">Aceptar</string>
     <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
