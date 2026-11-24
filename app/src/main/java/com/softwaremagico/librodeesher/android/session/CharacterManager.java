@@ -1,5 +1,6 @@
 package com.softwaremagico.librodeesher.android.session;
 
+import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 
 /**
@@ -17,6 +18,8 @@ public final class CharacterManager {
 
     private long selectedCharacterId = NO_ID;
 
+    private OptionsHandler optionsHandler;
+
     private CharacterManager() {
         // Singleton.
     }
@@ -32,10 +35,24 @@ public final class CharacterManager {
         return instance;
     }
 
+    /** Called on startup so every newly generated character inherits the configured rules. */
+    public void setOptionsHandler(OptionsHandler optionsHandler) {
+        this.optionsHandler = optionsHandler;
+    }
+
+    /** Creates a character with the global rule/PDF options already applied. */
+    public CharacterPlayer newCharacter() {
+        final CharacterPlayer character = new CharacterPlayer();
+        if (optionsHandler != null) {
+            optionsHandler.applyTo(character);
+        }
+        return character;
+    }
+
     /** The character being edited, creating an empty one on first access. */
     public CharacterPlayer getSelectedCharacter() {
         if (selectedCharacter == null) {
-            selectedCharacter = new CharacterPlayer();
+            selectedCharacter = newCharacter();
         }
         return selectedCharacter;
     }
@@ -56,7 +73,7 @@ public final class CharacterManager {
 
     /** Replaces the current character with a brand new empty one. */
     public void resetCharacter() {
-        this.selectedCharacter = new CharacterPlayer();
+        this.selectedCharacter = newCharacter();
         this.selectedCharacterId = NO_ID;
     }
 

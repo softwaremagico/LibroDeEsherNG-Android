@@ -58,6 +58,11 @@
     </item>
 
     <item
+        android:id="@+id/action_options"
+        android:title="@string/navigation_options"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never" />

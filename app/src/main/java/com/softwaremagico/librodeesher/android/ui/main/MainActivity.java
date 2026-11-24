@@ -17,7 +17,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.softwaremagico.librodeesher.android.BuildConfig;
 import com.softwaremagico.librodeesher.android.R;
+import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
+import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.language.Translator;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Apply the persisted language before any screen loads rules.
         Translator.setLanguage(SettingsHandler.getInstance(getApplicationContext()).getLanguage());
+        final OptionsHandler optionsHandler = OptionsHandler.getInstance(getApplicationContext());
+        optionsHandler.applyModules();
+        CharacterManager.getInstance().setOptionsHandler(optionsHandler);
         setContentView(R.layout.activity_main);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -77,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_save_character) {
             com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper.save(this);
             return true;
+        }
+        if (id == R.id.action_options) {
+            return navigate(R.id.navigation_options);
         }
         if (id == R.id.action_settings) {
             showLanguageDialog();

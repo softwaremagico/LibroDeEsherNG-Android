@@ -185,6 +185,31 @@
     <string name="pdf_mode_one_column">Una columna</string>
     <string name="pdf_mode_two_columns">Dos columnas</string>
     <string name="pdf_mode_legacy">Habilidades combinadas</string>
+    <!-- Options -->
+    <string name="navigation_options">Opciones</string>
+    <string name="options_rules">Reglas</string>
+    <string name="options_pdf">Hoja PDF</string>
+    <string name="options_modules">Módulos activos</string>
+    <string name="options_save">Guardar opciones</string>
+    <string name="options_applied">Opciones guardadas. Se aplicarán a los personajes nuevos.</string>
+    <string name="option_firearms">Permitir armas de fuego</string>
+    <string name="option_chi">Permitir poderes Chi</string>
+    <string name="option_other_realm_training">Adiestramientos de otros reinos</string>
+    <string name="option_magic">Permitir magia</string>
+    <string name="option_dark_spells">Listas oscuras como básicas</string>
+    <string name="option_perks_cost_background">Las dotes consumen puntos de trasfondo</string>
+    <string name="option_category_max_cost">Coste máximo por categoría</string>
+    <string name="option_handwriting">Fuente manuscrita en el PDF</string>
+    <string name="option_sort_pdf_skills">Ordenar habilidades por nombre en el PDF</string>
+    <string name="option_debug_mode">Modo depuración</string>
+
+    <string-array name="pdf_modes">
+        <item>@string/pdf_mode_standard</item>
+        <item>@string/pdf_mode_one_column</item>
+        <item>@string/pdf_mode_two_columns</item>
+        <item>@string/pdf_mode_legacy</item>
+    </string-array>
+
     <string name="random_preferences">Preferencias aleatorias</string>
     <string name="random_specialization">Especialización</string>
     <string name="random_use_defaults">Usar valores por defecto</string>

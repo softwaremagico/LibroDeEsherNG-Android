@@ -65,7 +65,7 @@ public class RandomCharacterEnhancedFragment extends Fragment {
 
     private void generateRandomCharacter() {
         try {
-            final CharacterPlayer character = new CharacterPlayer();
+            final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
             new RandomCharacterPlayer(character).createRandomValues();
             lastCharacter = character;
             CharacterManager.getInstance().setSelectedCharacter(character);

@@ -240,7 +240,7 @@ public class CharacterCreationFragment extends Fragment {
 
     private void generateSelected() {
         try {
-            final CharacterPlayer character = new CharacterPlayer();
+            final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
             applySelections(character, true);
             new RandomCharacterPlayer(character, levelPicker.getValue()).createRandomValues();
             afterGeneration(character);
@@ -254,7 +254,7 @@ public class CharacterCreationFragment extends Fragment {
             return;
         }
         try {
-            final CharacterPlayer character = new CharacterPlayer();
+            final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
             final Race race = pickRandom(races);
             final Culture culture = pickRandom(cultures);
             final Profession profession = pickRandom(professions);

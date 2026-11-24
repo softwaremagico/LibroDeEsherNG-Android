@@ -120,6 +120,14 @@
         tools:layout="@layout/fragment_character_list" />
 
     <fragment
+        android:id="@+id/navigation_options"
+        android:name="com.softwaremagico.librodeesher.android.ui.options.OptionsFragment"
+        android:label="@string/navigation_options"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_options" />
+
+    <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:label="@string/navigation_wiki"

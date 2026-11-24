@@ -95,7 +95,7 @@ public class CharacterAssistantFragment extends Fragment {
             return;
         }
 
-        character = new CharacterPlayer();
+        character = CharacterManager.getInstance().newCharacter();
         CharacterManager.getInstance().setSelectedCharacter(character);
 
         updateUI();

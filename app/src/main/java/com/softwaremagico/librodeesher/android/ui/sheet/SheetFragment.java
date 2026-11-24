@@ -25,6 +25,7 @@ import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntityDao;
 import com.softwaremagico.librodeesher.android.persistence.CharacterFileHelper;
 import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
+import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
@@ -32,6 +33,10 @@ import com.softwaremagico.librodeesher.export.txt.TxtSheet;
 import com.softwaremagico.librodeesher.persistence.CharacterDataMapper;
 import com.softwaremagico.librodeesher.persistence.CharacterJsonManager;
 import com.softwaremagico.librodeesher.pdf.CharacterPdfExporter;
+import com.softwaremagico.librodeesher.pdf.CombinedOneColumnCharacterSheet;
+import com.softwaremagico.librodeesher.pdf.CombinedTwoColumnsCharacterSheet;
+import com.softwaremagico.librodeesher.pdf.LegacyCombinedCharacterSheet;
+import com.softwaremagico.librodeesher.pdf.PdfDocument;
 import com.softwaremagico.librodeesher.pdf.StandardCharacterSheet;
 import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
 
@@ -263,7 +268,21 @@ public class SheetFragment extends Fragment {
         }
     }
 
-    /** Exports the currently selected character as a standard legacy-layout PDF. */
+    /** Sheet layout selected in the options screen. */
+    private PdfDocument createSheet() {
+        switch (OptionsHandler.getInstance(requireContext()).getPdfMode()) {
+            case 1:
+                return new CombinedOneColumnCharacterSheet();
+            case 2:
+                return new CombinedTwoColumnsCharacterSheet();
+            case 3:
+                return new LegacyCombinedCharacterSheet();
+            default:
+                return new StandardCharacterSheet();
+        }
+    }
+
+    /** Exports the currently selected character using the configured PDF layout. */
     private void exportPdf() {
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
@@ -277,7 +296,7 @@ public class SheetFragment extends Fragment {
                 throw new IllegalStateException("Cannot create " + pdfDir);
             }
             lastPdfFile = new File(pdfDir, "character_" + System.currentTimeMillis() + ".pdf");
-            CharacterPdfExporter.exportToFileFromJSON(json, new StandardCharacterSheet(),
+            CharacterPdfExporter.exportToFileFromJSON(json, createSheet(),
                     lastPdfFile.getAbsolutePath());
             Toast.makeText(requireContext(), R.string.pdf_export_success, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {

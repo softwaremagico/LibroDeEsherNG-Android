@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/options_rules"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        <CheckBox
+            android:id="@+id/option_firearms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_firearms" />
+
+        <CheckBox
+            android:id="@+id/option_chi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_chi" />
+
+        <CheckBox
+            android:id="@+id/option_other_realm_training"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_other_realm_training" />
+
+        <CheckBox
+            android:id="@+id/option_magic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_magic" />
+
+        <CheckBox
+            android:id="@+id/option_dark_spells"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_dark_spells" />
+
+        <CheckBox
+            android:id="@+id/option_perks_cost_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_perks_cost_background" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/option_category_max_cost" />
+
+        <EditText
+            android:id="@+id/option_category_max_cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/pdf_mode" />
+
+        <Spinner
+            android:id="@+id/option_pdf_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/pdf_modes" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/options_pdf"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        <CheckBox
+            android:id="@+id/option_handwriting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_handwriting" />
+
+        <CheckBox
+            android:id="@+id/option_sort_pdf_skills"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_sort_pdf_skills" />
+
+        <CheckBox
+            android:id="@+id/option_debug_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/option_debug_mode" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/options_modules"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        <LinearLayout
+            android:id="@+id/option_modules_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/option_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/options_save" />
+    </LinearLayout>
+</ScrollView>
