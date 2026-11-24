@@ -54,6 +54,7 @@
     <string name="sheet_no_character">No hay ningún personaje. Créalo en la pestaña Personaje.</string>
     <string name="sheet_delete">Eliminar</string>
     <string name="sheet_share">Compartir</string>
+    <string name="sheet_share_abbreviated">Compartir resumen abreviado</string>
     <string name="sheet_level_up">Subir de nivel</string>
     <string name="sheet_level_up_done">Nivel %1$d alcanzado.</string>
     <string name="sheet_level_up_max">Nivel máximo alcanzado.</string>

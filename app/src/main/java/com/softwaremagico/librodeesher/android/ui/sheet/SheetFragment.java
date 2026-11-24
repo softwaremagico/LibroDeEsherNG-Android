@@ -75,6 +75,7 @@ public class SheetFragment extends Fragment {
         final Button loadButton = view.findViewById(R.id.sheet_load_button);
         final Button deleteButton = view.findViewById(R.id.sheet_delete_button);
         final Button shareButton = view.findViewById(R.id.sheet_share_button);
+        final Button shareAbbreviatedButton = view.findViewById(R.id.sheet_share_abbreviated_button);
         final Button levelUpButton = view.findViewById(R.id.sheet_level_up_button);
         final Button exportPdfButton = view.findViewById(R.id.sheet_export_pdf_button);
         final Button sharePdfButton = view.findViewById(R.id.sheet_share_pdf_button);
@@ -86,6 +87,7 @@ public class SheetFragment extends Fragment {
         loadButton.setOnClickListener(v -> showLoadDialog());
         deleteButton.setOnClickListener(v -> showDeleteDialog());
         shareButton.setOnClickListener(v -> shareCharacter());
+        shareAbbreviatedButton.setOnClickListener(v -> shareAbbreviatedCharacter());
         levelUpButton.setOnClickListener(v -> showLevelUpDialog());
         exportPdfButton.setOnClickListener(v -> exportPdf());
         sharePdfButton.setOnClickListener(v -> sharePdf());
@@ -259,6 +261,26 @@ public class SheetFragment extends Fragment {
             startActivity(Intent.createChooser(intent, getString(R.string.sheet_share_chooser)));
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot share character sheet", exception);
+            Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /** Shares the monster-style abbreviated summary of the selected character. */
+    private void shareAbbreviatedCharacter() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            final String text = TxtSheet.getCharacterAbbreviatureAsText(character);
+            final Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, character.getName());
+            intent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(intent, getString(R.string.sheet_share_chooser)));
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot share abbreviated sheet", exception);
             Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
         }
     }
