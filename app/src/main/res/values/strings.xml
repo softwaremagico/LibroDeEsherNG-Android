@@ -182,6 +182,10 @@
     <string name="equipment_none">Nada por aquí.</string>
     <string name="equipment_name">Nombre</string>
     <string name="equipment_description">Descripción (opcional)</string>
+    <string name="equipment_bonuses">Bonos del objeto</string>
+    <string name="equipment_bonus_name">ID de categoría/habilidad</string>
+    <string name="equipment_bonus_value">Valor del bono</string>
+    <string name="equipment_add_bonus">Añadir bono</string>
     <string name="add">Añadir</string>
 
     <!-- Weapon cost tiers -->

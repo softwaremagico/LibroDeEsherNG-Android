@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,13 +19,14 @@ import androidx.fragment.app.Fragment;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
+import com.softwaremagico.librodeesher.equipment.BonusType;
 import com.softwaremagico.librodeesher.equipment.Equipment;
 import com.softwaremagico.librodeesher.equipment.MagicObject;
+import com.softwaremagico.librodeesher.equipment.ObjectBonus;
 import com.softwaremagico.librodeesher.language.TranslatedText;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,7 +92,17 @@ public class EquipmentFragment extends Fragment {
             container.addView(message(getString(R.string.equipment_none)));
         }
         for (final MagicObject item : magicItems) {
-            addRow(text(item.getName()), text(item.getDescription()), v -> {
+            final StringBuilder info = new StringBuilder(text(item.getDescription()));
+            final List<ObjectBonus> itemBonuses = item.getBonuses() == null
+                    ? new ArrayList<>() : item.getBonuses();
+            for (final ObjectBonus bonus : itemBonuses) {
+                if (info.length() > 0) {
+                    info.append('\n');
+                }
+                info.append(bonus.getType()).append(": ").append(bonus.getBonusName())
+                        .append(' ').append(bonus.getBonus());
+            }
+            addRow(text(item.getName()), info.toString(), v -> {
                 character.removeMagicItem(item);
                 render();
             });
@@ -101,6 +114,31 @@ public class EquipmentFragment extends Fragment {
                 .inflate(R.layout.dialog_equipment, container, false);
         final EditText nameField = view.findViewById(R.id.dialog_equipment_name);
         final EditText descriptionField = view.findViewById(R.id.dialog_equipment_description);
+        final List<ObjectBonus> bonuses = new ArrayList<>();
+        final TextView bonusList = view.findViewById(R.id.dialog_equipment_bonus_list);
+
+        if (magic) {
+            view.findViewById(R.id.dialog_equipment_bonus_section).setVisibility(View.VISIBLE);
+            final Spinner typeSpinner = view.findViewById(R.id.dialog_equipment_bonus_type);
+            typeSpinner.setAdapter(new ArrayAdapter<>(requireContext(),
+                    android.R.layout.simple_spinner_item, BonusType.values()));
+            final EditText bonusNameField = view.findViewById(R.id.dialog_equipment_bonus_name);
+            final EditText bonusValueField = view.findViewById(R.id.dialog_equipment_bonus_value);
+            view.findViewById(R.id.dialog_equipment_add_bonus).setOnClickListener(v -> {
+                try {
+                    final int value = Integer.parseInt(bonusValueField.getText().toString().trim());
+                    final String bonusName = bonusNameField.getText().toString().trim();
+                    bonuses.add(new ObjectBonus((BonusType) typeSpinner.getSelectedItem(),
+                            bonusName, value));
+                    bonusFieldUpdated(bonusList, bonuses);
+                    bonusNameField.setText("");
+                    bonusValueField.setText("");
+                } catch (NumberFormatException exception) {
+                    bonusList.setText(R.string.equipment_bonus_value);
+                }
+            });
+        }
+
         new AlertDialog.Builder(requireContext())
                 .setTitle(magic ? R.string.equipment_add_magic : R.string.equipment_add)
                 .setView(view)
@@ -114,8 +152,9 @@ public class EquipmentFragment extends Fragment {
                     final TranslatedText descriptionText = description.isEmpty()
                             ? null : new TranslatedText(description, description);
                     if (magic) {
-                        CharacterManager.getInstance().getSelectedCharacter().addMagicItem(
-                                new MagicObject(nameText, descriptionText, Collections.emptyList()));
+                        final MagicObject item = new MagicObject(nameText, descriptionText,
+                                new ArrayList<>(bonuses));
+                        CharacterManager.getInstance().getSelectedCharacter().addMagicItem(item);
                     } else {
                         CharacterManager.getInstance().getSelectedCharacter().addStandardEquipment(
                                 new Equipment(nameText, descriptionText));
@@ -124,6 +163,18 @@ public class EquipmentFragment extends Fragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void bonusFieldUpdated(TextView bonusList, List<ObjectBonus> bonuses) {
+        final StringBuilder builder = new StringBuilder();
+        for (final ObjectBonus bonus : bonuses) {
+            if (builder.length() > 0) {
+                builder.append('\n');
+            }
+            builder.append(bonus.getType()).append(": ").append(bonus.getBonusName())
+                    .append(' ').append(bonus.getBonus());
+        }
+        bonusList.setText(builder.toString());
     }
 
     private String text(TranslatedText translated) {

@@ -21,4 +21,49 @@
         android:hint="@string/equipment_description"
         android:inputType="text" />
 
+    <LinearLayout
+        android:id="@+id/dialog_equipment_bonus_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/equipment_bonuses"
+            android:textStyle="bold"
+            android:paddingTop="12dp" />
+
+        <Spinner
+            android:id="@+id/dialog_equipment_bonus_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/dialog_equipment_bonus_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/equipment_bonus_name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/dialog_equipment_bonus_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/equipment_bonus_value"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/dialog_equipment_add_bonus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/equipment_add_bonus" />
+
+        <TextView
+            android:id="@+id/dialog_equipment_bonus_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>
