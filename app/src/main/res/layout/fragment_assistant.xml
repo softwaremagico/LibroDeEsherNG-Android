@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="Anterior" />
+                android:text="@string/assistant_previous" />
 
             <Button
                 android:id="@+id/assistant_next_button"
@@ -46,14 +46,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="Siguiente" />
+                android:text="@string/assistant_next" />
         </LinearLayout>
 
         <Button
             android:id="@+id/assistant_finish_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Finalizar"
+            android:text="@string/assistant_finish"
             android:visibility="gone" />
 
         <Button
