@@ -44,7 +44,7 @@ public class ReferenceCharactersUiTest {
 
     private static final String[] TABS = {"Personaje", "Características", "Habilidades", "Conjuros",
             "Dotes", "Historial", "Equipo", "Resistencias", "Categorías", "Coste de armas",
-            "Adiestramientos"};
+            "Adiestramientos", "Cultura detallada", "Profesión detallada"};
 
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule = new ActivityScenarioRule<>(MainActivity.class);
@@ -157,6 +157,10 @@ public class ReferenceCharactersUiTest {
                 return R.id.weapon_tiers_container;
             case "Adiestramientos":
                 return R.id.trainings_container;
+            case "Cultura detallada":
+                return R.id.culture_container;
+            case "Profesión detallada":
+                return R.id.profession_container;
             default:
                 throw new IllegalArgumentException("Unknown tab: " + title);
         }

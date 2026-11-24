@@ -120,6 +120,22 @@
         tools:layout="@layout/fragment_character_list" />
 
     <fragment
+        android:id="@+id/navigation_culture_details"
+        android:name="com.softwaremagico.librodeesher.android.ui.creation.CultureDetailsFragment"
+        android:label="@string/navigation_culture_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_culture_details" />
+
+    <fragment
+        android:id="@+id/navigation_profession_details"
+        android:name="com.softwaremagico.librodeesher.android.ui.creation.ProfessionDetailsFragment"
+        android:label="@string/navigation_profession_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_profession_details" />
+
+    <fragment
         android:id="@+id/navigation_trainings"
         android:name="com.softwaremagico.librodeesher.android.ui.trainings.TrainingsFragment"
         android:label="@string/navigation_trainings"

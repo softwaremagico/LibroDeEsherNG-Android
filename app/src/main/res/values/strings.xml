@@ -185,6 +185,29 @@
     <string name="pdf_mode_one_column">Una columna</string>
     <string name="pdf_mode_two_columns">Dos columnas</string>
     <string name="pdf_mode_legacy">Habilidades combinadas</string>
+    <!-- Guided culture and profession creation -->
+    <string name="navigation_culture_details">Cultura detallada</string>
+    <string name="navigation_profession_details">Profesión detallada</string>
+    <string name="creation_applied">Decisión aplicada.</string>
+    <string name="creation_error">No se pudo aplicar la decisión.</string>
+    <string name="culture_weapons">Armas típicas (orden)</string>
+    <string name="culture_adolescence">Rangos de adolescencia</string>
+    <string name="culture_grant">Concesión %1$d</string>
+    <string name="culture_languages">Idiomas opcionales</string>
+    <string name="culture_no_languages">No hay idiomas opcionales.</string>
+    <string name="culture_race_language">Idioma racial %1$d</string>
+    <string name="culture_culture_language">Idioma cultural %1$d</string>
+    <string name="culture_hobbies">Aficiones</string>
+    <string name="culture_no_hobbies">No hay aficiones.</string>
+    <string name="culture_hobby_rank">%1$s — rangos: %2$d</string>
+    <string name="profession_realms">Reinos de magia</string>
+    <string name="profession_realm">Reino %1$d</string>
+    <string name="profession_common">Habilidades comunes</string>
+    <string name="profession_professional">Habilidades profesionales</string>
+    <string name="profession_restricted">Habilidades restringidas</string>
+    <string name="profession_choose">Elegir %1$d: %2$s</string>
+    <string name="profession_category">una categoría</string>
+
     <!-- Trainings -->
     <string name="navigation_trainings">Adiestramientos</string>
     <string name="trainings_remaining">Puntos de desarrollo restantes: %1$d</string>

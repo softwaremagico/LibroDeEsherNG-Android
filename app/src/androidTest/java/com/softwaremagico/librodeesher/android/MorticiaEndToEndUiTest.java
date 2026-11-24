@@ -64,6 +64,8 @@ public class MorticiaEndToEndUiTest {
         verifyCategoriesTab();
         verifyWeaponTiersTab();
         verifyTrainingsTab();
+        verifyCultureDetailsTab();
+        verifyProfessionDetailsTab();
     }
 
     private void createMorticiaAtLevelTen() throws Exception {
@@ -162,6 +164,16 @@ public class MorticiaEndToEndUiTest {
     private void verifyTrainingsTab() {
         openTab("Adiestramientos");
         onView(withId(R.id.trainings_container)).check(matches(hasMinimumChildCount(2)));
+    }
+
+    private void verifyCultureDetailsTab() {
+        openTab("Cultura detallada");
+        onView(withId(R.id.culture_container)).check(matches(hasMinimumChildCount(1)));
+    }
+
+    private void verifyProfessionDetailsTab() {
+        openTab("Profesión detallada");
+        onView(withId(R.id.profession_container)).check(matches(hasMinimumChildCount(1)));
     }
 
     private void openTab(String title) {

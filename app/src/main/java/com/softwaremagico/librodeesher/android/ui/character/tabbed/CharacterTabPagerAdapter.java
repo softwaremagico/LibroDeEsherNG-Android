@@ -30,7 +30,9 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
             R.string.navigation_resistances,
             R.string.navigation_categories,
             R.string.navigation_weapon_tiers,
-            R.string.navigation_trainings
+            R.string.navigation_trainings,
+            R.string.navigation_culture_details,
+            R.string.navigation_profession_details
     };
 
     public CharacterTabPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -62,6 +64,10 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
             return new WeaponTiersFragment();
         } else if (position == 10) {
             return new com.softwaremagico.librodeesher.android.ui.trainings.TrainingsFragment();
+        } else if (position == 11) {
+            return new com.softwaremagico.librodeesher.android.ui.creation.CultureDetailsFragment();
+        } else if (position == 12) {
+            return new com.softwaremagico.librodeesher.android.ui.creation.ProfessionDetailsFragment();
         }
         return new CharacterCreationFragment();
     }

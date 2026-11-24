@@ -94,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
             showAboutDialog();
             return true;
         }
+        if (id == R.id.action_culture_details) {
+            return navigate(R.id.navigation_culture_details);
+        }
+        if (id == R.id.action_profession_details) {
+            return navigate(R.id.navigation_profession_details);
+        }
         if (id == R.id.action_trainings) {
             return navigate(R.id.navigation_trainings);
         }
