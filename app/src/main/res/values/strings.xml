@@ -38,6 +38,11 @@
     <string name="character_profession">Profesión</string>
     <string name="character_level">Nivel</string>
     <string name="character_age">Edad</string>
+    <string name="character_insert_age">Insertar edad</string>
+    <string name="age_apply">Aplicar</string>
+    <string name="age_expectancy_warning">Supera la expectativa de vida de la raza (%1$d años).</string>
+    <string name="age_updated">Edad final actualizada a %1$d años.</string>
+    <string name="age_select_race_first">Selecciona una raza antes de insertar la edad.</string>
     <string name="character_generate">Generar personaje</string>
     <string name="character_random">Generar aleatoriamente</string>
     <string name="character_random_name">Nombre aleatorio</string>

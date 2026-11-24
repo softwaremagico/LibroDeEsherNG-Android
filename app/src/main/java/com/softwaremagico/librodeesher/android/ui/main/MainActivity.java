@@ -1,8 +1,13 @@
 package com.softwaremagico.librodeesher.android.ui.main;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,7 +26,10 @@ import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
+import com.softwaremagico.librodeesher.character.CharacterPlayer;
+import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.language.Translator;
+import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_random_preferences) {
             return navigate(R.id.navigation_random_preferences);
         }
+        if (id == R.id.action_insert_age) {
+            showInsertAgeDialog();
+            return true;
+        }
         if (id == R.id.action_settings) {
             showLanguageDialog();
             return true;
@@ -154,6 +166,58 @@ public class MainActivity extends AppCompatActivity {
         }
         navController.navigate(destinationId);
         return true;
+    }
+
+    /** Raises the final age after creation, warning when it exceeds the racial lifespan. */
+    private void showInsertAgeDialog() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.getRaceId() == null) {
+            Toast.makeText(this, R.string.age_select_race_first, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            final Integer expectedAge = RulesCatalog.getInstance().getRace(character.getRaceId())
+                    .getExpectedLifeYears();
+            final int lifespan = expectedAge == null ? 100 : expectedAge;
+            final int minimum = character.getCurrentAge();
+            final NumberPicker picker = new NumberPicker(this);
+            picker.setMinValue(minimum);
+            picker.setMaxValue(Math.max(minimum + 1, lifespan + 50));
+            picker.setValue(Math.max(character.getFinalAge(), minimum));
+
+            final TextView warning = new TextView(this);
+            warning.setTextColor(Color.RED);
+            picker.setOnValueChangedListener((widget, oldValue, value) -> {
+                if (value > lifespan) {
+                    warning.setText(getString(R.string.age_expectancy_warning, lifespan));
+                } else {
+                    warning.setText("");
+                }
+            });
+            if (picker.getValue() > lifespan) {
+                warning.setText(getString(R.string.age_expectancy_warning, lifespan));
+            }
+
+            final LinearLayout content = new LinearLayout(this);
+            content.setOrientation(LinearLayout.VERTICAL);
+            content.setPadding(48, 16, 48, 16);
+            content.addView(picker);
+            content.addView(warning);
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.character_insert_age)
+                    .setView(content)
+                    .setPositiveButton(R.string.age_apply, (dialog, which) -> {
+                        character.setFinalAge(picker.getValue());
+                        Toast.makeText(this, getString(R.string.age_updated, picker.getValue()),
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton(R.string.close, null)
+                    .show();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot insert age", exception);
+            Toast.makeText(this, R.string.age_select_race_first, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Lets the user switch the rules language; the activity is recreated to apply it everywhere. */

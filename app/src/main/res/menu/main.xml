@@ -70,6 +70,11 @@
     </item>
 
     <item
+        android:id="@+id/action_insert_age"
+        android:title="@string/character_insert_age"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_options"
         android:title="@string/navigation_options"
         app:showAsAction="never" />
