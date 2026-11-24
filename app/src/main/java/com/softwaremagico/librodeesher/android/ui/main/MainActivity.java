@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.BuildConfig;
+import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
@@ -74,6 +75,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        final boolean levelOne = CharacterManager.getInstance().getSelectedCharacter().getLevel() <= 1;
+        for (final int id : new int[]{R.id.action_culture_details, R.id.action_profession_details,
+                R.id.action_perks}) {
+            final MenuItem item = menu.findItem(id);
+            if (item != null) {
+                item.setEnabled(levelOne);
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_new_character) {
@@ -90,7 +105,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_save_character) {
-            com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper.save(this);
+            final int problem = CharacterValidator.problem(CharacterManager.getInstance().getSelectedCharacter());
+            if (problem != 0) {
+                Toast.makeText(this, problem, Toast.LENGTH_SHORT).show();
+            } else {
+                com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper.save(this);
+            }
             return true;
         }
         if (id == R.id.action_options) {

@@ -47,6 +47,10 @@
     <string name="character_random">Generar aleatoriamente</string>
     <string name="character_random_name">Nombre aleatorio</string>
     <string name="character_select_race_first">Selecciona una raza primero.</string>
+    <string name="character_confirm_characteristics_first">Confirma primero las características.</string>
+    <string name="character_overspent_development_points">Se han gastado demasiados puntos de desarrollo.</string>
+    <string name="character_validation_error">No se puede comprobar el personaje.</string>
+    <string name="character_level_one_only">Esta opción solo está disponible en el nivel 1.</string>
     <string name="character_reset">Nuevo personaje</string>
     <string name="character_summary">Resumen</string>
     <string name="character_not_created">Configura raza, cultura y profesión para crear el personaje.</string>

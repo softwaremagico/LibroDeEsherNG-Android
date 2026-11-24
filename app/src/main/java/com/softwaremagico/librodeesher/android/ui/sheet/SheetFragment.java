@@ -25,6 +25,7 @@ import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntityDao;
 import com.softwaremagico.librodeesher.android.persistence.CharacterFileHelper;
 import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
+import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.core.PdfSheetFactory;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
@@ -97,7 +98,20 @@ public class SheetFragment extends Fragment {
         importLevelButton.setOnClickListener(v -> importLevelLauncher.launch(new String[]{"*/*"}));
     }
 
+    /** Blocks save/export/level-up until the character is well formed, as in the desktop app. */
+    private boolean requireWellFormedCharacter() {
+        final int problem = CharacterValidator.problem(CharacterManager.getInstance().getSelectedCharacter());
+        if (problem != 0) {
+            Toast.makeText(requireContext(), problem, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private void launchExport(boolean character) {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         final CharacterPlayer selected = CharacterManager.getInstance().getSelectedCharacter();
         if (selected.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
@@ -183,6 +197,9 @@ public class SheetFragment extends Fragment {
     }
 
     private void saveCharacter() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         CharacterSaveHelper.save(requireContext());
     }
 
@@ -247,6 +264,9 @@ public class SheetFragment extends Fragment {
     }
 
     private void shareCharacter() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
@@ -267,6 +287,9 @@ public class SheetFragment extends Fragment {
 
     /** Shares the monster-style abbreviated summary of the selected character. */
     private void shareAbbreviatedCharacter() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
@@ -287,6 +310,9 @@ public class SheetFragment extends Fragment {
 
     /** Exports the currently selected character using the configured PDF layout. */
     private void exportPdf() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
@@ -309,6 +335,9 @@ public class SheetFragment extends Fragment {
     }
 
     private void sharePdf() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         if (lastPdfFile == null || !lastPdfFile.exists()) {
             exportPdf();
         }
@@ -330,6 +359,9 @@ public class SheetFragment extends Fragment {
     }
 
     private void showLevelUpDialog() {
+        if (!requireWellFormedCharacter()) {
+            return;
+        }
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null) {
             Toast.makeText(requireContext(), R.string.sheet_no_character, Toast.LENGTH_SHORT).show();
