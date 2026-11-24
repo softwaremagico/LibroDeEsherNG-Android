@@ -222,9 +222,7 @@ public class SheetFragment extends Fragment {
             Toast.makeText(requireContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
             return;
         }
-        final CharacterManager manager = CharacterManager.getInstance();
-        manager.setSelectedCharacter(character);
-        manager.setSelectedCharacterId(entity.getId());
+        CharacterManager.getInstance().openCharacter(character, entity.getId());
         renderCharacter();
     }
 

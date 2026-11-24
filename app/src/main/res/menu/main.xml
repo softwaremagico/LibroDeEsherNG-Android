@@ -5,12 +5,22 @@
     <item
         android:id="@+id/action_new_character"
         android:title="@string/character_new"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_save_character"
         android:title="@string/sheet_save"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_switch_character"
+        android:title="@string/character_switch"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_close_character"
+        android:title="@string/character_close"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_load_character"

@@ -51,8 +51,7 @@ public class CharacterLoadFragment extends Fragment implements CharacterListAdap
     public void onCharacterClick(CharacterEntity entity) {
         try {
             CharacterPlayer loaded = entity.getCharacterPlayer();
-            CharacterManager.getInstance().setSelectedCharacter(loaded);
-            CharacterManager.getInstance().setSelectedCharacterId(entity.getId());
+            CharacterManager.getInstance().openCharacter(loaded, entity.getId());
             Toast.makeText(getContext(), R.string.character_loaded, Toast.LENGTH_SHORT).show();
             Navigation.findNavController(requireView()).navigate(R.id.navigation_home);
         } catch (Exception e) {

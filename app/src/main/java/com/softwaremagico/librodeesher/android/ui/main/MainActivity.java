@@ -32,6 +32,8 @@ import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.language.Translator;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
@@ -92,10 +94,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_new_character) {
-            com.softwaremagico.librodeesher.android.session.CharacterManager.getInstance().resetCharacter();
+            final CharacterManager manager = CharacterManager.getInstance();
+            manager.openCharacter(manager.newCharacter(), CharacterManager.NO_ID);
             if (navController != null) {
                 navController.navigate(R.id.navigation_home);
             }
+            return true;
+        }
+        if (id == R.id.action_switch_character) {
+            showSwitchCharacterDialog();
+            return true;
+        }
+        if (id == R.id.action_close_character) {
+            showCloseCharacterDialog();
             return true;
         }
         if (id == R.id.action_load_character) {
@@ -186,6 +197,38 @@ public class MainActivity extends AppCompatActivity {
         }
         navController.navigate(destinationId);
         return true;
+    }
+
+    private void showSwitchCharacterDialog() {
+        final List<CharacterManager.OpenCharacter> openCharacters =
+                CharacterManager.getInstance().getOpenCharacters();
+        if (openCharacters.size() < 2) {
+            Toast.makeText(this, R.string.character_no_open, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final String[] labels = new String[openCharacters.size()];
+        for (int i = 0; i < labels.length; i++) {
+            labels[i] = openCharacters.get(i).displayName();
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.character_switch)
+                .setItems(labels, (dialog, which) -> {
+                    CharacterManager.getInstance().switchTo(which);
+                    navigate(R.id.navigation_home);
+                })
+                .show();
+    }
+
+    private void showCloseCharacterDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.character_close)
+                .setMessage(R.string.character_close_confirm)
+                .setPositiveButton(R.string.close, (dialog, which) -> {
+                    CharacterManager.getInstance().closeSelected();
+                    navigate(R.id.navigation_home);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     /** Raises the final age after creation, warning when it exceeds the racial lifespan. */
