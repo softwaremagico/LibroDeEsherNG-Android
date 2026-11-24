@@ -1,169 +1,171 @@
 # Libro de Esher NG — Android
 
-[![Licencia GNU GPL 3.0](https://img.shields.io/badge/licencia-GNU_GPL_3.0-brightgreen.svg)](LICENSE)
-[![Plataforma Android](https://img.shields.io/badge/plataforma-Android-3DDC84.svg?logo=android&logoColor=white)]()
+[![GNU GPL 3.0 License](https://img.shields.io/badge/license-GNU_GPL_3.0-brightgreen.svg)](LICENSE)
+[![Android platform](https://img.shields.io/badge/platform-Android-3DDC84.svg?logo=android&logoColor=white)]()
 [![Java 17](https://img.shields.io/badge/Java-17-orange.svg?logo=OpenJDK&logoColor=white)]()
 
-> Los latidos de su corazón retumbaban en sus oídos mientras corría a través de los largos
-> corredores. «Pixie, no..., sílfide no..., gnomo, no...», gesticulaban sus labios en voz baja
-> mientras pasaba las hojas de ese viejo libro que ahora tenía entre sus manos.
+> His heartbeat pounded in his ears as he ran through the long corridors. "Pixie, no...
+> sylph, no... gnome, no..." his lips mouthed in a low voice as he turned the pages of that old
+> book he had found long ago and now held in his hands. He knew these corridors like the back of
+> his hand, which let him find what he needed while fleeing toward the heart of his lair...
+> "Goblin, no... orc, maybe, though I need something bigger...". His fingers kept turning until,
+> finally, they stopped on one page: "War troll". His lips repeated it again, "War troll", and
+> again, and again, as if trying to make the idea real through the sound of his own voice alone.
 >
-> «Troll de guerra», dijo otra vez, cada vez más alto, como si saboreara las palabras.
->
-> — extracto de la introducción original de *El Libro de Esher*
+> — excerpt from the introduction to *El Libro de Esher*
 
-## Acerca de Libro de Esher
+## About Libro de Esher
 
-El Libro de Esher es una aplicación que facilita la creación de fichas de personajes para tus
-jugadores o la creación de personajes no jugadores en unos pocos segundos. Permite además
-personalizar razas, culturas y profesiones, y ofrece la flexibilidad necesaria para cualquier tipo
-de partida de **Rolemaster / El Libro de Esher**.
+Libro de Esher is an application that makes it easy to create character sheets for your players,
+or to create non-player characters in just a few seconds. It also lets you customize races,
+cultures and professions, giving you all the flexibility needed for any kind of
+**Rolemaster / El Libro de Esher** game.
 
-Fue desarrollado originalmente por Jorge Hortelano Otero como una aplicación de escritorio en Java,
-distribuida como software libre bajo licencia GNU. Este repositorio es la **versión Android**,
-construida sobre [LibroDeEsherNG](https://github.com/softwaremagico/LibroDeEsherNG): el mismo motor
-de reglas y modelo de creación de personajes, modernizado como biblioteca Java sin dependencias de
-AWT/Swing, y preparado para ejecutarse en un teléfono o tableta.
+It was originally developed by Jorge Hortelano Otero as a free-software desktop application,
+distributed under the GNU license. This repository is the **Android version**, built on top of
+[LibroDeEsherNG](https://github.com/softwaremagico/LibroDeEsherNG): the same rules engine and
+character creation model, modernized as a Java library without AWT/Swing dependencies and ready to
+run on a phone or tablet.
 
-Es una herramienta **no oficial**, no afiliada a los titulares de los derechos de Rolemaster.
+It is an **unofficial** tool, not affiliated with the holders of the Rolemaster rights.
 
-## Funcionalidades
+## Features
 
-### Creación y desarrollo de personajes
+### Character creation and development
 
-- Creación paso a paso con nombre, sexo, raza, cultura, profesión, nivel y edad.
-- Generación aleatoria configurable, con especialización, talentos, adiestramientos preferidos y
-  rangos sugeridos.
-- Creación guiada de cultura y profesión: idiomas raciales/regionales, aficiones, orden de armas
-  típicas, rangos de adolescencia, reinos de magia y habilidades comunes/profesionales/restringidas.
-- Desarrollo completo: características, habilidades, listas de conjuros, dotes, adiestramientos,
-  categorías, costes de armas, resistencias, equipo y trasfondo.
-- Asistente de creación para quien prefiere seguir el flujo original ventana a ventana.
+- Step-by-step creation: name, sex, race, culture, profession, level and age.
+- Configurable random generation, including specialization, talents, preferred trainings and
+  suggested ranks.
+- Guided culture and profession creation: racial/regional languages, hobbies, typical weapon
+  order, adolescent ranks, spell realms, and common/professional/restricted skills.
+- Full development: characteristics, skills, spell lists, perks, trainings, categories, weapon
+  costs, resistances, equipment and background points.
+- A creation assistant for those who prefer to follow the original window-by-window flow.
 
-### Hoja, guardado e intercambio
+### Sheet, saving and sharing
 
-- Hoja de texto y exportación a PDF en cuatro diseños: estándar, una columna, dos columnas y
-  habilidades combinadas (legacy).
-- Compartir la hoja de texto o el PDF directamente desde la app.
-- Guardado local de varios personajes con Room; carga, eliminación y cambio de personaje.
-- Importación/exportación de personajes mediante el selector de archivos de Android (SAF). El
-  formato es JSON y acepta también las instantáneas `.rlm` JSON del modelo original.
-- Importación/exportación de una **subida de nivel** aislada, con validación contra el personaje del
-  nivel anterior.
+- Text sheet and PDF export in four layouts: standard, one column, two columns and combined
+  skills (legacy).
+- Share the text sheet or the PDF straight from the app.
+- Local storage of multiple characters with Room; load, delete and switch characters.
+- Character import/export through the Android Storage Access Framework (SAF). The format is JSON
+  and the legacy JSON `.rlm` snapshots are accepted as well.
+- Import/export of an isolated **level-up**, validated against the character at the previous
+  level.
 
-### Opciones y módulos
+### Options and modules
 
-- Panel de opciones de reglas: armas de fuego, poderes Chi, magia, listas oscuras, dotes que
-  consumen puntos de trasfondo, coste máximo por categoría y otros detalles del reglamento.
-- Activación/desactivación de módulos de reglas y selección del diseño de PDF.
-- Idioma del catálogo y de las reglas (español/inglés) desde Ajustes.
-- Ayuda integrada con el catálogo de razas, culturas, profesiones, habilidades, dotes y hechizos.
+- Rules options panel: firearms, Chi powers, magic, dark spell lists, perks that consume
+  background points, maximum category cost and other rule details.
+- Enable/disable rule modules and choose the PDF layout.
+- Catalog and rules language (Spanish/English) from Settings.
+- Built-in wiki with the catalog of races, cultures, professions, skills, perks and spells.
 
-## Requisitos previos
+## Requirements
 
-- **JDK 17** (el wrapper de Gradle 9.6 está incluido en el repositorio).
-- **Android SDK 37** instalado y `local.properties` apuntando a él (`sdk.dir=...`).
-- Dispositivo o emulador con **API 31 o superior** para ejecutar la app y los tests instrumentados.
-- **Maven 3.9+** para publicar los módulos de LibroDeEsherNG en el repositorio Maven local.
+- **JDK 17** (the Gradle 9.6 wrapper is included in the repository).
+- **Android SDK 37** installed and `local.properties` pointing to it (`sdk.dir=...`).
+- A device or emulator with **API 31 or higher** to run the app and the instrumented tests.
+- **Maven 3.9+** to publish the LibroDeEsherNG modules to the local Maven repository.
 
-La app depende de `librodeesher-rules`, `librodeesher-random` y `librodeesher-pdf`, que se resuelven
-desde `mavenLocal()`. Además, OpenPDF 1.x necesita en Android las dependencias `android-awt` y StAX,
-ya declaradas en `app/build.gradle`.
+The app depends on `librodeesher-rules`, `librodeesher-random` and `librodeesher-pdf`, resolved
+from `mavenLocal()`. In addition, OpenPDF 1.x needs the `android-awt` and StAX dependencies on
+Android; both are already declared in `app/build.gradle`.
 
-## Compilación e instalación
+## Building and installing
 
-Primero publica el motor de reglas NG en tu Maven local (se recomienda mantener ambos repositorios
-como hermanos):
+First publish the NG rules engine to your local Maven repository (keeping both repositories as
+siblings is recommended):
 
 ```bash
 cd ../LibroDeEsherNG
 mvn install
 ```
 
-Después compila e instala la app:
+Then build and install the app:
 
 ```bash
 cd ../LibroDeEsherNG-Android
-./gradlew assembleDebug        # genera app/build/outputs/apk/debug/app-debug.apk
-./gradlew installDebug         # instala en el dispositivo/emulador conectado
+./gradlew assembleDebug        # produces app/build/outputs/apk/debug/app-debug.apk
+./gradlew installDebug         # installs it on the connected device/emulator
 ```
 
-Para generar un APK de release (sin ofuscar, `minifyEnabled=false`):
+To build a release APK (not obfuscated, `minifyEnabled=false`):
 
 ```bash
 ./gradlew assembleRelease
 ```
 
-## Ejecución
+## Usage
 
-Abre la app y usa la barra inferior para alternar entre **Personaje**, **Asistente**, **Aleatorio**,
-**Características**, **Hoja** y **Ayuda**. Desde el menú superior puedes crear, guardar y cargar personajes, acceder al
-panel de Desarrollo (cultura, profesión, adiestramientos, habilidades, conjuros, dotes, historial,
-equipo, categorías y costes de armas), cambiar las opciones, el idioma o ver «Acerca de».
+Open the app and use the bottom bar to switch between **Character**, **Assistant**, **Random**,
+**Characteristics**, **Sheet** and **Help**. The top menu lets you create, save and load
+characters, open the Development panel (culture, profession, trainings, skills, spells, perks,
+history, equipment, categories and weapon costs), change the options, switch the language or read
+the About screen.
 
-La pestaña **Personaje** muestra también el resto de ventanas como pestañas deslizables, para que
-puedas revisar y editar todas las secciones sin salir del personaje.
+The **Character** tab also shows the rest of the sections as swipeable tabs, so you can review and
+edit everything without leaving your character.
 
-## Subida de nivel remota
+## Remote level-up
 
-Igual que en la aplicación original de escritorio, el jugador y el director de juego pueden seguir
-un flujo seguro para subir de nivel en casa:
+As in the original desktop application, the player and the game master can follow a safe workflow
+to level up at home:
 
-1. El DJ exporta el personaje actual y se lo envía al jugador.
-2. El jugador sube el nivel con la app y exporta **solamente la subida** (un archivo JSON de nivel).
-   No debe enviar el personaje completo.
-3. El DJ importa esa subida sobre su copia del personaje. La app reconstruye el personaje del nivel
-   anterior y valida que el archivo corresponde exactamente a esa base antes de aplicarlo.
-4. Para la siguiente subida, el DJ debe volver a enviar su personaje actualizado al jugador.
+1. The GM exports the current character and sends it to the player.
+2. The player levels up in the app and exports **only the level-up** (a level JSON file). The full
+   character must not be sent back.
+3. The GM imports that level-up on top of their copy of the character. The app rebuilds the
+   previous-level character and verifies that the file matches that exact base before applying it.
+4. For the next level-up, the GM must send their updated character to the player again.
 
-Nunca se debe sustituir la copia del DJ por la copia del jugador: la primera es la referencia de
-confianza, exactamente como se describe en el manual original.
+The GM's copy must never be replaced with the player's copy: the former is the trusted reference,
+exactly as described in the original manual.
 
-## Pruebas
+## Tests
 
 ```bash
-./gradlew testDebugUnitTest      # tests JVM (persistencia, gestor de personajes, exportación)
-./gradlew connectedDebugAndroidTest  # tests instrumentados UI-only (requiere dispositivo)
+./gradlew testDebugUnitTest      # JVM tests (persistence, character manager, export)
+./gradlew connectedDebugAndroidTest  # UI-only instrumented tests (requires a device)
 ```
 
-Los tests instrumentados comprueban flujos completos exclusivamente a través de la interfaz:
-creación de los siete personajes de referencia y revisión de **todas** sus ventanas, verificación
-del PDF exportado, subida de nivel, importación/exportación, opciones, historial y dotes. La
-generación aleatoria y el renderizado de PDF son lentos en emulador; los tests amplían los timeouts
-de Espresso hasta 15 minutos por este motivo.
+The instrumented tests exercise complete flows exclusively through the UI: creation of the seven
+reference characters with a review of **every** window, verification of the exported PDF,
+level-up, import/export, options, history and perks. Random generation and PDF rendering are slow
+in an emulator, so Espresso timeouts are extended to 15 minutes.
 
-La cobertura JVM incluye regresión de reglas y PDF frente a las fichas legacy del motor NG.
+JVM coverage includes rules and PDF regression against the legacy sheets of the NG engine.
 
-## Arquitectura
+## Architecture
 
-- Proyecto Gradle de un único módulo Android (`app`), Kotlin-free, Java 17 con desugaring.
-- UI construida con Fragmentos, Navigation Component, ViewPager2, Material Components y Room.
-- `CharacterManager` mantiene el personaje seleccionado en sesión; `OptionsHandler` persiste las
-  opciones de reglas y módulos en `SharedPreferences`.
-- `CharacterFileHelper` centraliza la importación/exportación de personajes y niveles mediante
+- Single-module Android Gradle project (`app`), Kotlin-free, Java 17 with desugaring.
+- UI built with Fragments, Navigation Component, ViewPager2, Material Components and Room.
+- `CharacterManager` keeps the selected character in session; `OptionsHandler` persists rules and
+  module options in `SharedPreferences`.
+- `CharacterFileHelper` centralizes character/level import and export through
   `ActivityResultContracts` (SAF).
-- Todo el cálculo de reglas, generación aleatoria y exportación a PDF se delega a los módulos NG;
-  la app no reimplementa reglas.
+- All rules calculation, random generation and PDF export are delegated to the NG modules; the app
+  does not reimplement any rules.
 
-## Historial de versiones
+## Version history
 
-### 1.0.0 (en desarrollo)
+### 1.0.0 (in development)
 
-- Paridad con la aplicación original: opciones de reglas y módulos, creación guiada de cultura y
-  profesión, selector de adiestramientos e historial/dotes interactivos.
-- Importación/exportación de personajes y de subidas de nivel, con el flujo seguro DJ/jugador.
-- Cuatro diseños de PDF, compartición de hoja y PDF, guardado múltiple con Room.
-- Cobertura UI-only de los personajes de referencia y regresión de PDF frente a las fichas legacy.
+- Parity with the original application: rules/module options, guided culture and profession
+  creation, training selector, and interactive history/perks.
+- Character and level-up import/export, with the safe GM/player workflow.
+- Four PDF layouts, text/PDF sharing and multiple-character storage with Room.
+- UI-only coverage of the reference characters and PDF regression against the legacy sheets.
 
-## Notas
+## Notes
 
-- Iconos y fuentes incluidos en el proyecto bajo sus licencias correspondientes.
-- Rolemaster es una marca registrada de Iron Crown Enterprises / Aurigas Aldebaron.
-- Licencia GNU General Public License v3; el texto completo está en [`LICENSE`](LICENSE).
+- Icons and fonts are included in the project under their respective licenses.
+- Rolemaster is a registered trademark of Iron Crown Enterprises / Aurigas Aldebaron.
+- Licensed under the GNU General Public License v3; the full text is in [`LICENSE`](LICENSE).
 
-## Más información
+## More information
 
-- Aplicación original: https://github.com/softwaremagico/LibroDeEsher
-- Motor de reglas NG: https://github.com/softwaremagico/LibroDeEsherNG
-- Esta app Android: https://github.com/softwaremagico/LibroDeEsherNG-Android
-- Bugs, ideas y sugerencias: softwaremagico@gmail.com
+- Original application: https://github.com/softwaremagico/LibroDeEsher
+- NG rules engine: https://github.com/softwaremagico/LibroDeEsherNG
+- This Android app: https://github.com/softwaremagico/LibroDeEsherNG-Android
+- Bugs, ideas and suggestions: softwaremagico@gmail.com
