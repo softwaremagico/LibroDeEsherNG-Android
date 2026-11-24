@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/random_preferences_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -35,6 +36,83 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="0" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/random_final_level" />
+
+        <EditText
+            android:id="@+id/random_final_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/random_final_level_hint"
+            android:inputType="number" />
+
+        <CheckBox
+            android:id="@+id/random_perks_enabled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/random_perks_enabled" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/random_category_ranks" />
+
+        <EditText
+            android:id="@+id/random_category_ranks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/random_ranks_hint"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/random_skill_ranks" />
+
+        <EditText
+            android:id="@+id/random_skill_ranks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/random_ranks_hint"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/random_trainings" />
+
+        <EditText
+            android:id="@+id/random_trainings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/random_list_hint"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/random_suggested_perks" />
+
+        <EditText
+            android:id="@+id/random_suggested_perks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/random_list_hint"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/random_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
 
         <Button
             android:id="@+id/random_apply_prefs"

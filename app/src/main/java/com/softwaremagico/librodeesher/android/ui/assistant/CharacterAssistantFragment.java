@@ -200,7 +200,7 @@ public class CharacterAssistantFragment extends Fragment {
                 break;
             case 6:
                 showNumberDialog(R.string.assistant_step_level, 1, MAX_LEVEL,
-                        Math.max(1, character.getLevel()), level -> {
+                        RandomPreferencesHandler.getInstance(requireContext()).getFinalLevel(), level -> {
                             generated = false;
                             finishCharacter(level);
                         }, false);
@@ -368,10 +368,12 @@ public class CharacterAssistantFragment extends Fragment {
                 return;
             }
             if (!generated) {
+                final RandomPreferencesHandler preferences =
+                        RandomPreferencesHandler.getInstance(requireContext());
                 final RandomCharacterPlayer generator = new RandomCharacterPlayer(character, finalLevel);
-                generator.setSpecializationLevel(
-                        RandomPreferencesHandler.getInstance(requireContext()).getSpecializationLevel());
+                preferences.configure(generator);
                 generator.createRandomValues();
+                preferences.afterGeneration(character);
                 generated = true;
             }
             CharacterManager.getInstance().setSelectedCharacter(character);

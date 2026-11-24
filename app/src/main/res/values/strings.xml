@@ -313,5 +313,17 @@
     <string name="random_apply_preferences">Aplicar preferencias</string>
     <string name="random_preferences_saved">Preferencias aleatorias guardadas</string>
     <string name="random_preferences_error">No se pudieron guardar las preferencias</string>
+    <string name="random_final_level">Nivel final</string>
+    <string name="random_final_level_hint">1–20</string>
+    <string name="random_perks_enabled">Generar dotes aleatorias</string>
+    <string name="random_category_ranks">Rangos deseados por categoría (id:rangos,…)</string>
+    <string name="random_skill_ranks">Rangos deseados por habilidad (id:rangos,…)</string>
+    <string name="random_ranks_hint">ej.arms:5,combat:3</string>
+    <string name="random_trainings">Adiestramientos preferidos (ids separados por comas)</string>
+    <string name="random_suggested_perks">Dotes preferidas (ids separados por comas)</string>
+    <string name="random_list_hint">id1,id2</string>
+    <string name="random_progress_summary">Nivel %1$d · especialización %2$d · dotes %3$s</string>
+    <string name="random_yes">sí</string>
+    <string name="random_no">no</string>
     <string name="character_new">Nuevo Personaje</string>
 </resources>

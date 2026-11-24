@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.core.CharacterSummaryBuilder;
+import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.android.ui.components.ElementAdapter;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
@@ -81,7 +82,7 @@ public class CharacterCreationFragment extends Fragment {
         levelPicker.setMinValue(1);
         levelPicker.setMaxValue(MAX_LEVEL);
         levelPicker.setWrapSelectorWheel(false);
-        levelPicker.setValue(1);
+        levelPicker.setValue(RandomPreferencesHandler.getInstance(requireContext()).getFinalLevel());
         sexes = Arrays.asList(SexType.values());
 
         try {
@@ -246,7 +247,7 @@ public class CharacterCreationFragment extends Fragment {
         try {
             final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
             applySelections(character, true);
-            new RandomCharacterPlayer(character, levelPicker.getValue()).createRandomValues();
+            generate(character, levelPicker.getValue());
             afterGeneration(character);
         } catch (Exception exception) {
             showError(exception);
@@ -265,7 +266,7 @@ public class CharacterCreationFragment extends Fragment {
             character.setRaceId(race.getId());
             character.setCultureId(culture.getId());
             character.setProfessionId(profession.getId());
-            new RandomCharacterPlayer(character, levelPicker.getValue()).createRandomValues();
+            generate(character, levelPicker.getValue());
             selectById(raceSpinner, races, race.getId());
             selectById(cultureSpinner, cultures, culture.getId());
             selectById(professionSpinner, professions, profession.getId());
@@ -295,6 +296,15 @@ public class CharacterCreationFragment extends Fragment {
         if (profession != null) {
             character.setProfessionId(profession.getId());
         }
+    }
+
+    private void generate(CharacterPlayer character, int level) throws InvalidXmlElementException {
+        final RandomPreferencesHandler preferences =
+                RandomPreferencesHandler.getInstance(requireContext());
+        final RandomCharacterPlayer generator = new RandomCharacterPlayer(character, level);
+        preferences.configure(generator);
+        generator.createRandomValues();
+        preferences.afterGeneration(character);
     }
 
     private void afterGeneration(CharacterPlayer character) {
@@ -330,7 +340,7 @@ public class CharacterCreationFragment extends Fragment {
         CharacterManager.getInstance().resetCharacter();
         nameInput.setText("");
         ageInput.setText("");
-        levelPicker.setValue(1);
+        levelPicker.setValue(RandomPreferencesHandler.getInstance(requireContext()).getFinalLevel());
         if (raceSpinner.getAdapter() != null && raceSpinner.getAdapter().getCount() > 0) {
             raceSpinner.setSelection(0);
         }

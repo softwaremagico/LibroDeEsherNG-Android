@@ -66,10 +66,13 @@ public class RandomCharacterEnhancedFragment extends Fragment {
     private void generateRandomCharacter() {
         try {
             final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
-            final RandomCharacterPlayer generator = new RandomCharacterPlayer(character);
-            generator.setSpecializationLevel(
-                    RandomPreferencesHandler.getInstance(requireContext()).getSpecializationLevel());
+            final RandomPreferencesHandler preferences =
+                    RandomPreferencesHandler.getInstance(requireContext());
+            final RandomCharacterPlayer generator =
+                    new RandomCharacterPlayer(character, preferences.getFinalLevel());
+            preferences.configure(generator);
             generator.createRandomValues();
+            preferences.afterGeneration(character);
             lastCharacter = character;
             CharacterManager.getInstance().setSelectedCharacter(character);
             summaryText.setText(CharacterSummaryBuilder.build(character));
