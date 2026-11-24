@@ -50,6 +50,7 @@ public class CharacteristicsFragment extends Fragment {
     private TextView emptyText;
     private LinearLayout container;
     private TextView pointsText;
+    private Button randomButton;
     private Button confirmButton;
     private boolean generating;
 
@@ -66,7 +67,11 @@ public class CharacteristicsFragment extends Fragment {
         emptyText = view.findViewById(R.id.characteristics_empty);
         container = view.findViewById(R.id.characteristics_container);
         pointsText = view.findViewById(R.id.characteristics_points);
+        randomButton = view.findViewById(R.id.characteristics_random);
         confirmButton = view.findViewById(R.id.characteristics_confirm);
+        if (randomButton != null) {
+            randomButton.setOnClickListener(v -> randomizeCharacteristics());
+        }
         if (confirmButton != null) {
             confirmButton.setOnClickListener(v -> confirmCharacteristics());
         }
@@ -88,6 +93,9 @@ public class CharacteristicsFragment extends Fragment {
             }
             if (confirmButton != null) {
                 confirmButton.setVisibility(View.GONE);
+            }
+            if (randomButton != null) {
+                randomButton.setVisibility(View.GONE);
             }
             container.setVisibility(View.GONE);
             return;
@@ -128,6 +136,10 @@ public class CharacteristicsFragment extends Fragment {
                     confirmButton.setEnabled(spent <= total);
                 }
             }
+            if (randomButton != null) {
+                randomButton.setVisibility(View.VISIBLE);
+                randomButton.setEnabled(!character.isCharacteristicsConfirmed());
+            }
         } catch (Exception ignored) {
             if (pointsText != null) {
                 pointsText.setText("");
@@ -135,6 +147,25 @@ public class CharacteristicsFragment extends Fragment {
             if (confirmButton != null) {
                 confirmButton.setVisibility(View.GONE);
             }
+            if (randomButton != null) {
+                randomButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /** Legacy "Aleatorio" button: spends the creation points using the profession preferences. */
+    private void randomizeCharacteristics() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        if (character.isCharacteristicsConfirmed()) {
+            return;
+        }
+        try {
+            RandomCharacterPlayer.setRandomCharacteristics(character, 0);
+            render();
+            Toast.makeText(requireContext(), R.string.accept, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot randomize characteristics", exception);
+            Toast.makeText(requireContext(), R.string.error_creating_character, Toast.LENGTH_SHORT).show();
         }
     }
 

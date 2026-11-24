@@ -21,6 +21,12 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/characteristics_random"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/characteristics_random" />
+
+        <Button
             android:id="@+id/characteristics_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -26,6 +26,14 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/item_perk_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:text="@string/perks_options"
+        android:visibility="gone" />
+
+    <Button
         android:id="@+id/item_perk_action"
         android:layout_width="44dp"
         android:layout_height="wrap_content"

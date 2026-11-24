@@ -108,6 +108,7 @@
     <string name="accept">Aceptar</string>
     <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
+    <string name="characteristics_random">Aleatorio</string>
 
     <!-- Wiki / help -->
     <string name="wiki_title">Ayuda</string>
@@ -179,6 +180,12 @@
     <string name="perks_available_header">Disponibles</string>
     <string name="perks_empty">No hay dotes disponibles.</string>
     <string name="perks_error">No se pudo actualizar la dote.</string>
+    <string name="perks_options">Opciones</string>
+    <string name="perks_choice_title">Opciones de la dote</string>
+    <string name="perks_choice_flexible_title">Elige al menos una opción</string>
+    <string name="perks_weakness_title">Elige un defecto</string>
+    <string name="perks_no_weakness">Ninguna</string>
+    <string name="perks_with_weakness">Defecto: %1$s</string>
 
     <!-- Resistances / combat -->
     <string name="resistances_combat_header">Combate</string>

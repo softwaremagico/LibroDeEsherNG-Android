@@ -18,10 +18,14 @@ import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
+import com.softwaremagico.librodeesher.Element;
+import com.softwaremagico.librodeesher.android.ui.components.ChoiceDialogs;
 import com.softwaremagico.librodeesher.android.ui.components.ElementAdapter;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.perk.Perk;
+import com.softwaremagico.librodeesher.perk.PerkChoiceGrant;
+import com.softwaremagico.librodeesher.perk.PerkChoiceScope;
 import com.softwaremagico.librodeesher.perk.SelectedPerk;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
@@ -156,12 +160,25 @@ public class PerksFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_perk, container, false);
         final TextView nameView = row.findViewById(R.id.item_perk_name);
         final TextView infoView = row.findViewById(R.id.item_perk_info);
+        final Button optionsButton = row.findViewById(R.id.item_perk_options);
         final Button action = row.findViewById(R.id.item_perk_action);
+        final Perk perk = RulesCatalog.getInstance().getPerk(selectedPerk.getPerkId());
 
+        String info = perkInfo(selectedPerk.getPerkId(), selectedPerk.isRandom());
+        if (selectedPerk.getWeaknessId() != null) {
+            info += " · " + getString(R.string.perks_with_weakness, displayNameForId(selectedPerk.getWeaknessId()));
+        }
         nameView.setText(perkName(selectedPerk.getPerkId()));
-        infoView.setText(perkInfo(selectedPerk.getPerkId(), selectedPerk.isRandom()));
+        infoView.setText(info);
         nameView.setOnClickListener(v -> showDescription(selectedPerk.getPerkId()));
         infoView.setOnClickListener(v -> showDescription(selectedPerk.getPerkId()));
+
+        final boolean choiceGrants = perk != null && !perk.getChoiceGrants().isEmpty();
+        final boolean weaknessPossible = canPairWeakness(perk) && !character.hasWeakness(selectedPerk.getPerkId());
+        if (choiceGrants || weaknessPossible) {
+            optionsButton.setVisibility(View.VISIBLE);
+            optionsButton.setOnClickListener(v -> resolvePerkRequirements(selectedPerk.getPerkId()));
+        }
 
         action.setText("-");
         action.setEnabled(!selectedPerk.isRandom());
@@ -174,7 +191,9 @@ public class PerksFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_perk, container, false);
         final TextView nameView = row.findViewById(R.id.item_perk_name);
         final TextView infoView = row.findViewById(R.id.item_perk_info);
+        final Button optionsButton = row.findViewById(R.id.item_perk_options);
         final Button action = row.findViewById(R.id.item_perk_action);
+        optionsButton.setVisibility(View.GONE);
 
         final Integer cost = perkCost(perkId);
         nameView.setText(perkName(perkId));
@@ -207,7 +226,7 @@ public class PerksFragment extends Fragment {
     private void addPerk(String perkId) {
         try {
             if (CharacterManager.getInstance().getSelectedCharacter().addAvailablePerk(perkId)) {
-                render();
+                resolvePerkRequirements(perkId);
             } else {
                 Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
             }
@@ -215,6 +234,221 @@ public class PerksFragment extends Fragment {
             AppLog.error("Cannot add perk", exception);
             Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /** Legacy "Opciones" flow: pair a weakness, then resolve every choice grant of the perk. */
+    private void resolvePerkRequirements(String perkId) {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        try {
+            final Perk perk = RulesCatalog.getInstance().getPerk(perkId);
+            if (perk == null) {
+                return;
+            }
+            if (canPairWeakness(perk) && !character.hasWeakness(perkId)) {
+                final List<String> weaknessIds = character.getAvailableWeaknessIds(perkId);
+                if (!weaknessIds.isEmpty()) {
+                    final List<String> labels = new ArrayList<>();
+                    labels.add(getString(R.string.perks_no_weakness));
+                    labels.addAll(displayNames(weaknessIds));
+                    ChoiceDialogs.selectOne(requireContext(), getString(R.string.perks_weakness_title), labels,
+                            label -> {
+                                if (!getString(R.string.perks_no_weakness).equals(label)) {
+                                    final int index = labels.indexOf(label) - 1;
+                                    try {
+                                        character.addWeakness(perkId, weaknessIds.get(index));
+                                    } catch (InvalidXmlElementException exception) {
+                                        AppLog.error("Cannot pair weakness", exception);
+                                    }
+                                }
+                                resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0);
+                            });
+                    return;
+                }
+            }
+            resolveChoiceGrants(character, perkId, perk.getChoiceGrants(), 0);
+        } catch (Exception exception) {
+            AppLog.error("Cannot resolve perk options", exception);
+            render();
+        }
+    }
+
+    private boolean canPairWeakness(Perk perk) {
+        return perk != null && OptionsHandler.getInstance(requireContext()).isPerksCostBackgroundPoints()
+                && perk.getCost() != null && perk.getCost() > 0;
+    }
+
+    /** Resolves grants sequentially so only one selection dialog is visible at a time. */
+    private void resolveChoiceGrants(CharacterPlayer character, String perkId, List<PerkChoiceGrant> grants,
+                                     int index) {
+        if (index >= grants.size()) {
+            render();
+            return;
+        }
+        final PerkChoiceGrant grant = grants.get(index);
+        try {
+            if (grant.getCategoryId() != null || grant.getSkillId() != null) {
+                character.applyPerkChoiceGrant(perkId, index, grant,
+                        grant.getCategoryId() != null ? grant.getCategoryId() : grant.getSkillId());
+                resolveChoiceGrants(character, perkId, grants, index + 1);
+                return;
+            }
+            // A successful call with no candidate means the grant was already resolved; an
+            // unresolved choice rejects a null candidate without recording a decision.
+            try {
+                character.applyPerkChoiceGrant(perkId, index, grant, (String) null);
+                resolveChoiceGrants(character, perkId, grants, index + 1);
+                return;
+            } catch (RuntimeException alreadyUnresolved) {
+                // The player still has to choose below.
+            }
+            final List<String> optionIds = choiceScopeIds(character, grant.getScope());
+            if (optionIds.isEmpty()) {
+                resolveChoiceGrants(character, perkId, grants, index + 1);
+                return;
+            }
+            final List<String> optionLabels = displayNames(optionIds);
+            final int choices = grant.getOptionsToChoose() == null ? 1 : grant.getOptionsToChoose();
+            if (choices == -1) {
+                showFlexibleChoiceDialog(character, perkId, grants, index, grant, optionIds, optionLabels);
+            } else {
+                ChoiceDialogs.selectMany(requireContext(), getString(R.string.perks_choice_title),
+                        optionLabels, choices, selectedLabels -> {
+                            try {
+                                character.applyPerkChoiceGrant(perkId, index, grant,
+                                        idsFromLabels(optionIds, optionLabels, selectedLabels));
+                                resolveChoiceGrants(character, perkId, grants, index + 1);
+                            } catch (Exception exception) {
+                                AppLog.error("Cannot apply perk choice", exception);
+                                Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+                                render();
+                            }
+                        });
+            }
+        } catch (Exception exception) {
+            AppLog.error("Cannot resolve perk choice grant", exception);
+            resolveChoiceGrants(character, perkId, grants, index + 1);
+        }
+    }
+
+    private void showFlexibleChoiceDialog(CharacterPlayer character, String perkId,
+                                          List<PerkChoiceGrant> grants, int index, PerkChoiceGrant grant,
+                                          List<String> optionIds, List<String> optionLabels) {
+        final boolean[] checked = new boolean[optionIds.size()];
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.perks_choice_flexible_title)
+                .setMultiChoiceItems(optionLabels.toArray(new String[0]), checked,
+                        (source, which, isChecked) -> checked[which] = isChecked)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.accept, (source, which) -> {
+                    final List<String> selectedIds = new ArrayList<>();
+                    for (int i = 0; i < checked.length; i++) {
+                        if (checked[i]) {
+                            selectedIds.add(optionIds.get(i));
+                        }
+                    }
+                    if (selectedIds.isEmpty()) {
+                        Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    try {
+                        character.applyPerkChoiceGrant(perkId, index, grant, selectedIds);
+                        resolveChoiceGrants(character, perkId, grants, index + 1);
+                    } catch (Exception exception) {
+                        AppLog.error("Cannot apply flexible perk choice", exception);
+                        Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+    }
+
+    private List<String> choiceScopeIds(CharacterPlayer character, PerkChoiceScope scope)
+            throws InvalidXmlElementException {
+        final List<String> ids = new ArrayList<>();
+        if (scope == null) {
+            return ids;
+        }
+        switch (scope) {
+            case ANY_CATEGORY:
+                for (final com.softwaremagico.librodeesher.category.Category category
+                        : RulesCatalog.getInstance().getCategories()) {
+                    ids.add(category.getId());
+                }
+                break;
+            case ANY_WEAPON_CATEGORY:
+                for (final com.softwaremagico.librodeesher.category.Category category
+                        : RulesCatalog.getInstance().getCategories()) {
+                    if (CharacterPlayer.isWeaponCategoryId(category.getId())) {
+                        ids.add(category.getId());
+                    }
+                }
+                break;
+            case ANY_SKILL:
+                for (final com.softwaremagico.librodeesher.skill.Skill skill
+                        : RulesCatalog.getInstance().getSkills()) {
+                    ids.add(skill.getId());
+                }
+                break;
+            case ANY_WEAPON_SKILL:
+                for (final com.softwaremagico.librodeesher.skill.Skill skill
+                        : RulesCatalog.getInstance().getSkills()) {
+                    if (skill.getCategoryId() != null && skill.getCategoryId().startsWith("weapons")) {
+                        ids.add(skill.getId());
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return ids;
+    }
+
+    private List<String> displayNames(List<String> ids) {
+        final List<String> labels = new ArrayList<>();
+        for (final String id : ids) {
+            labels.add(displayNameForId(id));
+        }
+        return labels;
+    }
+
+    private String displayNameForId(String id) {
+        final Element[] candidates = new Element[3];
+        try {
+            candidates[0] = RulesCatalog.getInstance().getCategory(id);
+        } catch (Exception ignored) {
+            // Not a category id.
+        }
+        try {
+            candidates[1] = RulesCatalog.getInstance().getSkill(id);
+        } catch (Exception ignored) {
+            // Not a skill id.
+        }
+        try {
+            candidates[2] = RulesCatalog.getInstance().getPerk(id);
+        } catch (Exception ignored) {
+            // Not a perk id.
+        }
+        for (final Element candidate : candidates) {
+            if (candidate != null) {
+                final String name = ElementAdapter.displayName(candidate);
+                if (name != null && !name.isEmpty()) {
+                    return name;
+                }
+            }
+        }
+        return id;
+    }
+
+    private List<String> idsFromLabels(List<String> ids, List<String> labels, List<String> selectedLabels) {
+        final List<String> remainingLabels = new ArrayList<>(labels);
+        final List<String> selectedIds = new ArrayList<>();
+        for (final String label : selectedLabels) {
+            final int index = remainingLabels.indexOf(label);
+            if (index >= 0) {
+                selectedIds.add(ids.get(index));
+                remainingLabels.remove(index);
+            }
+        }
+        return selectedIds;
     }
 
     private void showDescription(String perkId) {
