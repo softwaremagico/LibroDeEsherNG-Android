@@ -11,10 +11,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
+import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.android.ui.components.ElementAdapter;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
@@ -24,6 +26,7 @@ import com.softwaremagico.librodeesher.perk.SelectedPerk;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,7 +38,9 @@ import java.util.List;
 public class PerksFragment extends Fragment {
 
     private TextView remainingText;
+    private TextView historyPointsText;
     private LinearLayout container;
+    private boolean sortByCost;
 
     @Nullable
     @Override
@@ -48,7 +53,17 @@ public class PerksFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         remainingText = view.findViewById(R.id.perks_remaining);
+        historyPointsText = view.findViewById(R.id.perks_history_points);
         container = view.findViewById(R.id.perks_container);
+        view.findViewById(R.id.perks_sort_name).setOnClickListener(v -> {
+            sortByCost = false;
+            render();
+        });
+        view.findViewById(R.id.perks_sort_cost).setOnClickListener(v -> {
+            sortByCost = true;
+            render();
+        });
+        view.findViewById(R.id.perks_random).setOnClickListener(v -> addRandomPerks());
     }
 
     @Override
@@ -77,6 +92,12 @@ public class PerksFragment extends Fragment {
             return;
         }
         remainingText.setText(getString(R.string.perks_remaining, remaining == null ? 0 : remaining));
+        try {
+            historyPointsText.setText(getString(R.string.perks_history_points,
+                    character.getRemainingBackgroundPoints()));
+        } catch (InvalidXmlElementException exception) {
+            historyPointsText.setText(R.string.sheet_no_character);
+        }
 
         if (!selected.isEmpty()) {
             container.addView(header(getString(R.string.perks_selected_header)));
@@ -97,7 +118,10 @@ public class PerksFragment extends Fragment {
             container.addView(empty);
             return;
         }
-        available.sort(Comparator.comparing(this::perkName));
+        available.sort(sortByCost
+                ? Comparator.comparing(this::perkCost, Comparator.nullsLast(Integer::compareTo))
+                        .thenComparing(this::perkName)
+                : Comparator.comparing(this::perkName));
         for (final String perkId : available) {
             try {
                 addAvailableRow(character, perkId, remaining == null ? 0 : remaining);
@@ -136,6 +160,8 @@ public class PerksFragment extends Fragment {
 
         nameView.setText(perkName(selectedPerk.getPerkId()));
         infoView.setText(perkInfo(selectedPerk.getPerkId(), selectedPerk.isRandom()));
+        nameView.setOnClickListener(v -> showDescription(selectedPerk.getPerkId()));
+        infoView.setOnClickListener(v -> showDescription(selectedPerk.getPerkId()));
 
         action.setText("-");
         action.setEnabled(!selectedPerk.isRandom());
@@ -153,6 +179,8 @@ public class PerksFragment extends Fragment {
         final Integer cost = perkCost(perkId);
         nameView.setText(perkName(perkId));
         infoView.setText(perkInfo(perkId, false));
+        nameView.setOnClickListener(v -> showDescription(perkId));
+        infoView.setOnClickListener(v -> showDescription(perkId));
 
         action.setText("+");
         action.setEnabled(cost == null || cost <= remaining);
@@ -185,6 +213,63 @@ public class PerksFragment extends Fragment {
             }
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot add perk", exception);
+            Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showDescription(String perkId) {
+        try {
+            final Perk perk = RulesCatalog.getInstance().getPerk(perkId);
+            final String description = perk == null || perk.getDescription() == null
+                    ? "" : perk.getDescription().getTranslatedText();
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(perkName(perkId))
+                    .setMessage(description == null || description.isEmpty()
+                            ? getString(R.string.perks_cost, perkCost(perkId) == null ? 0 : perkCost(perkId))
+                            : description)
+                    .setPositiveButton(R.string.accept, null)
+                    .show();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot show perk description", exception);
+            Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /** Selects a few affordable perks exactly as the legacy "Dotes aleatorias" button did. */
+    private void addRandomPerks() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        try {
+            final List<String> candidates = new ArrayList<>(character.getAvailablePerkIds());
+            Collections.shuffle(candidates);
+            final boolean backgroundBudget = OptionsHandler.getInstance(requireContext())
+                    .isPerksCostBackgroundPoints();
+            int added = 0;
+            for (final String perkId : candidates) {
+                if (added >= 3) {
+                    break;
+                }
+                final int before = character.getRemainingBackgroundPoints();
+                character.addPerk(perkId);
+                if (character.getSelectedPerks().stream()
+                        .noneMatch(selected -> selected.getPerkId().equals(perkId))) {
+                    continue;
+                }
+                if (backgroundBudget && character.getRemainingBackgroundPoints() < 0) {
+                    character.removePerk(perkId);
+                    continue;
+                }
+                character.setPerkAsRandom(perkId, true);
+                added++;
+                if (before <= 0) {
+                    break;
+                }
+            }
+            render();
+            if (added == 0) {
+                Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception exception) {
+            AppLog.error("Cannot add random perks", exception);
             Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
         }
     }

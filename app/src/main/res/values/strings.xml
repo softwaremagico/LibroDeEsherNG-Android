@@ -129,6 +129,11 @@
     <string name="perks_remaining">Puntos de dotes restantes: %1$d</string>
     <string name="perks_cost">Coste %1$d</string>
     <string name="perks_random">Aleatoria</string>
+    <string name="perks_history_points">Puntos de Historial: %1$d</string>
+    <string name="perks_sort_name">Ordenar por nombre</string>
+    <string name="perks_sort_cost">Ordenar por coste</string>
+    <string name="perks_add_random">Dotes aleatorias</string>
+    <string name="perks_description">Descripción del talento</string>
     <string name="perks_selected_header">Seleccionadas</string>
     <string name="perks_available_header">Disponibles</string>
     <string name="perks_empty">No hay dotes disponibles.</string>
@@ -152,6 +157,14 @@
     <string name="history_text_header">Historial</string>
     <string name="history_bonus">+%1$d</string>
     <string name="history_roll">%1$d → %2$d</string>
+    <string name="history_show_all">Ver todas</string>
+    <string name="history_add_skill">Añadir habilidad</string>
+    <string name="history_add_category">Añadir categoría</string>
+    <string name="history_add_language">Añadir idioma</string>
+    <string name="history_up_characteristic">Mejorar %1$s</string>
+    <string name="history_magic_items_header">Objetos mágicos</string>
+    <string name="history_add_magic_item">Añadir objeto mágico</string>
+    <string name="history_no_options">No hay opciones disponibles.</string>
 
     <!-- Equipment -->
     <string name="equipment_standard_header">Equipo</string>
