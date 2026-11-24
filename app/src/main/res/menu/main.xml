@@ -75,6 +75,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_random_preferences"
+        android:title="@string/random_config"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
         app:showAsAction="never" />

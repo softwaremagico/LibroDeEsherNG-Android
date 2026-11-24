@@ -12,12 +12,21 @@ public final class AppLog {
 
     private static final String TAG = "LibroDeEsher";
 
+    private static volatile boolean debugEnabled;
+
     private AppLog() {
         // Utility class.
     }
 
+    /** Enables verbose logging; wired to the debug option in the options screen. */
+    public static void setDebugMode(boolean enabled) {
+        debugEnabled = enabled;
+    }
+
     public static void debug(String message) {
-        Log.d(TAG, message);
+        if (debugEnabled) {
+            Log.d(TAG, message);
+        }
     }
 
     public static void info(String message) {

@@ -18,12 +18,12 @@ import androidx.fragment.app.Fragment;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.core.CharacterSummaryBuilder;
-import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
-import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
+import com.softwaremagico.librodeesher.android.core.PdfSheetFactory;
+import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
+import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.pdf.CharacterPdfExporter;
-import com.softwaremagico.librodeesher.pdf.StandardCharacterSheet;
 import com.softwaremagico.librodeesher.persistence.CharacterData;
 import com.softwaremagico.librodeesher.persistence.CharacterDataMapper;
 import com.softwaremagico.librodeesher.persistence.CharacterJsonManager;
@@ -66,7 +66,10 @@ public class RandomCharacterEnhancedFragment extends Fragment {
     private void generateRandomCharacter() {
         try {
             final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
-            new RandomCharacterPlayer(character).createRandomValues();
+            final RandomCharacterPlayer generator = new RandomCharacterPlayer(character);
+            generator.setSpecializationLevel(
+                    RandomPreferencesHandler.getInstance(requireContext()).getSpecializationLevel());
+            generator.createRandomValues();
             lastCharacter = character;
             CharacterManager.getInstance().setSelectedCharacter(character);
             summaryText.setText(CharacterSummaryBuilder.build(character));
@@ -83,17 +86,10 @@ public class RandomCharacterEnhancedFragment extends Fragment {
         if (lastCharacter == null) {
             return;
         }
-        try {
-            final CharacterData data = CharacterDataMapper.toData(lastCharacter);
-            final String json = CharacterJsonManager.toJson(data);
-            final CharacterEntity entity = new CharacterEntity(lastCharacter);
-            entity.json = json;
-            AppDatabase.getInstance(requireContext()).getCharacterEntityDao().insert(entity);
-            Toast.makeText(getContext(), R.string.character_saved, Toast.LENGTH_SHORT).show();
-        } catch (Exception exception) {
-            AppLog.error("Error saving character", exception);
-            Toast.makeText(getContext(), R.string.error_no_rules, Toast.LENGTH_SHORT).show();
+        if (CharacterManager.getInstance().getSelectedCharacter() != lastCharacter) {
+            CharacterManager.getInstance().setSelectedCharacter(lastCharacter);
         }
+        CharacterSaveHelper.save(requireContext());
     }
 
     private void exportPdf() {
@@ -109,7 +105,8 @@ public class RandomCharacterEnhancedFragment extends Fragment {
             }
             final String fileName = "character_" + System.currentTimeMillis() + ".pdf";
             lastPdfFile = new File(pdfDir, fileName);
-            CharacterPdfExporter.exportToFileFromJSON(json, new StandardCharacterSheet(), lastPdfFile.getAbsolutePath());
+            CharacterPdfExporter.exportToFileFromJSON(json, PdfSheetFactory.create(requireContext()),
+                    lastPdfFile.getAbsolutePath());
             Toast.makeText(getContext(), R.string.pdf_export_success, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
             AppLog.error("Error exporting PDF", exception);

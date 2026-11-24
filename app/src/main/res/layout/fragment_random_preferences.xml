@@ -40,7 +40,7 @@
             android:id="@+id/random_apply_prefs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/random_use_defaults"
+            android:text="@string/random_apply_preferences"
             android:layout_marginTop="16dp" />
 
     </LinearLayout>

@@ -269,5 +269,8 @@
     <string name="random_preferences">Preferencias aleatorias</string>
     <string name="random_specialization">Especialización</string>
     <string name="random_use_defaults">Usar valores por defecto</string>
+    <string name="random_apply_preferences">Aplicar preferencias</string>
+    <string name="random_preferences_saved">Preferencias aleatorias guardadas</string>
+    <string name="random_preferences_error">No se pudieron guardar las preferencias</string>
     <string name="character_new">Nuevo Personaje</string>
 </resources>

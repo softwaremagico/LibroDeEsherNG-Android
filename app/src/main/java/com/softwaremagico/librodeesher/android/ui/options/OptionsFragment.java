@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
@@ -103,6 +104,8 @@ public class OptionsFragment extends Fragment {
                 sortPdfSkills.isChecked(), perksCostBackground.isChecked(), cost,
                 pdfMode.getSelectedItemPosition(), debugMode.isChecked(), disabled);
         CharacterManager.getInstance().setOptionsHandler(handler);
+        handler.applyTo(CharacterManager.getInstance().getSelectedCharacter());
+        AppLog.setDebugMode(debugMode.isChecked());
         Toast.makeText(requireContext(), R.string.options_applied, Toast.LENGTH_LONG).show();
     }
 

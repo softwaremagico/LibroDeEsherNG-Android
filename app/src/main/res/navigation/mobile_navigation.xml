@@ -152,6 +152,14 @@
         tools:layout="@layout/fragment_options" />
 
     <fragment
+        android:id="@+id/navigation_random_preferences"
+        android:name="com.softwaremagico.librodeesher.android.ui.random.RandomPreferencesFragment"
+        android:label="@string/random_config"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_random_preferences" />
+
+    <fragment
         android:id="@+id/navigation_wiki"
         android:name="com.softwaremagico.librodeesher.android.ui.wiki.WikiFragment"
         android:label="@string/navigation_wiki"

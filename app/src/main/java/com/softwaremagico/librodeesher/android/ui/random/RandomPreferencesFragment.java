@@ -14,14 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.softwaremagico.librodeesher.android.R;
-import com.softwaremagico.librodeesher.android.session.CharacterManager;
-import com.softwaremagico.librodeesher.character.CharacterPlayer;
-import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
+import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
 
+/** Random-generation preferences that are applied the next time a character is generated. */
 public class RandomPreferencesFragment extends Fragment {
 
     private SeekBar specializationSeekBar;
     private TextView specializationValue;
+    private RandomPreferencesHandler preferences;
 
     @Nullable
     @Override
@@ -33,15 +33,17 @@ public class RandomPreferencesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        preferences = RandomPreferencesHandler.getInstance(requireContext());
         specializationSeekBar = view.findViewById(R.id.random_specialization_seekbar);
         specializationValue = view.findViewById(R.id.random_specialization_value);
         final Button applyButton = view.findViewById(R.id.random_apply_prefs);
 
+        specializationSeekBar.setProgress(preferences.getSpecializationLevel() + 3);
+        specializationValue.setText(String.valueOf(preferences.getSpecializationLevel()));
         specializationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                final int value = progress - 3;
-                specializationValue.setText(String.valueOf(value));
+                specializationValue.setText(String.valueOf(progress - 3));
             }
 
             @Override
@@ -55,15 +57,10 @@ public class RandomPreferencesFragment extends Fragment {
 
         applyButton.setOnClickListener(v -> {
             try {
-                final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
-                final RandomCharacterPlayer generator = new RandomCharacterPlayer(character);
-                final int value = specializationSeekBar.getProgress() - 3;
-                generator.setSpecializationLevel(value);
-                generator.createRandomValues();
-                CharacterManager.getInstance().setSelectedCharacter(character);
-                Toast.makeText(getContext(), "Preferencias aplicadas", Toast.LENGTH_SHORT).show();
+                preferences.setSpecializationLevel(specializationSeekBar.getProgress() - 3);
+                Toast.makeText(getContext(), R.string.random_preferences_saved, Toast.LENGTH_SHORT).show();
             } catch (Exception exception) {
-                Toast.makeText(getContext(), "Error al aplicar preferencias", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.random_preferences_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

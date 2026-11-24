@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.BuildConfig;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Translator.setLanguage(SettingsHandler.getInstance(getApplicationContext()).getLanguage());
         final OptionsHandler optionsHandler = OptionsHandler.getInstance(getApplicationContext());
         optionsHandler.applyModules();
+        AppLog.setDebugMode(optionsHandler.isDebugMode());
         CharacterManager.getInstance().setOptionsHandler(optionsHandler);
         setContentView(R.layout.activity_main);
 
@@ -85,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_options) {
             return navigate(R.id.navigation_options);
+        }
+        if (id == R.id.action_random_preferences) {
+            return navigate(R.id.navigation_random_preferences);
         }
         if (id == R.id.action_settings) {
             showLanguageDialog();

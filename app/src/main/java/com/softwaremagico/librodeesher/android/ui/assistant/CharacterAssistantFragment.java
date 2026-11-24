@@ -19,13 +19,14 @@ import androidx.fragment.app.Fragment;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.core.CharacterSummaryBuilder;
-import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
-import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
+import com.softwaremagico.librodeesher.android.core.PdfSheetFactory;
+import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
+import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.culture.Culture;
+import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.pdf.CharacterPdfExporter;
-import com.softwaremagico.librodeesher.pdf.StandardCharacterSheet;
 import com.softwaremagico.librodeesher.persistence.CharacterData;
 import com.softwaremagico.librodeesher.persistence.CharacterDataMapper;
 import com.softwaremagico.librodeesher.persistence.CharacterJsonManager;
@@ -204,7 +205,7 @@ public class CharacterAssistantFragment extends Fragment {
     private void applyStep() {
         try {
             if (currentStep == 3) {
-                new RandomCharacterPlayer(character, 1).createRandomValues();
+                generateValues();
             }
         } catch (Exception exception) {
             AppLog.error("Error applying step", exception);
@@ -223,7 +224,7 @@ public class CharacterAssistantFragment extends Fragment {
             if (character.getProfessionId() == null && !professions.isEmpty()) {
                 character.setProfessionId(professions.get(0).getId());
             }
-            new RandomCharacterPlayer(character, 1).createRandomValues();
+            generateValues();
             CharacterManager.getInstance().setSelectedCharacter(character);
             summaryText.setText(CharacterSummaryBuilder.build(character));
             saveButton.setVisibility(View.VISIBLE);
@@ -238,18 +239,18 @@ public class CharacterAssistantFragment extends Fragment {
         }
     }
 
+    private void generateValues() throws InvalidXmlElementException {
+        final RandomCharacterPlayer generator = new RandomCharacterPlayer(character, 1);
+        generator.setSpecializationLevel(
+                RandomPreferencesHandler.getInstance(requireContext()).getSpecializationLevel());
+        generator.createRandomValues();
+    }
+
     private void saveCharacter() {
-        try {
-            final CharacterData data = CharacterDataMapper.toData(character);
-            final String json = CharacterJsonManager.toJson(data);
-            final CharacterEntity entity = new CharacterEntity(character);
-            entity.json = json;
-            AppDatabase.getInstance(requireContext()).getCharacterEntityDao().insert(entity);
-            Toast.makeText(getContext(), R.string.character_saved, Toast.LENGTH_SHORT).show();
-        } catch (Exception exception) {
-            AppLog.error("Error saving character", exception);
-            Toast.makeText(getContext(), R.string.error_no_rules, Toast.LENGTH_SHORT).show();
+        if (CharacterManager.getInstance().getSelectedCharacter() != character) {
+            CharacterManager.getInstance().setSelectedCharacter(character);
         }
+        CharacterSaveHelper.save(requireContext());
     }
 
     private void exportPdf() {
@@ -262,7 +263,8 @@ public class CharacterAssistantFragment extends Fragment {
             }
             final String fileName = "character_" + System.currentTimeMillis() + ".pdf";
             lastPdfFile = new File(pdfDir, fileName);
-            CharacterPdfExporter.exportToFileFromJSON(json, new StandardCharacterSheet(), lastPdfFile.getAbsolutePath());
+            CharacterPdfExporter.exportToFileFromJSON(json, PdfSheetFactory.create(requireContext()),
+                    lastPdfFile.getAbsolutePath());
             Toast.makeText(getContext(), R.string.pdf_export_success, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
             AppLog.error("Error exporting PDF", exception);
