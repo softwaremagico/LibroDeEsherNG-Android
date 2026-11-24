@@ -1,6 +1,7 @@
 package com.softwaremagico.librodeesher.android;
 
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -58,7 +59,7 @@ public class RandomPreferencesUiTest {
     public void fullPreferencesAreSavedAndShownAgain() {
         openPreferences();
         onView(withId(R.id.random_final_level)).perform(scrollTo(), replaceText("5"));
-        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), click());
+        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), setChecked(false));
         onView(withId(R.id.random_category_ranks)).perform(scrollTo(), replaceText("arms:5,combat:3"));
         onView(withId(R.id.random_skill_ranks)).perform(scrollTo(), replaceText("attack:4"));
         onView(withId(R.id.random_trainings)).perform(scrollTo(), replaceText("trainingOne,trainingTwo"));
@@ -75,7 +76,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_skill_ranks)).check(matches(withText("attack:4")));
         onView(withId(R.id.random_trainings)).check(matches(withText("trainingOne,trainingTwo")));
         onView(withId(R.id.random_suggested_perks)).check(matches(withText("ambidextrous")));
-        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), click());
+        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), setChecked(true));
         onView(withId(R.id.random_perks_enabled)).check(matches(isChecked()));
     }
 
@@ -86,6 +87,30 @@ public class RandomPreferencesUiTest {
     private void openPreferences() {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
         onView(withText(R.string.random_config)).perform(click());
+    }
+
+    /** Toggles only when needed, so the test does not depend on preferences left by earlier runs. */
+    private static ViewAction setChecked(boolean checked) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(CompoundButton.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "set checkbox to " + checked;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                final CompoundButton button = (CompoundButton) view;
+                if (button.isChecked() != checked) {
+                    button.performClick();
+                }
+                uiController.loopMainThreadUntilIdle();
+            }
+        };
     }
 
     private static ViewAction setProgress(int progress) {
