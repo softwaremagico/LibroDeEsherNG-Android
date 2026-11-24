@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.softwaremagico.librodeesher.android.AppLog;
@@ -23,6 +25,7 @@ import com.softwaremagico.librodeesher.android.ui.components.ElementAdapter;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.category.Category;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
+import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 import com.softwaremagico.librodeesher.skill.Skill;
 
@@ -65,6 +68,14 @@ public class SkillsFragment extends Fragment {
         categorySpinner = view.findViewById(R.id.skills_category_spinner);
         emptyText = view.findViewById(R.id.skills_empty);
         container = view.findViewById(R.id.skills_container);
+        view.findViewById(R.id.skills_favourites).setOnClickListener(v -> showFavouritesDialog());
+        view.findViewById(R.id.skills_recommended).setOnClickListener(v -> toggleRecommended());
+        view.findViewById(R.id.skills_generalize).setOnClickListener(v ->
+                chooseSkill(R.string.skills_generalize, this::generalize));
+        view.findViewById(R.id.skills_specialize).setOnClickListener(v ->
+                chooseSkill(R.string.skills_specialize, this::specialize));
+        view.findViewById(R.id.skills_bulk).setOnClickListener(v -> showBulkRanksDialog());
+        view.findViewById(R.id.skills_random).setOnClickListener(v -> spendRanksRandomly());
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View selectedView, int position, long id) {
@@ -240,6 +251,149 @@ public class SkillsFragment extends Fragment {
             }
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot change skill ranks", exception);
+            Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private List<Skill> currentSkills() {
+        final List<Skill> skills = skillsByCategory.get(selectedCategoryId);
+        return skills == null ? new ArrayList<>() : skills;
+    }
+
+    private void showFavouritesDialog() {
+        final List<Skill> skills = currentSkills();
+        if (skills.isEmpty()) {
+            Toast.makeText(requireContext(), R.string.skills_no_skills, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        final CharSequence[] labels = new CharSequence[skills.size()];
+        final boolean[] checked = new boolean[skills.size()];
+        final List<String> favourites;
+        try {
+            favourites = character.getFavouriteSkillIds();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot load favourite skills", exception);
+            Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        for (int i = 0; i < skills.size(); i++) {
+            labels[i] = ElementAdapter.displayName(skills.get(i));
+            checked[i] = favourites.contains(skills.get(i).getId());
+        }
+        final boolean[] selection = checked.clone();
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.skills_favourites)
+                .setMultiChoiceItems(labels, checked, (dialog, which, isChecked) -> selection[which] = isChecked)
+                .setPositiveButton(R.string.age_apply, (dialog, which) -> {
+                    for (int i = 0; i < skills.size(); i++) {
+                        if (selection[i]) {
+                            character.addFavouriteSkill(skills.get(i).getId());
+                        } else {
+                            character.removeFavouriteSkill(skills.get(i).getId());
+                        }
+                    }
+                    render();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void toggleRecommended() {
+        final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+        character.setRecommendedFavouriteSkillsIncluded(!character.isRecommendedFavouriteSkillsIncluded());
+        Toast.makeText(requireContext(), R.string.skills_updated, Toast.LENGTH_SHORT).show();
+    }
+
+    @FunctionalInterface
+    private interface SkillAction {
+        void apply(Skill skill) throws InvalidXmlElementException;
+    }
+
+    private void chooseSkill(int title, SkillAction action) {
+        final List<Skill> skills = currentSkills();
+        if (skills.isEmpty()) {
+            Toast.makeText(requireContext(), R.string.skills_no_skills, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final CharSequence[] labels = new CharSequence[skills.size()];
+        for (int i = 0; i < skills.size(); i++) {
+            labels[i] = ElementAdapter.displayName(skills.get(i));
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setItems(labels, (dialog, which) -> {
+                    try {
+                        action.apply(skills.get(which));
+                        render();
+                    } catch (InvalidXmlElementException exception) {
+                        AppLog.error("Cannot apply skill action", exception);
+                        Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+    }
+
+    private void generalize(Skill skill) throws InvalidXmlElementException {
+        CharacterManager.getInstance().getSelectedCharacter().generalizeSkill(skill.getId());
+    }
+
+    private void specialize(Skill skill) throws InvalidXmlElementException {
+        final EditText input = new EditText(requireContext());
+        input.setHint(R.string.skills_specialization_hint);
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.skills_specialize)
+                .setView(input)
+                .setPositiveButton(R.string.add, (dialog, which) -> {
+                    final String specialization = input.getText().toString().trim();
+                    if (specialization.isEmpty()) {
+                        return;
+                    }
+                    try {
+                        CharacterManager.getInstance().getSelectedCharacter()
+                                .addSkillSpecialization(skill.getId(), specialization);
+                        render();
+                    } catch (InvalidXmlElementException exception) {
+                        AppLog.error("Cannot specialize skill", exception);
+                        Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void showBulkRanksDialog() {
+        final EditText input = new EditText(requireContext());
+        input.setHint(R.string.skills_ranks_hint);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.skills_bulk)
+                .setView(input)
+                .setPositiveButton(R.string.add, (dialog, which) -> {
+                    try {
+                        final int ranks = Integer.parseInt(input.getText().toString().trim());
+                        if (CharacterManager.getInstance().getSelectedCharacter()
+                                .setCurrentLevelCategoryRanks(selectedCategoryId, ranks)) {
+                            render();
+                        } else {
+                            Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (NumberFormatException | InvalidXmlElementException exception) {
+                        AppLog.error("Cannot set category ranks", exception);
+                        Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void spendRanksRandomly() {
+        try {
+            final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
+            RandomCharacterPlayer.setRandomRanks(character, 0, null, 0, character.getLevel(), null, null);
+            render();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot spend ranks randomly", exception);
             Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
         }
     }

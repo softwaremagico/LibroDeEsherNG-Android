@@ -117,6 +117,16 @@
     <string name="skills_rank_cost">%1$d rangos · coste %2$s</string>
     <string name="skills_empty">No hay habilidades disponibles para desarrollar.</string>
     <string name="skills_error">No se pudo actualizar la habilidad.</string>
+    <string name="skills_favourites">Favoritas</string>
+    <string name="skills_recommended">Recomendadas</string>
+    <string name="skills_generalize">Generalizar</string>
+    <string name="skills_specialize">Especializar</string>
+    <string name="skills_bulk">Rangos de categoría</string>
+    <string name="skills_random">Gastar aleatoriamente</string>
+    <string name="skills_no_skills">No hay habilidades en esta categoría.</string>
+    <string name="skills_specialization_hint">Identificador de especialización</string>
+    <string name="skills_ranks_hint">Rangos</string>
+    <string name="skills_updated">Habilidades actualizadas.</string>
 
     <!-- Spells development -->
     <string name="spells_remaining">Puntos de desarrollo restantes: %1$d</string>

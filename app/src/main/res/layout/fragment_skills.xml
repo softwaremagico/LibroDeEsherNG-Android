@@ -13,6 +13,60 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:textStyle="bold" />
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_vertical_margin">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/skills_favourites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skills_favourites" />
+
+            <Button
+                android:id="@+id/skills_recommended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/skills_recommended" />
+
+            <Button
+                android:id="@+id/skills_generalize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/skills_generalize" />
+
+            <Button
+                android:id="@+id/skills_specialize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/skills_specialize" />
+
+            <Button
+                android:id="@+id/skills_bulk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/skills_bulk" />
+
+            <Button
+                android:id="@+id/skills_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/skills_random" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <Spinner
         android:id="@+id/skills_category_spinner"
         android:layout_width="match_parent"
