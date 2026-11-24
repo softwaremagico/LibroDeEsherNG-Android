@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
+import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.perk.SelectedPerk;
 import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
+import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -106,14 +108,49 @@ public final class RandomPreferencesHandler {
     /** Applies every persisted preference to a fresh generator before calling createRandomValues. */
     public void configure(RandomCharacterPlayer generator) {
         generator.setSpecializationLevel(getSpecializationLevel());
+        final RulesCatalog catalog = RulesCatalog.getInstance();
         for (final Map.Entry<String, Integer> entry : getCategoryRanks().entrySet()) {
-            generator.setSuggestedCategoryRanks(entry.getKey(), entry.getValue());
+            if (exists(catalog, entry.getKey(), 0)) {
+                generator.setSuggestedCategoryRanks(entry.getKey(), entry.getValue());
+            }
         }
         for (final Map.Entry<String, Integer> entry : getSkillRanks().entrySet()) {
-            generator.setSuggestedSkillRanks(entry.getKey(), entry.getValue());
+            if (exists(catalog, entry.getKey(), 1)) {
+                generator.setSuggestedSkillRanks(entry.getKey(), entry.getValue());
+            }
         }
-        generator.setSuggestedTrainings(getTrainings());
-        generator.setSuggestedPerks(getSuggestedPerks());
+        final List<String> trainings = new ArrayList<>();
+        for (final String id : getTrainings()) {
+            if (exists(catalog, id, 2)) {
+                trainings.add(id);
+            }
+        }
+        generator.setSuggestedTrainings(trainings);
+        final List<String> perks = new ArrayList<>();
+        for (final String id : getSuggestedPerks()) {
+            if (exists(catalog, id, 3)) {
+                perks.add(id);
+            }
+        }
+        generator.setSuggestedPerks(perks);
+    }
+
+    /** Ignores stale ids that are no longer present in the rules catalog. */
+    private static boolean exists(RulesCatalog catalog, String id, int kind) {
+        try {
+            switch (kind) {
+                case 0:
+                    return catalog.getCategory(id) != null;
+                case 1:
+                    return catalog.getSkill(id) != null;
+                case 2:
+                    return catalog.getTraining(id) != null;
+                default:
+                    return catalog.getPerk(id) != null;
+            }
+        } catch (InvalidXmlElementException exception) {
+            return false;
+        }
     }
 
     /** Applies post-generation preferences that cannot be expressed in the generator itself. */

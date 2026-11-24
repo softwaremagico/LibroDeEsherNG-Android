@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_new_character"
         android:title="@string/character_new"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_save_character"

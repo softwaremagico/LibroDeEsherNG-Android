@@ -16,6 +16,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
@@ -29,8 +30,8 @@ public class MultiCharacterSessionUiTest {
 
     @Test
     public void canOpenSwitchAndCloseSeveralCharacters() {
-        clickMenu(R.string.character_new);
-        clickMenu(R.string.character_new);
+        onView(withId(R.id.action_new_character)).perform(click());
+        onView(withId(R.id.action_new_character)).perform(click());
 
         clickMenu(R.string.character_switch);
         onView(withText(R.string.character_switch)).check(matches(isDisplayed()));
