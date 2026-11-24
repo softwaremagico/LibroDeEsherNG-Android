@@ -53,7 +53,12 @@ public class HistoryPerksUiTest {
     public void backgroundSpendingAndPerkActionsAreReflectedInTheUi() {
         createCharacterWithUi();
 
+        openTab("Personaje");
+        onView(withId(R.id.name_input)).check(matches(withText("Prueba Historial")));
+
         openTab("Dotes");
+        android.os.SystemClock.sleep(700);
+        onView(withId(R.id.perks_remaining)).check(matches(withSubstring("Puntos de dotes")));
         onView(withId(R.id.perks_history_points)).check(matches(withSubstring("Puntos de Historial")));
         final String initialPoints = textOf(R.id.perks_history_points);
 
