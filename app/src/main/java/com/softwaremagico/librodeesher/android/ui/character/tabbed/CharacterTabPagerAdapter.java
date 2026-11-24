@@ -29,7 +29,8 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
             R.string.navigation_equipment,
             R.string.navigation_resistances,
             R.string.navigation_categories,
-            R.string.navigation_weapon_tiers
+            R.string.navigation_weapon_tiers,
+            R.string.navigation_trainings
     };
 
     public CharacterTabPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -59,6 +60,8 @@ public class CharacterTabPagerAdapter extends FragmentStateAdapter {
             return new CategoriesFragment();
         } else if (position == 9) {
             return new WeaponTiersFragment();
+        } else if (position == 10) {
+            return new com.softwaremagico.librodeesher.android.ui.trainings.TrainingsFragment();
         }
         return new CharacterCreationFragment();
     }

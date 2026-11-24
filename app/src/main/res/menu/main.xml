@@ -23,6 +23,10 @@
         app:showAsAction="never">
         <menu>
             <item
+                android:id="@+id/action_trainings"
+                android:title="@string/navigation_trainings"
+                app:showAsAction="never" />
+            <item
                 android:id="@+id/action_skills"
                 android:title="@string/navigation_skills"
                 app:showAsAction="never" />

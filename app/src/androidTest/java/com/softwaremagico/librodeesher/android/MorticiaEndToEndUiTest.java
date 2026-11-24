@@ -63,6 +63,7 @@ public class MorticiaEndToEndUiTest {
         verifyResistancesTab();
         verifyCategoriesTab();
         verifyWeaponTiersTab();
+        verifyTrainingsTab();
     }
 
     private void createMorticiaAtLevelTen() throws Exception {
@@ -156,6 +157,11 @@ public class MorticiaEndToEndUiTest {
     private void verifyWeaponTiersTab() {
         openTab("Coste de armas");
         onView(withId(R.id.weapon_tiers_container)).check(renderedRowsOrEmptyState(R.id.weapon_tiers_empty));
+    }
+
+    private void verifyTrainingsTab() {
+        openTab("Adiestramientos");
+        onView(withId(R.id.trainings_container)).check(matches(hasMinimumChildCount(2)));
     }
 
     private void openTab(String title) {

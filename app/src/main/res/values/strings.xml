@@ -185,6 +185,26 @@
     <string name="pdf_mode_one_column">Una columna</string>
     <string name="pdf_mode_two_columns">Dos columnas</string>
     <string name="pdf_mode_legacy">Habilidades combinadas</string>
+    <!-- Trainings -->
+    <string name="navigation_trainings">Adiestramientos</string>
+    <string name="trainings_remaining">Puntos de desarrollo restantes: %1$d</string>
+    <string name="trainings_selected_header">Seleccionados</string>
+    <string name="trainings_available_header">Disponibles</string>
+    <string name="trainings_none_selected">Sin adiestramientos.</string>
+    <string name="trainings_empty">No hay adiestramientos disponibles.</string>
+    <string name="trainings_cost">Coste %1$d</string>
+    <string name="trainings_favoured">Favorecido</string>
+    <string name="trainings_months">%1$d meses</string>
+    <string name="trainings_add">+</string>
+    <string name="trainings_remove">−</string>
+    <string name="trainings_error">No se pudo actualizar el adiestramiento.</string>
+    <string name="trainings_choices">Opciones de %1$s</string>
+    <string name="trainings_choice">Opción %1$s %2$d</string>
+    <string name="trainings_category">Categoría %1$d</string>
+    <string name="trainings_skill">Habilidad %1$d.%2$d</string>
+    <string name="trainings_spell_list">Lista %1$d.%2$d</string>
+    <string name="trainings_characteristic">Característica %1$d</string>
+
     <!-- Options -->
     <string name="navigation_options">Opciones</string>
     <string name="options_rules">Reglas</string>
