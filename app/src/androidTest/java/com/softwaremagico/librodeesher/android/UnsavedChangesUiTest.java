@@ -125,6 +125,7 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Historial");
+        onView(withId(R.id.history_container)).check(matches(isDisplayed()));
         onView(allOf(ViewMatchers.isAssignableFrom(android.widget.EditText.class),
                 isDescendantOfA(withId(R.id.history_container))))
                 .perform(scrollTo(), replaceText("Historia de prueba"));
@@ -200,7 +201,9 @@ public class UnsavedChangesUiTest {
     }
 
     private void openTab(String title) {
-        onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs)))).perform(scrollTo(), click());
+        onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs))))
+                .perform(scrollTo(), UiViews.clickClickableAncestor());
+        android.os.SystemClock.sleep(500);
     }
 
     private void openMenu() {
