@@ -59,7 +59,8 @@ public class HistoryPerksUiTest {
         onView(withId(R.id.name_input)).check(matches(withText("Prueba Historial")));
 
         openTab("Dotes");
-        onView(withId(R.id.perks_remaining)).check(matches(withSubstring("Puntos de dotes")));
+        onView(withId(R.id.perks_remaining)).perform(UiViews.waitForText("Puntos de dotes", 10_000))
+                .check(matches(withSubstring("Puntos de dotes")));
         onView(withId(R.id.perks_history_points)).check(matches(withSubstring("Puntos de Historial")));
         final String initialPoints = textOf(R.id.perks_history_points);
 

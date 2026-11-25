@@ -25,6 +25,34 @@ public final class UiViews {
         // Utility class.
     }
 
+    /** Waits for a TextView to contain expected text while allowing the UI thread to process work. */
+    public static ViewAction waitForText(String expected, long timeoutMillis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(android.widget.TextView.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for text containing " + expected;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
+                do {
+                    final CharSequence text = ((android.widget.TextView) view).getText();
+                    if (text != null && text.toString().contains(expected)) {
+                        return;
+                    }
+                    controller.loopMainThreadForAtLeast(100);
+                } while (android.os.SystemClock.uptimeMillis() < deadline);
+                throw new AssertionError("Timed out waiting for text containing " + expected);
+            }
+        };
+    }
+
     /**
      * Runs an optional interaction with a short timeout. A missing optional view must not wait for
      * the 15-minute policy that slow rule loading needs for required views.
