@@ -161,6 +161,7 @@ public class CharacteristicsFragment extends Fragment {
         }
         try {
             RandomCharacterPlayer.setRandomCharacteristics(character, 0);
+            requireActivity().invalidateOptionsMenu();
             render();
             Toast.makeText(requireContext(), R.string.accept, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
@@ -196,6 +197,7 @@ public class CharacteristicsFragment extends Fragment {
                     generating = false;
                 }
             }
+            requireActivity().invalidateOptionsMenu();
             render();
             Toast.makeText(requireContext(), R.string.accept, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
@@ -236,6 +238,7 @@ public class CharacteristicsFragment extends Fragment {
                 if ((character.getCharacteristicTemporalValue(abbreviation) == null
                         || character.getCharacteristicTemporalValue(abbreviation) < 90)) {
                     character.setCharacteristicTemporalValue(abbreviation, 90);
+                    requireActivity().invalidateOptionsMenu();
                     render();
                     return;
                 }
@@ -257,6 +260,7 @@ public class CharacteristicsFragment extends Fragment {
                 render();
                 return;
             }
+            requireActivity().invalidateOptionsMenu();
             render();
         } catch (Exception exception) {
             AppLog.error("Cannot change characteristic", exception);
