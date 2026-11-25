@@ -80,6 +80,7 @@ public class EquipmentFragment extends Fragment {
         for (final Equipment item : equipment) {
             addRow(text(item.getName()), text(item.getDescription()), v -> {
                 character.removeStandardEquipment(item);
+                requireActivity().invalidateOptionsMenu();
                 render();
             });
         }
@@ -104,6 +105,7 @@ public class EquipmentFragment extends Fragment {
             }
             addRow(text(item.getName()), info.toString(), v -> {
                 character.removeMagicItem(item);
+                requireActivity().invalidateOptionsMenu();
                 render();
             });
         }
@@ -159,6 +161,7 @@ public class EquipmentFragment extends Fragment {
                         CharacterManager.getInstance().getSelectedCharacter().addStandardEquipment(
                                 new Equipment(nameText, descriptionText));
                     }
+                    requireActivity().invalidateOptionsMenu();
                     render();
                 })
                 .setNegativeButton(R.string.cancel, null)

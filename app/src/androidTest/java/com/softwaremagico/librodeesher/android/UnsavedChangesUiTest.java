@@ -135,6 +135,20 @@ public class UnsavedChangesUiTest {
         assertTitleHasMarker(true);
     }
 
+    @Test
+    public void equipmentEditsUpdateUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Equipo");
+        onView(withId(R.id.equipment_container)).check(matches(isDisplayed()));
+        onView(withText(R.string.equipment_add)).perform(scrollTo(), click());
+        onView(withId(R.id.dialog_equipment_name)).inRoot(isDialog()).perform(replaceText("Mochila"));
+        onView(withText(R.string.add)).inRoot(isDialog()).perform(click());
+        assertTitleHasMarker(true);
+    }
+
     private void makeSelectedCharacterDirty() {
         renameSelectedCharacter("Cambios sin guardar");
     }
