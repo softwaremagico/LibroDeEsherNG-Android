@@ -100,6 +100,7 @@ public class HistoryPerksUiTest {
     private void openTab(String title) {
         onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs))))
                 .perform(scrollTo(), UiViews.clickClickableAncestor());
+        android.os.SystemClock.sleep(500);
     }
 
     /** Random perks can now open the legacy weakness/choice dialogs; resolve them before checking the list. */
