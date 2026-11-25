@@ -201,7 +201,9 @@ public class DevelopmentScreensUiTest {
         final android.app.UiAutomation automation =
                 androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getUiAutomation();
         final android.view.accessibility.AccessibilityNodeInfo initial = automation.getRootInActiveWindow();
-        if (initial == null || !clickOverflow(initial)) {
+        final String overflowDescription = ApplicationProvider.getApplicationContext().getString(
+                androidx.appcompat.R.string.abc_action_menu_overflow_description);
+        if (initial == null || !clickOverflow(initial, overflowDescription)) {
             throw new AssertionError("Overflow menu button not visible");
         }
         final long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
@@ -226,16 +228,19 @@ public class DevelopmentScreensUiTest {
         throw new AssertionError("Overflow menu item not visible: " + text);
     }
 
-    private static boolean clickOverflow(android.view.accessibility.AccessibilityNodeInfo node) {
+    private static boolean clickOverflow(android.view.accessibility.AccessibilityNodeInfo node,
+                                         String overflowDescription) {
         final CharSequence className = node.getClassName();
-        if (className != null && className.toString().endsWith("OverflowMenuButton")
+        final CharSequence description = node.getContentDescription();
+        if ((overflowDescription.contentEquals(description == null ? "" : description)
+                || (className != null && className.toString().endsWith("OverflowMenuButton")))
                 && node.isVisibleToUser()
                 && node.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)) {
             return true;
         }
         for (int i = 0; i < node.getChildCount(); i++) {
             final android.view.accessibility.AccessibilityNodeInfo child = node.getChild(i);
-            if (child != null && clickOverflow(child)) {
+            if (child != null && clickOverflow(child, overflowDescription)) {
                 return true;
             }
         }
