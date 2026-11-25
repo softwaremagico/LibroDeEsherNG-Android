@@ -175,14 +175,41 @@ public class UnsavedChangesUiTest {
 
     @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
-        createCompleteCharacter();
-        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
-        onView(withId(R.id.sheet_save_button)).perform(click());
-        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
-        openTab("Conjuros");
-        onView(withId(R.id.spells_type_spinner)).perform(
-                UiViews.selectCategoryAndClickEnabled(R.id.spells_container, R.id.item_spell_minus));
-        assertTitleHasMarker(true);
+        UiMenus.click(R.string.navigation_options);
+        final AtomicReference<Boolean> previousMagic = new AtomicReference<>();
+        onView(withId(R.id.option_magic)).perform(scrollTo(), new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(android.widget.CompoundButton.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "read magic option";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                previousMagic.set(((android.widget.CompoundButton) view).isChecked());
+            }
+        }, UiViews.setChecked(true));
+        onView(withId(R.id.option_save)).perform(scrollTo(), click());
+        Espresso.pressBack();
+        try {
+            createCompleteCharacter();
+            onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+            onView(withId(R.id.sheet_save_button)).perform(click());
+            onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+            openTab("Conjuros");
+            onView(withId(R.id.spells_type_spinner)).perform(
+                    UiViews.selectCategoryAndClickEnabled(R.id.spells_container, R.id.item_spell_minus));
+            assertTitleHasMarker(true);
+        } finally {
+            UiMenus.click(R.string.navigation_options);
+            onView(withId(R.id.option_magic)).perform(scrollTo(), UiViews.setChecked(previousMagic.get()));
+            onView(withId(R.id.option_save)).perform(scrollTo(), click());
+            Espresso.pressBack();
+        }
     }
 
     private void makeSelectedCharacterDirty() {
