@@ -241,6 +241,7 @@ public class CharacterCreationFragment extends Fragment {
             character.setCurrentAge(age);
             character.setFinalAge(age);
         }
+        requireActivity().invalidateOptionsMenu();
     }
 
     private void generateSelected() {

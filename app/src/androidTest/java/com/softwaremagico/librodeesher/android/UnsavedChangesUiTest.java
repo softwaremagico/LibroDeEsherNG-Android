@@ -59,13 +59,13 @@ public class UnsavedChangesUiTest {
     public void titleMarksUnsavedChangesAndClearsThemOnSave() {
         createCompleteCharacter();
 
-        readTitleAfterClosingMenu(false);
+        assertTitleHasMarker(false);
 
         renameSelectedCharacter("Cambios sin guardar");
-        readTitleAfterClosingMenu(true);
+        assertTitleHasMarker(true);
 
         clickMenu(R.string.sheet_save);
-        readTitleAfterClosingMenu(false);
+        assertTitleHasMarker(false);
     }
 
     @Test
@@ -159,7 +159,8 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
         onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[laan]"));
         onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
-        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[bard]"));
+        onView(withId(R.id.level_picker)).perform(scrollTo(), UiViews.setNumberPickerValue(2));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
         UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());

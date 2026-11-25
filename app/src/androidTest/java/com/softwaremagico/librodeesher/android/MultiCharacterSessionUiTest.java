@@ -57,7 +57,8 @@ public class MultiCharacterSessionUiTest {
         onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
         onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[laan]"));
         onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
-        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[bard]"));
+        onView(withId(R.id.level_picker)).perform(scrollTo(), UiViews.setNumberPickerValue(2));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
 
