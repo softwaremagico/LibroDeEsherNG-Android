@@ -183,8 +183,7 @@ public class UiCoverageSweepTest {
     }
 
     private void menuItem(int title) {
-        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(label(title))).inRoot(isPlatformPopup()).perform(click());
+        UiMenus.click(title);
     }
 
     private static String label(int id) {

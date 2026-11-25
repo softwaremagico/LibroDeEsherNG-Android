@@ -72,8 +72,7 @@ public class OptionsUiTest {
     }
 
     private void openOptions() {
-        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(R.string.navigation_options)).inRoot(isPlatformPopup()).perform(click());
+        UiMenus.click(R.string.navigation_options);
     }
 
     /** Clicks the checkbox only when needed, so the test never depends on a previous run's state. */

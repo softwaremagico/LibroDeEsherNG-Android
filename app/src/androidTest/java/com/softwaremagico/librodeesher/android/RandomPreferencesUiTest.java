@@ -86,8 +86,7 @@ public class RandomPreferencesUiTest {
     }
 
     private void openPreferences() {
-        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(R.string.random_config)).inRoot(isPlatformPopup()).perform(click());
+        UiMenus.click(R.string.random_config);
     }
 
     /** Toggles only when needed, so the test does not depend on preferences left by earlier runs. */
