@@ -220,6 +220,47 @@ public final class UiViews {
         };
     }
 
+    /** Selects a category containing an enabled row action and clicks that action. */
+    public static ViewAction selectCategoryAndClickEnabled(int containerId, int actionId) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(Spinner.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "select a category with an enabled row action";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final Spinner spinner = (Spinner) view;
+                final android.widget.SpinnerAdapter adapter = spinner.getAdapter();
+                if (adapter == null) {
+                    throw new AssertionError("Category spinner has no adapter");
+                }
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    spinner.setSelection(i);
+                    controller.loopMainThreadForAtLeast(150);
+                    final View container = view.getRootView().findViewById(containerId);
+                    if (container == null) {
+                        continue;
+                    }
+                    final List<View> actions = new ArrayList<>();
+                    collect(container, actionId, actions);
+                    for (final View action : actions) {
+                        if (action.isEnabled() && action.getVisibility() == View.VISIBLE) {
+                            action.performClick();
+                            return;
+                        }
+                    }
+                }
+                throw new AssertionError("No category has an enabled row action " + actionId);
+            }
+        };
+    }
+
     /** Clicks the action button of the row whose name contains {@code textPart}. */
     public static ViewAction clickRowActionContaining(int containerId, int nameId, int actionId,
                                                       String textPart) {

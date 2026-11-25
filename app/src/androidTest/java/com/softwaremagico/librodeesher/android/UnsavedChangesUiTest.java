@@ -156,8 +156,8 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Habilidades");
-        onView(withId(R.id.skills_container)).perform(
-                UiViews.clickFirstEnabled(R.id.skills_container, R.id.item_skill_minus));
+        onView(withId(R.id.skills_category_spinner)).perform(
+                UiViews.selectCategoryAndClickEnabled(R.id.skills_container, R.id.item_skill_minus));
         assertTitleHasMarker(true);
     }
 
