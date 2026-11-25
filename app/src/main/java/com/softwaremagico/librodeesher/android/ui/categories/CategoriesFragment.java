@@ -117,6 +117,7 @@ public class CategoriesFragment extends Fragment {
         }
         try {
             if (CharacterManager.getInstance().getSelectedCharacter().setCurrentLevelCategoryRanks(category.getId(), ranks)) {
+                requireActivity().invalidateOptionsMenu();
                 render();
             } else {
                 Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();

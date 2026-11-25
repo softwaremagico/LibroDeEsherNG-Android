@@ -161,6 +161,18 @@ public class UnsavedChangesUiTest {
         assertTitleHasMarker(true);
     }
 
+    @Test
+    public void categoryRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Categorías");
+        onView(withId(R.id.categories_container)).perform(
+                UiViews.clickFirstEnabled(R.id.categories_container, R.id.item_skill_minus));
+        assertTitleHasMarker(true);
+    }
+
     private void makeSelectedCharacterDirty() {
         renameSelectedCharacter("Cambios sin guardar");
     }
