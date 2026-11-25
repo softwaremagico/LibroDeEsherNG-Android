@@ -169,7 +169,6 @@ public class DevelopmentScreensUiTest {
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Personaje");
         safe(() -> onView(withId(R.id.random_name_button)).perform(scrollTo(), click()));
-        safe(() -> onView(withId(R.id.reset_button)).perform(scrollTo(), click()));
         safe(() -> {
             menuItem(R.string.character_insert_age);
             onView(withText(R.string.age_apply)).inRoot(isDialog()).perform(click());
@@ -188,6 +187,13 @@ public class DevelopmentScreensUiTest {
             menuItem(R.string.about);
             Espresso.pressBack();
         });
+
+        // Reset replaces the active character and triggers spinner/menu refreshes. Do it after
+        // menu checks so a pending refresh cannot dismiss the popup between opening and selection.
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Personaje");
+        onView(withId(R.id.reset_button)).perform(scrollTo(), click());
+        onView(withId(R.id.summary_text)).check(matches(withText(R.string.character_not_created)));
     }
 
     private void menuItem(int title) {
