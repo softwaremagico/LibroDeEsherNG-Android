@@ -256,7 +256,6 @@ public class UnsavedChangesUiTest {
         } finally {
             onView(withId(R.id.option_sort_pdf_skills)).perform(scrollTo(), UiViews.setChecked(original.get()));
             onView(withId(R.id.option_save)).perform(scrollTo(), click());
-            Espresso.pressBack();
         }
     }
 
