@@ -196,13 +196,15 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.option_save)).perform(scrollTo(), click());
         Espresso.pressBack();
         try {
-            createCompleteCharacter();
+            createCompleteCharacter(1);
             onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+            onView(withId(R.id.sheet_level_up_button)).perform(click());
+            onView(withText(R.string.sheet_level_up_manual)).inRoot(isDialog()).perform(click());
             onView(withId(R.id.sheet_save_button)).perform(click());
             onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
             openTab("Conjuros");
             onView(withId(R.id.spells_type_spinner)).perform(
-                    UiViews.selectCategoryAndClickEnabled(R.id.spells_container, R.id.item_spell_minus));
+                    UiViews.selectCategoryAndClickEnabled(R.id.spells_container, R.id.item_spell_plus));
             assertTitleHasMarker(true);
         } finally {
             UiMenus.click(R.string.navigation_options);
@@ -260,18 +262,26 @@ public class UnsavedChangesUiTest {
     }
 
     private void createCompleteCharacter() {
+        createCompleteCharacter(2);
+    }
+
+    private void createCompleteCharacter(int level) {
         onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
         UiDialogs.discardUnsavedChangesIfPrompted();
-        completeWizard();
+        completeWizard(level);
     }
 
     private void completeWizard() {
+        completeWizard(2);
+    }
+
+    private void completeWizard(int level) {
         onView(withId(R.id.name_input)).perform(replaceText("Prueba Guardado"));
         onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
         onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[laan]"));
         onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
         onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[bard]"));
-        onView(withId(R.id.level_picker)).perform(scrollTo(), UiViews.setNumberPickerValue(2));
+        onView(withId(R.id.level_picker)).perform(scrollTo(), UiViews.setNumberPickerValue(level));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
         UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
