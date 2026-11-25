@@ -73,6 +73,8 @@ public class HistoryFragment extends Fragment {
     }
 
     private void render() {
+        // History point, language and magic-item actions rerender after mutating the character.
+        requireActivity().invalidateOptionsMenu();
         container.removeAllViews();
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         if (character.getRaceId() == null || character.getLevel() == 0) {
