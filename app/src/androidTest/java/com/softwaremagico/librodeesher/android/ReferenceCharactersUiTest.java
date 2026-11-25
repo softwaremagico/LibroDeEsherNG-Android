@@ -119,7 +119,9 @@ public class ReferenceCharactersUiTest {
 
     private void verifyEveryWindow(CharacterSpec character) {
         for (final String title : TABS) {
-            onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs)))).perform(scrollTo(), click());
+            onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs))))
+                    .perform(scrollTo(), UiViews.clickClickableAncestor());
+            android.os.SystemClock.sleep(500);
             if ("Personaje".equals(title)) {
                 onView(withId(R.id.name_input)).check(matches(withText(character.name)));
                 onView(withId(R.id.summary_text)).check(matches(withSubstring("Nivel: " + character.level)));

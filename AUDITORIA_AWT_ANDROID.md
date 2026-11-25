@@ -79,10 +79,16 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 
 - Baterías UI-only previas: `#22` → `OK (20 tests)` (`/tmp/opencode/final-all-ui-22.log`);
   `#23` → `OK (20 tests)` (`/tmp/opencode/issue23-all-ui-2.log`), ambas con origen publicado.
+- `ded810e` refuerza el requisito UI-only: las comprobaciones de reglas que llamaban directamente a
+  la librería se movieron al source set JVM (`app/src/test`), y las comprobaciones de persistencia y
+  PDF ya presentes en `SheetActionsUiTest` y los E2E se eliminaron de `app/src/androidTest`. Tras este
+  cambio, los tests instrumentados solo impulsan la interfaz y validan ficheros exportados.
 - `#24`/`#25`/`#26`: `assembleDebug`, `testDebugUnitTest`, `assembleDebugAndroidTest` y
-  `lintDebug` completados correctamente; la batería instrumentada completa con cobertura sigue
-  pendiente de verificación. El último intento completo anterior registró fallos y no constituye
-  evidencia de una batería verde.
+  `lintDebug` completados correctamente. Tras la batería completa que detectó diez fallos por
+  esperas de render y un diálogo de ajustes pendiente, se publicaron `a594720` (esperas y cierre de
+  diálogos), `312c740` (confirmación obligatoria en la preparación del test de cambios sin guardar)
+  y `ddfb69b` (espera a que la pestaña termine de renderizar antes de verificarla).
+  La batería instrumentada completa con cobertura sigue pendiente de verificación.
 - Tests JVM añadidos: serialización JSON, entidad Room, manager de sesión (dirty tracking,
   clonación, cambio/cierre), validador, resumen y fechas. Tests instrumentados añadidos:
   `UnsavedChangesUiTest`, `AdditionalScreensUiTest` (asistente, wiki, aleatorio),
@@ -97,10 +103,10 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 - Nihal: el test UI con ocho subidas automáticas y comprobación del PDF pasó en 616,6 segundos
   (`/tmp/opencode/nihal-optimized2.log`). La ejecución histórica de 887,5 segundos no es una
   comparación controlada. Las subidas requieren aproximadamente 56–67 segundos cada una.
-- Estado pendiente de cierre: Android `HEAD == origin/main` en `8c8a4d5` antes de actualizar este
-  informe; existe el directorio no rastreado `images/`, que se ha preservado. NG permanece sin
-  cambios en `a29d114` (`origin/master`). Las incidencias `#24`–`#26` siguen abiertas hasta
-  completar la verificación.
+- Estado previo a la batería final: las incidencias `#24`–`#26` están cerradas tras las pruebas
+  focalizadas documentadas en sus comentarios; sigue pendiente una batería integrada verde y una
+  medición actualizada de cobertura. Existe el directorio no rastreado `images/`, que se ha
+  preservado. NG permanece sin cambios en `a29d114` (`origin/master`).
 - PDF: memories `.serena/memories/librodeesher-ng-pdf-parity.md` y
   `.serena/memories/android/nihal-e2e-verification.md`. Los artefactos crudos de `.parity/out/`
   están desactualizados y no deben usarse como evidencia.
@@ -117,3 +123,23 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   personaje; no es un defecto de render.
 - El catálogo NG tiene 65 categorías frente a 58 del legacy; la última fila de la tabla de valores
   puede diferir por recorte de catálogo, no por el exportador.
+
+## 6. Trabajo futuro documentado
+
+No afecta a la equivalencia AWT/Android ya verificada y queda registrado para implementaciones
+posteriores:
+
+- Librería `LibroDeEsherNG`: [#1](https://github.com/softwaremagico/LibroDeEsherNG/issues/1)
+  decide el catálogo de categorías para paridad byte a byte del PDF legacy;
+  [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2) actualiza Javadoc y comentarios
+  obsoletos. La librería permanece sin cambios en `a29d114` (`origin/master`).
+- App Android: [#27](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/27)
+  asistente guiado ampliado, [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
+  preferencias aleatorias adicionales,
+  [#29](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/29) Guardar como/Undo,
+  [#30](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/30) prueba SAF `content://`,
+  [#31](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/31) política de backup,
+  [#32](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/32) prueba de módulos
+  desactivados y [#33](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/33)
+  documentación/memorias obsoletas. Todas están abiertas con contexto y evidencia.
+- El QR de Advisor queda fuera de alcance por acuerdo: no existe en AWT y no altera resultados.

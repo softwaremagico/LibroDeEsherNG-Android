@@ -181,7 +181,9 @@ public class MorticiaEndToEndUiTest {
     }
 
     private void openTab(String title) {
-        onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs)))).perform(scrollTo(), click());
+        onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs))))
+                .perform(scrollTo(), UiViews.clickClickableAncestor());
+        android.os.SystemClock.sleep(500);
     }
 
     /**
