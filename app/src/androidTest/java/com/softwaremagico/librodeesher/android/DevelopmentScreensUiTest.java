@@ -50,7 +50,7 @@ public class DevelopmentScreensUiTest {
         createCompleteCharacter();
 
         development(R.string.navigation_skills);
-        onView(withId(R.id.skills_remaining)).check(matches(isDisplayed()));
+        onView(withId(R.id.skills_remaining)).perform(scrollTo()).check(matches(isDisplayed()));
 
         safe(() -> onView(withId(R.id.skills_recommended)).perform(click()));
         safe(() -> {
@@ -89,7 +89,7 @@ public class DevelopmentScreensUiTest {
         createCompleteCharacter();
 
         development(R.string.navigation_history);
-        onView(withId(R.id.history_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.history_container)).perform(scrollTo()).check(matches(isDisplayed()));
         safe(() -> onView(withId(R.id.history_random)).perform(click()));
         safe(() -> {
             onView(withText(R.string.history_add_skill)).perform(scrollTo(), click());
@@ -182,15 +182,18 @@ public class DevelopmentScreensUiTest {
 
         safe(() -> {
             menuItem(R.string.settings);
-            Espresso.pressBack();
+            android.os.SystemClock.sleep(500);
+            UiDialogs.dismissAnyDialogIfPresent();
         });
         safe(() -> {
             menuItem(R.string.about);
-            Espresso.pressBack();
+            android.os.SystemClock.sleep(500);
+            UiDialogs.dismissAnyDialogIfPresent();
         });
 
         // Reset replaces the active character and triggers spinner/menu refreshes. Do it after
         // menu checks so a pending refresh cannot dismiss the popup between opening and selection.
+        UiDialogs.dismissAnyDialogIfPresent();
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Personaje");
         onView(withId(R.id.reset_button)).perform(scrollTo(), click());

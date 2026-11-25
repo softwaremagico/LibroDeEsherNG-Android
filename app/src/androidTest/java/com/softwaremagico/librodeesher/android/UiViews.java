@@ -53,6 +53,64 @@ public final class UiViews {
         };
     }
 
+    /** Waits until a dynamically-populated container reaches the requested number of children. */
+    public static ViewAction waitForChildCount(int minimum, long timeoutMillis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for at least " + minimum + " children";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
+                do {
+                    if (((ViewGroup) view).getChildCount() >= minimum) {
+                        return;
+                    }
+                    controller.loopMainThreadForAtLeast(100);
+                } while (android.os.SystemClock.uptimeMillis() < deadline);
+                throw new AssertionError("Timed out waiting for " + minimum + " children");
+            }
+        };
+    }
+
+    /** Waits until a container shows rows or its explicit empty state. */
+    public static ViewAction waitForRowsOrEmpty(int emptyViewId, long timeoutMillis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for rows or empty state " + emptyViewId;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
+                do {
+                    final View emptyView = view.getRootView().findViewById(emptyViewId);
+                    final boolean hasRows = ((ViewGroup) view).getChildCount() > 0;
+                    final boolean emptyShown = emptyView != null
+                            && emptyView.getVisibility() == View.VISIBLE;
+                    if (hasRows || emptyShown) {
+                        return;
+                    }
+                    controller.loopMainThreadForAtLeast(100);
+                } while (android.os.SystemClock.uptimeMillis() < deadline);
+                throw new AssertionError("Timed out waiting for rows or empty state " + emptyViewId);
+            }
+        };
+    }
+
     /**
      * Runs an optional interaction with a short timeout. A missing optional view must not wait for
      * the 15-minute policy that slow rule loading needs for required views.

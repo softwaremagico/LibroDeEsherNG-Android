@@ -111,7 +111,9 @@ public class MorticiaEndToEndUiTest {
 
     private void verifyCharacteristicsTab() {
         openTab("Características");
-        onView(withId(R.id.characteristics_container)).check(matches(hasMinimumChildCount(1)));
+        onView(withId(R.id.characteristics_container))
+                .perform(UiViews.waitForChildCount(1, 10_000))
+                .check(matches(hasMinimumChildCount(1)));
     }
 
     private void verifySkillsTab() {
@@ -123,7 +125,7 @@ public class MorticiaEndToEndUiTest {
     private void verifySpellsTab() {
         openTab("Conjuros");
         onView(withId(R.id.spells_remaining)).check(matches(withSubstring("Puntos de desarrollo restantes")));
-        onView(withId(R.id.spells_container)).check(renderedRowsOrEmptyState(R.id.spells_empty));
+        assertRenderedRowsOrEmpty(R.id.spells_container, R.id.spells_empty);
     }
 
     private void verifyPerksTab() {
@@ -134,28 +136,33 @@ public class MorticiaEndToEndUiTest {
 
     private void verifyHistoryTab() {
         openTab("Historial");
-        onView(withId(R.id.history_container)).check(renderedRowsOrEmptyState(R.id.history_empty));
+        assertRenderedRowsOrEmpty(R.id.history_container, R.id.history_empty);
     }
 
     private void verifyEquipmentTab() {
         openTab("Equipo");
-        onView(withId(R.id.equipment_container)).check(renderedRowsOrEmptyState(R.id.equipment_empty));
+        assertRenderedRowsOrEmpty(R.id.equipment_container, R.id.equipment_empty);
     }
 
     private void verifyResistancesTab() {
         openTab("Resistencias");
-        onView(withId(R.id.resistances_container)).check(renderedRowsOrEmptyState(R.id.resistances_empty));
+        assertRenderedRowsOrEmpty(R.id.resistances_container, R.id.resistances_empty);
     }
 
     private void verifyCategoriesTab() {
         openTab("Categorías");
         onView(withId(R.id.categories_remaining)).check(matches(withSubstring("Puntos de desarrollo restantes")));
-        onView(withId(R.id.categories_container)).check(renderedRowsOrEmptyState(R.id.categories_empty));
+        assertRenderedRowsOrEmpty(R.id.categories_container, R.id.categories_empty);
     }
 
     private void verifyWeaponTiersTab() {
         openTab("Coste de armas");
-        onView(withId(R.id.weapon_tiers_container)).check(renderedRowsOrEmptyState(R.id.weapon_tiers_empty));
+        assertRenderedRowsOrEmpty(R.id.weapon_tiers_container, R.id.weapon_tiers_empty);
+    }
+
+    private static void assertRenderedRowsOrEmpty(int containerId, int emptyViewId) {
+        onView(withId(containerId)).perform(UiViews.waitForRowsOrEmpty(emptyViewId, 10_000))
+                .check(renderedRowsOrEmptyState(emptyViewId));
     }
 
     private void verifyTrainingsTab() {
