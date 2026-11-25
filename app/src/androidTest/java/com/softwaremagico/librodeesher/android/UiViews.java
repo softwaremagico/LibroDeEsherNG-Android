@@ -236,9 +236,17 @@ public final class UiViews {
             @Override
             public void perform(UiController controller, View view) {
                 final Spinner spinner = (Spinner) view;
-                final android.widget.SpinnerAdapter adapter = spinner.getAdapter();
+                android.widget.SpinnerAdapter adapter = spinner.getAdapter();
+                final long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+                while (adapter == null && android.os.SystemClock.uptimeMillis() < deadline) {
+                    controller.loopMainThreadForAtLeast(100);
+                    adapter = spinner.getAdapter();
+                }
                 if (adapter == null) {
-                    throw new AssertionError("Category spinner has no adapter");
+                    final View empty = view.getRootView().findViewById(R.id.spells_empty);
+                    final String state = empty instanceof android.widget.TextView
+                            ? String.valueOf(((android.widget.TextView) empty).getText()) : "not present";
+                    throw new AssertionError("Category spinner has no adapter; spells empty state: " + state);
                 }
                 for (int i = 0; i < adapter.getCount(); i++) {
                     spinner.setSelection(i);
