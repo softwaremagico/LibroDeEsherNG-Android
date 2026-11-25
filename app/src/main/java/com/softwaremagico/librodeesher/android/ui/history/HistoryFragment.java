@@ -344,6 +344,7 @@ public class HistoryFragment extends Fragment {
         apply.setText(R.string.accept);
         apply.setOnClickListener(v -> {
             character.setHistoryText(text.getText().toString());
+            requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         });
         container.addView(text);

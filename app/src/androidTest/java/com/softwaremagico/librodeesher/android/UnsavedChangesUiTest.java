@@ -118,6 +118,22 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Cambios que deben conservarse")));
     }
 
+    @Test
+    public void historyEditsUpdateUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Historial");
+        onView(allOf(ViewMatchers.isAssignableFrom(android.widget.EditText.class),
+                isDescendantOfA(withId(R.id.history_container))))
+                .perform(scrollTo(), replaceText("Historia de prueba"));
+        Espresso.closeSoftKeyboard();
+        onView(allOf(withText(R.string.accept), isDescendantOfA(withId(R.id.history_container))))
+                .perform(scrollTo(), click());
+        assertTitleHasMarker(true);
+    }
+
     private void makeSelectedCharacterDirty() {
         renameSelectedCharacter("Cambios sin guardar");
     }
