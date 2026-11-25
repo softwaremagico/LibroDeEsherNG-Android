@@ -1,7 +1,5 @@
 package com.softwaremagico.librodeesher.android;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.culture.Culture;
 import com.softwaremagico.librodeesher.profession.Profession;
@@ -10,13 +8,12 @@ import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
+/** JVM checks of the rules engine; the instrumented suite stays strictly UI-only. */
 public class FullCharacterLevelUpTest {
     @Test
     public void createAndLevelUpCharacter() throws Exception {
