@@ -178,6 +178,7 @@ public class DevelopmentScreensUiTest {
         onView(withId(R.id.option_save)).perform(scrollTo()).check(matches(isDisplayed()));
         safe(() -> onView(withId(R.id.option_magic)).perform(scrollTo(), click()));
         safe(() -> onView(withId(R.id.option_save)).perform(UiViews.clickDirectly()));
+        Espresso.pressBack();
 
         safe(() -> {
             menuItem(R.string.settings);
