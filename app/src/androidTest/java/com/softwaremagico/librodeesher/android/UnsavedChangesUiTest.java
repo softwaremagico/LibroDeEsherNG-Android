@@ -226,6 +226,41 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
+    public void characterOptionUpdatesUnsavedMarker() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        UiMenus.click(R.string.navigation_options);
+        final AtomicReference<Boolean> original = new AtomicReference<>();
+        onView(withId(R.id.option_sort_pdf_skills)).perform(scrollTo(), new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(android.widget.CompoundButton.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "toggle PDF sorting option";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final android.widget.CompoundButton button = (android.widget.CompoundButton) view;
+                original.set(button.isChecked());
+                button.performClick();
+            }
+        });
+        try {
+            onView(withId(R.id.option_save)).perform(scrollTo(), click());
+            assertTitleHasMarker(true);
+        } finally {
+            onView(withId(R.id.option_sort_pdf_skills)).perform(scrollTo(), UiViews.setChecked(original.get()));
+            onView(withId(R.id.option_save)).perform(scrollTo(), click());
+            Espresso.pressBack();
+        }
+    }
+
+    @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         UiMenus.click(R.string.navigation_options);
         final AtomicReference<Boolean> previousMagic = new AtomicReference<>();

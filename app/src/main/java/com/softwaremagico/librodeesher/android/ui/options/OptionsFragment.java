@@ -109,6 +109,7 @@ public class OptionsFragment extends Fragment {
                 pdfMode.getSelectedItemPosition(), debugMode.isChecked(), disabled);
         CharacterManager.getInstance().setOptionsHandler(handler);
         handler.applyTo(CharacterManager.getInstance().getSelectedCharacter());
+        requireActivity().invalidateOptionsMenu();
         AppLog.setDebugMode(debugMode.isChecked());
         Toast.makeText(requireContext(), R.string.options_applied, Toast.LENGTH_LONG).show();
     }

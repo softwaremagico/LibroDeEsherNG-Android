@@ -170,13 +170,13 @@ public class SheetFragment extends Fragment {
             if (character) {
                 final CharacterPlayer imported = CharacterFileHelper.importCharacter(requireContext(), uri);
                 CharacterManager.getInstance().setSelectedCharacter(imported);
-                requireActivity().invalidateOptionsMenu();
                 Toast.makeText(requireContext(), R.string.sheet_file_imported, Toast.LENGTH_SHORT).show();
             } else {
                 CharacterFileHelper.importLevel(requireContext(), uri,
                         CharacterManager.getInstance().getSelectedCharacter());
                 Toast.makeText(requireContext(), R.string.sheet_file_imported, Toast.LENGTH_SHORT).show();
             }
+            requireActivity().invalidateOptionsMenu();
             lastPdfFile = null;
             renderCharacter();
         } catch (Exception exception) {
