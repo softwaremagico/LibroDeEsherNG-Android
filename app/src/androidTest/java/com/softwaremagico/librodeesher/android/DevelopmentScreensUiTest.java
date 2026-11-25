@@ -197,10 +197,13 @@ public class DevelopmentScreensUiTest {
     }
 
     private void menuItem(int title) {
-        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
         final String text = label(title);
         final android.app.UiAutomation automation =
                 androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getUiAutomation();
+        final android.view.accessibility.AccessibilityNodeInfo initial = automation.getRootInActiveWindow();
+        if (initial == null || !clickOverflow(initial)) {
+            throw new AssertionError("Overflow menu button not visible");
+        }
         final long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
         do {
             final android.view.accessibility.AccessibilityNodeInfo root = automation.getRootInActiveWindow();
@@ -221,6 +224,22 @@ public class DevelopmentScreensUiTest {
             android.os.SystemClock.sleep(200);
         } while (android.os.SystemClock.uptimeMillis() < deadline);
         throw new AssertionError("Overflow menu item not visible: " + text);
+    }
+
+    private static boolean clickOverflow(android.view.accessibility.AccessibilityNodeInfo node) {
+        final CharSequence className = node.getClassName();
+        if (className != null && className.toString().endsWith("OverflowMenuButton")
+                && node.isVisibleToUser()
+                && node.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)) {
+            return true;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            final android.view.accessibility.AccessibilityNodeInfo child = node.getChild(i);
+            if (child != null && clickOverflow(child)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void createCompleteCharacter() {
