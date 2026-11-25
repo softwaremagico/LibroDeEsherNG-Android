@@ -1,16 +1,14 @@
 package com.softwaremagico.librodeesher.android;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSubstring;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.is;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -57,13 +55,13 @@ public class NihalEndToEndUiTest {
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
         UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
 
-        for (int i = 0; i < 8; i++) {
-            onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
-            onView(withId(R.id.sheet_level_up_button)).perform(UiViews.selectSpinnerContaining("Desarrollo automático"));
-            onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        for (int level = 2; level <= 9; level++) {
+            onView(withId(R.id.sheet_level_up_button)).perform(scrollTo(), click());
+            onView(withText(R.string.sheet_level_up_auto)).inRoot(isDialog()).perform(click());
+            onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level " + level)));
         }
 
-        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Nihal Dragoniana")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level 9")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Laan")));
