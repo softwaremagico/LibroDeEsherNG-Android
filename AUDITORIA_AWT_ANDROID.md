@@ -79,9 +79,10 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 
 - Baterías UI-only previas: `#22` → `OK (20 tests)` (`/tmp/opencode/final-all-ui-22.log`);
   `#23` → `OK (20 tests)` (`/tmp/opencode/issue23-all-ui-2.log`), ambas con origen publicado.
-- `#24`/`#25`: `assembleDebug`, `testDebugUnitTest`, `assembleDebugAndroidTest` y `lintDebug` en
-  verde; batería final de instrumentación con cobertura en
-  `/tmp/opencode/final-coverage-run.log`.
+- `#24`/`#25`/`#26`: `assembleDebug`, `testDebugUnitTest`, `assembleDebugAndroidTest` y
+  `lintDebug` completados correctamente; la batería instrumentada completa con cobertura sigue
+  pendiente de verificación. El último intento completo anterior registró fallos y no constituye
+  evidencia de una batería verde.
 - Tests JVM añadidos: serialización JSON, entidad Room, manager de sesión (dirty tracking,
   clonación, cambio/cierre), validador, resumen y fechas. Tests instrumentados añadidos:
   `UnsavedChangesUiTest`, `AdditionalScreensUiTest` (asistente, wiki, aleatorio),
@@ -91,9 +92,15 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   idioma y wiki).
 - Cobertura: JaCoCo combinatorial (`testDebugUnitTest` + `createDebugCoverageReport`), informe en
   `app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv`. Las clases generadas por
-  Android/Room se excluyen del denominador.
-- Estado final: Android `HEAD == origin/main`, árbol limpio; NG sin cambios en `a29d114`
-  (`origin/master`). El commit exacto se registra al cierre de `#24`/`#25`.
+  Android/Room se excluyen del denominador. La última medición disponible fue 2668/4589 líneas
+  (58,1 %); falta verificar una medición actualizada y alcanzar el objetivo del 80 %.
+- Nihal: el test UI con ocho subidas automáticas y comprobación del PDF pasó en 616,6 segundos
+  (`/tmp/opencode/nihal-optimized2.log`). La ejecución histórica de 887,5 segundos no es una
+  comparación controlada. Las subidas requieren aproximadamente 56–67 segundos cada una.
+- Estado pendiente de cierre: Android `HEAD == origin/main` en `8c8a4d5` antes de actualizar este
+  informe; existe el directorio no rastreado `images/`, que se ha preservado. NG permanece sin
+  cambios en `a29d114` (`origin/master`). Las incidencias `#24`–`#26` siguen abiertas hasta
+  completar la verificación.
 - PDF: memories `.serena/memories/librodeesher-ng-pdf-parity.md` y
   `.serena/memories/android/nihal-e2e-verification.md`. Los artefactos crudos de `.parity/out/`
   están desactualizados y no deben usarse como evidencia.
