@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -69,6 +70,22 @@ public class MultiCharacterSessionUiTest {
         // The second entry only exists when the clone was added to the session.
         onData(anything()).atPosition(1).perform(click());
         onView(withId(R.id.navigation_home)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void switchingCharacterConfirmsBeforeDiscardingEdits() {
+        onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
+        UiDialogs.discardUnsavedChangesIfPrompted();
+        onView(withId(R.id.name_input)).perform(replaceText("Original"));
+        Espresso.closeSoftKeyboard();
+        clickMenu(R.string.character_clone);
+
+        onView(withId(R.id.name_input)).perform(replaceText("Copia modificada"));
+        Espresso.closeSoftKeyboard();
+        clickMenu(R.string.character_switch);
+        onView(withText(R.string.unsaved_changes_message)).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText(R.string.cancel)).inRoot(isDialog()).perform(click());
+        onView(withId(R.id.name_input)).check(matches(withText("Copia modificada")));
     }
 
     private void clickMenu(int label) {
