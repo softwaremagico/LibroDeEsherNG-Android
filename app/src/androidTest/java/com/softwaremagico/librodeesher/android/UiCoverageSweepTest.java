@@ -173,6 +173,7 @@ public class UiCoverageSweepTest {
 
     private void development(int title) {
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        android.os.SystemClock.sleep(300);
         openTab(label(title));
     }
 

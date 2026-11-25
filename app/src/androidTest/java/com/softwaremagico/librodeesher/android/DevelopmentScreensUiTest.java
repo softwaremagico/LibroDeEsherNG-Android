@@ -211,7 +211,9 @@ public class DevelopmentScreensUiTest {
     private void development(int title) {
         // Every development screen is also a tab of the character view; using the tab avoids
         // depending on the ActionBar submenu visibility during long UI sweeps.
+        UiDialogs.dismissAnyDialogIfPresent();
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        android.os.SystemClock.sleep(300);
         openTab(label(title));
     }
 
@@ -228,7 +230,7 @@ public class DevelopmentScreensUiTest {
 
     private void openTab(String title) {
         onView(allOf(withText(title), isDescendantOfA(withId(R.id.tabs)))).perform(scrollTo(), click());
-        android.os.SystemClock.sleep(300);
+        android.os.SystemClock.sleep(500);
     }
 
     private static String label(int id) {
