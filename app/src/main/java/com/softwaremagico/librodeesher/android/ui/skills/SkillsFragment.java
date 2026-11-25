@@ -245,6 +245,7 @@ public class SkillsFragment extends Fragment {
         }
         try {
             if (CharacterManager.getInstance().getSelectedCharacter().setCurrentLevelSkillRanks(skill.getId(), ranks)) {
+                requireActivity().invalidateOptionsMenu();
                 render();
             } else {
                 Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
@@ -293,6 +294,7 @@ public class SkillsFragment extends Fragment {
                             character.removeFavouriteSkill(skills.get(i).getId());
                         }
                     }
+                    requireActivity().invalidateOptionsMenu();
                     render();
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -302,6 +304,7 @@ public class SkillsFragment extends Fragment {
     private void toggleRecommended() {
         final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
         character.setRecommendedFavouriteSkillsIncluded(!character.isRecommendedFavouriteSkillsIncluded());
+        requireActivity().invalidateOptionsMenu();
         Toast.makeText(requireContext(), R.string.skills_updated, Toast.LENGTH_SHORT).show();
     }
 
@@ -325,6 +328,7 @@ public class SkillsFragment extends Fragment {
                 .setItems(labels, (dialog, which) -> {
                     try {
                         action.apply(skills.get(which));
+                        requireActivity().invalidateOptionsMenu();
                         render();
                     } catch (InvalidXmlElementException exception) {
                         AppLog.error("Cannot apply skill action", exception);
@@ -352,6 +356,7 @@ public class SkillsFragment extends Fragment {
                     try {
                         CharacterManager.getInstance().getSelectedCharacter()
                                 .addSkillSpecialization(skill.getId(), specialization);
+                        requireActivity().invalidateOptionsMenu();
                         render();
                     } catch (InvalidXmlElementException exception) {
                         AppLog.error("Cannot specialize skill", exception);
@@ -374,6 +379,7 @@ public class SkillsFragment extends Fragment {
                         final int ranks = Integer.parseInt(input.getText().toString().trim());
                         if (CharacterManager.getInstance().getSelectedCharacter()
                                 .setCurrentLevelCategoryRanks(selectedCategoryId, ranks)) {
+                            requireActivity().invalidateOptionsMenu();
                             render();
                         } else {
                             Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
@@ -391,6 +397,7 @@ public class SkillsFragment extends Fragment {
         try {
             final CharacterPlayer character = CharacterManager.getInstance().getSelectedCharacter();
             RandomCharacterPlayer.setRandomRanks(character, 0, null, 0, character.getLevel(), null, null);
+            requireActivity().invalidateOptionsMenu();
             render();
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot spend ranks randomly", exception);
