@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.softwaremagico.librodeesher.android.R;
+import com.softwaremagico.librodeesher.android.core.UnsavedChangesGuard;
 import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
 import com.softwaremagico.librodeesher.android.persistence.CharacterEntity;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
@@ -49,13 +50,16 @@ public class CharacterLoadFragment extends Fragment implements CharacterListAdap
 
     @Override
     public void onCharacterClick(CharacterEntity entity) {
-        try {
-            CharacterPlayer loaded = entity.getCharacterPlayer();
-            CharacterManager.getInstance().openCharacter(loaded, entity.getId());
-            Toast.makeText(getContext(), R.string.character_loaded, Toast.LENGTH_SHORT).show();
-            Navigation.findNavController(requireView()).navigate(R.id.navigation_home);
-        } catch (Exception e) {
-            Toast.makeText(getContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
-        }
+        UnsavedChangesGuard.run(requireContext(), () -> {
+            try {
+                CharacterPlayer loaded = entity.getCharacterPlayer();
+                CharacterManager.getInstance().openCharacter(loaded, entity.getId());
+                requireActivity().invalidateOptionsMenu();
+                Toast.makeText(getContext(), R.string.character_loaded, Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(requireView()).navigate(R.id.navigation_home);
+            } catch (Exception e) {
+                Toast.makeText(getContext(), R.string.sheet_load_error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

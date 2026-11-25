@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id 'jacoco'
 }
 
 android {
@@ -23,6 +24,8 @@ android {
         }
         debug {
             minifyEnabled false
+            // Produces coverage.ec on the device for the instrumented UI suite.
+            testCoverageEnabled true
         }
     }
     compileOptions {
@@ -65,4 +68,33 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+}
+
+// JVM unit-test coverage. Generated Android classes are excluded so the ratio reflects the code
+// written in this module; UI classes are additionally exercised by the instrumented suite.
+tasks.configureEach {
+    if (name == 'testDebugUnitTest') {
+        finalizedBy 'jacocoTestReport'
+    }
+}
+
+tasks.register('jacocoTestReport', JacocoReport) {
+    dependsOn tasks.matching { it.name == 'testDebugUnitTest' }
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = true
+    }
+    sourceDirectories.setFrom(files(android.sourceSets.main.java.srcDirs))
+    // Unit-test data plus the coverage.ec collected by connectedDebugAndroidTest.
+    executionData.setFrom(files(
+            "$buildDir/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    ).filter { it.exists() })
+    executionData.from(fileTree(dir: "$buildDir/outputs/code_coverage", includes: ['**/*.ec']))
+    classDirectories.setFrom(files(
+            fileTree(dir: "$buildDir/intermediates/javac/debug/compileDebugJavaWithJavac/classes", exclude: [
+                    '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+                    '**/databinding/**', '**/*_Factory.*', '**/*_ViewBinding.*'
+            ])
+    ))
 }

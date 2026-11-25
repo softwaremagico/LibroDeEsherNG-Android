@@ -86,20 +86,17 @@ public class ReferenceCharactersUiTest {
     }
 
     private void createAndVerify(CharacterSpec character) throws Exception {
-        onView(withId(R.id.action_new_character)).perform(click());
+        onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
+        UiDialogs.discardUnsavedChangesIfPrompted();
         onView(withId(R.id.name_input)).perform(replaceText(character.name));
 
-        onView(withId(R.id.sex_spinner)).perform(click());
-        onData(is(character.sex)).perform(click());
+        onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerContaining(character.sex));
 
-        onView(withId(R.id.race_spinner)).perform(click());
-        onData(hasToString("Race[" + character.raceId + "]")).perform(click());
+        onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[" + character.raceId + "]"));
 
-        onView(withId(R.id.culture_spinner)).perform(click());
-        onData(hasToString("Culture[" + character.cultureId + "]")).perform(click());
+        onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[" + character.cultureId + "]"));
 
-        onView(withId(R.id.profession_spinner)).perform(click());
-        onData(hasToString("Profession[" + character.professionId + "]")).perform(click());
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[" + character.professionId + "]"));
 
         onView(withId(R.id.level_picker)).perform(setNumberPickerValue(character.level));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
@@ -107,7 +104,7 @@ public class ReferenceCharactersUiTest {
         onView(withId(R.id.summary_text)).check(matches(withSubstring("Nombre: " + character.name)));
         onView(withId(R.id.summary_text)).check(matches(withSubstring("Nivel: " + character.level)));
 
-        onView(withId(R.id.navigation_sheet)).perform(click());
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_text)).check(matches(withSubstring(character.name)));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level " + character.level)));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring(character.raceName)));
@@ -116,7 +113,7 @@ public class ReferenceCharactersUiTest {
         PdfExportCheck.exportAndVerify(character.name, character.level, character.raceName,
                 character.cultureName, character.professionName);
 
-        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         verifyEveryWindow(character);
     }
 

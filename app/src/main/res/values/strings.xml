@@ -30,9 +30,16 @@
     <string name="character_saved">Personaje guardado</string>
     <string name="character_loaded">Personaje cargado</string>
     <string name="character_switch">Cambiar de personaje</string>
+    <string name="character_clone">Clonar personaje</string>
+    <string name="character_cloned">Personaje clonado.</string>
+    <string name="character_clone_error">No se pudo clonar el personaje.</string>
     <string name="character_close">Cerrar personaje</string>
     <string name="character_close_confirm">¿Cerrar este personaje? Los cambios no guardados se perderán.</string>
     <string name="character_no_open">No hay más personajes abiertos.</string>
+    <string name="unsaved_marker">*</string>
+    <string name="unsaved_changes_title">Cambios sin guardar</string>
+    <string name="unsaved_changes_message">El personaje tiene cambios sin guardar. Si continúas, se perderán.</string>
+    <string name="unsaved_changes_continue">Continuar</string>
     <string name="pdf_export_error">Error al exportar PDF</string>
     <string name="pdf_export_success">PDF exportado correctamente</string>
     <string name="navigation_visualization">Hoja</string>

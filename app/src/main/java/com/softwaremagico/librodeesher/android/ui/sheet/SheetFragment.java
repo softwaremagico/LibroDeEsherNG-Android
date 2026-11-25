@@ -161,6 +161,7 @@ public class SheetFragment extends Fragment {
             if (character) {
                 final CharacterPlayer imported = CharacterFileHelper.importCharacter(requireContext(), uri);
                 CharacterManager.getInstance().setSelectedCharacter(imported);
+                requireActivity().invalidateOptionsMenu();
                 Toast.makeText(requireContext(), R.string.sheet_file_imported, Toast.LENGTH_SHORT).show();
             } else {
                 CharacterFileHelper.importLevel(requireContext(), uri,
@@ -201,6 +202,7 @@ public class SheetFragment extends Fragment {
             return;
         }
         CharacterSaveHelper.save(requireContext());
+        requireActivity().invalidateOptionsMenu();
     }
 
     private void showLoadDialog() {
@@ -223,6 +225,7 @@ public class SheetFragment extends Fragment {
             return;
         }
         CharacterManager.getInstance().openCharacter(character, entity.getId());
+        requireActivity().invalidateOptionsMenu();
         renderCharacter();
     }
 
@@ -389,6 +392,7 @@ public class SheetFragment extends Fragment {
             character.increaseLevel();
             new RandomCharacterPlayer(character).setDevelopmentPoints();
             renderCharacter();
+            requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(), getString(R.string.sheet_level_up_done, character.getLevel()),
                     Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
@@ -402,6 +406,7 @@ public class SheetFragment extends Fragment {
         try {
             character.increaseLevel();
             renderCharacter();
+            requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(),
                     getString(R.string.sheet_level_up_manual_hint, character.getLevel()),
                     Toast.LENGTH_LONG).show();

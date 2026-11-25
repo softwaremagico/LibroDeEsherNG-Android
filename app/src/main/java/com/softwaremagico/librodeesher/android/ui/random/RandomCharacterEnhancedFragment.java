@@ -23,13 +23,19 @@ import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
+import com.softwaremagico.librodeesher.culture.Culture;
 import com.softwaremagico.librodeesher.pdf.CharacterPdfExporter;
 import com.softwaremagico.librodeesher.persistence.CharacterData;
 import com.softwaremagico.librodeesher.persistence.CharacterDataMapper;
 import com.softwaremagico.librodeesher.persistence.CharacterJsonManager;
+import com.softwaremagico.librodeesher.profession.Profession;
 import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
+import com.softwaremagico.librodeesher.race.Race;
+import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
 import java.io.File;
+import java.util.List;
+import java.util.Random;
 
 public class RandomCharacterEnhancedFragment extends Fragment {
 
@@ -40,6 +46,7 @@ public class RandomCharacterEnhancedFragment extends Fragment {
     private Button shareButton;
     private CharacterPlayer lastCharacter;
     private File lastPdfFile;
+    private final Random random = new Random();
 
     @Nullable
     @Override
@@ -66,6 +73,10 @@ public class RandomCharacterEnhancedFragment extends Fragment {
     private void generateRandomCharacter() {
         try {
             final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
+            // The AWT Controller only enabled "Aleatorio" once race, culture and profession were
+            // selected. RandomCharacterPlayer#createRandomValues() still expects that precondition,
+            // so seed the fresh character with the current selections or with random catalog ones.
+            seedSelections(character);
             final RandomPreferencesHandler preferences =
                     RandomPreferencesHandler.getInstance(requireContext());
             final RandomCharacterPlayer generator =
@@ -75,6 +86,7 @@ public class RandomCharacterEnhancedFragment extends Fragment {
             preferences.afterGeneration(character);
             lastCharacter = character;
             CharacterManager.getInstance().setSelectedCharacter(character);
+            requireActivity().invalidateOptionsMenu();
             summaryText.setText(CharacterSummaryBuilder.build(character));
             saveButton.setVisibility(View.VISIBLE);
             exportButton.setVisibility(View.VISIBLE);
@@ -83,6 +95,25 @@ public class RandomCharacterEnhancedFragment extends Fragment {
             AppLog.error("Cannot generate random character", exception);
             summaryText.setText(getString(R.string.error_creating_character, String.valueOf(exception.getMessage())));
         }
+    }
+
+    /** Mirrors the legacy precondition check: never hand an unseeded character to the generator. */
+    private void seedSelections(CharacterPlayer character) throws Exception {
+        final CharacterPlayer current = CharacterManager.getInstance().getSelectedCharacter();
+        final RulesCatalog catalog = RulesCatalog.getInstance();
+        final String raceId = current != null && current.getRaceId() != null
+                ? current.getRaceId() : pick(catalog.getRaces()).getId();
+        final String cultureId = current != null && current.getCultureId() != null
+                ? current.getCultureId() : pick(catalog.getCultures()).getId();
+        final String professionId = current != null && current.getProfessionId() != null
+                ? current.getProfessionId() : pick(catalog.getProfessions()).getId();
+        character.setRaceId(raceId);
+        character.setCultureId(cultureId);
+        character.setProfessionId(professionId);
+    }
+
+    private <T> T pick(List<T> items) {
+        return items.get(random.nextInt(items.size()));
     }
 
     private void saveCharacter() {

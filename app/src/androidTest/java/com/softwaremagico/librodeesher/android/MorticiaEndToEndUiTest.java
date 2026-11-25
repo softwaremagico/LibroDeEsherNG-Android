@@ -13,8 +13,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSubstring;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.is;
 
 import android.view.View;
 import android.widget.NumberPicker;
@@ -69,20 +69,17 @@ public class MorticiaEndToEndUiTest {
     }
 
     private void createMorticiaAtLevelTen() throws Exception {
-        onView(withId(R.id.action_new_character)).perform(click());
+        onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
+        UiDialogs.discardUnsavedChangesIfPrompted();
         onView(withId(R.id.name_input)).perform(replaceText("Morticia Innodan"));
 
-        onView(withId(R.id.sex_spinner)).perform(click());
-        onData(is("Mujer")).perform(click());
+        onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
 
-        onView(withId(R.id.race_spinner)).perform(click());
-        onData(hasToString("Race[ilourianos]")).perform(click());
+        onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[ilourianos]"));
 
-        onView(withId(R.id.culture_spinner)).perform(click());
-        onData(hasToString("Culture[woodland]")).perform(click());
+        onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[woodland]"));
 
-        onView(withId(R.id.profession_spinner)).perform(click());
-        onData(hasToString("Profession[elementalist]")).perform(click());
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[elementalist]"));
 
         onView(withId(R.id.level_picker)).perform(setNumberPickerValue(10));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
@@ -94,7 +91,7 @@ public class MorticiaEndToEndUiTest {
         onView(withId(R.id.summary_text)).check(matches(withSubstring("Profesión: Elementalista")));
         onView(withId(R.id.summary_text)).check(matches(withSubstring("Nivel: 10")));
 
-        onView(withId(R.id.navigation_sheet)).perform(click());
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Morticia Innodan")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level 10")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Ilourianos")));
@@ -103,7 +100,7 @@ public class MorticiaEndToEndUiTest {
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Resistance rolls")));
         PdfExportCheck.exportAndVerify("Morticia Innodan", 10, "Ilourianos", "Silvana", "Elementalista");
 
-        onView(withId(R.id.navigation_home)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
     }
 
     private void verifyCharacterTab() {

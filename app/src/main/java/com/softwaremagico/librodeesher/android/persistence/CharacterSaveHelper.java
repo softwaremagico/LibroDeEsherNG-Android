@@ -28,6 +28,7 @@ public final class CharacterSaveHelper {
             }
             final long id = AppDatabase.getInstance(context).getCharacterEntityDao().insert(entity);
             manager.setSelectedCharacterId(id);
+            manager.markClean();
             Toast.makeText(context, R.string.sheet_saved, Toast.LENGTH_SHORT).show();
             return true;
         } catch (Exception exception) {

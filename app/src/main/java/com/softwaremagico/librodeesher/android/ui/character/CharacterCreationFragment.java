@@ -314,6 +314,7 @@ public class CharacterCreationFragment extends Fragment {
             character.setFinalAge(age);
         }
         CharacterManager.getInstance().setSelectedCharacter(character);
+        requireActivity().invalidateOptionsMenu();
         nameInput.setText(character.getName());
         summaryText.setText(CharacterSummaryBuilder.build(character));
     }

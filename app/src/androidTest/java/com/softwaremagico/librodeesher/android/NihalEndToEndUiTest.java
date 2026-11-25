@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSubstring;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 
@@ -41,36 +42,28 @@ public class NihalEndToEndUiTest {
 
     @Test
     public void createNihalFromScratchAndReachLevelNineUsingOnlyUi() throws Exception {
-        onView(withId(R.id.action_new_character)).perform(click());
+        onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
+        UiDialogs.discardUnsavedChangesIfPrompted();
         onView(withId(R.id.name_input)).perform(replaceText("Nihal Dragoniana"));
 
-        onView(withId(R.id.sex_spinner)).perform(click());
-        onData(is("Mujer")).perform(click());
+        onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
 
-        onView(withId(R.id.race_spinner)).perform(click());
-        onData(hasToString("Race[laan]")).perform(click());
+        onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[laan]"));
 
-        onView(withId(R.id.culture_spinner)).perform(click());
-        onData(hasToString("Culture[coastalUrbanClassHigh]")).perform(click());
+        onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
 
-        onView(withId(R.id.profession_spinner)).perform(click());
-        onData(hasToString("Profession[lordOfTheChaos]")).perform(click());
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
 
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
-        try {
-            onView(withId(R.id.characteristics_confirm)).perform(click());
-        } catch (Exception ignored) {
-            // Characteristics may already be confirmed on this build.
-        }
+        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
 
         for (int i = 0; i < 8; i++) {
-            onView(withId(R.id.navigation_sheet)).perform(click());
-            onView(withId(R.id.sheet_level_up_button)).perform(click());
-            onData(is("Desarrollo automático")).perform(click());
-            onView(withId(R.id.navigation_home)).perform(click());
+            onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+            onView(withId(R.id.sheet_level_up_button)).perform(UiViews.selectSpinnerContaining("Desarrollo automático"));
+            onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         }
 
-        onView(withId(R.id.navigation_sheet)).perform(click());
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Nihal Dragoniana")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level 9")));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Laan")));

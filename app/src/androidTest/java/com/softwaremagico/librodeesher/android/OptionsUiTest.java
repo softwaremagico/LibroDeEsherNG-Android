@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -53,9 +54,26 @@ public class OptionsUiTest {
         onView(withId(R.id.option_save)).perform(scrollTo(), click());
     }
 
+    @Test
+    public void characterLevelOptionsAreShownAndPersisted() {
+        openOptions();
+        setChecked(R.id.option_sort_pdf_skills, true);
+        setChecked(R.id.option_perks_cost_background, false);
+        onView(withId(R.id.option_save)).perform(scrollTo(), click());
+        Espresso.pressBack();
+
+        openOptions();
+        onView(withId(R.id.option_sort_pdf_skills)).check(matches(isChecked()));
+        onView(withId(R.id.option_perks_cost_background)).check(matches(isNotChecked()));
+
+        setChecked(R.id.option_sort_pdf_skills, false);
+        setChecked(R.id.option_perks_cost_background, true);
+        onView(withId(R.id.option_save)).perform(scrollTo(), click());
+    }
+
     private void openOptions() {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(R.string.navigation_options)).perform(click());
+        onView(withText(R.string.navigation_options)).inRoot(isPlatformPopup()).perform(click());
     }
 
     /** Clicks the checkbox only when needed, so the test never depends on a previous run's state. */

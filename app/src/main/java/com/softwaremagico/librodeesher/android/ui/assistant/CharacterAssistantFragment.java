@@ -140,6 +140,7 @@ public class CharacterAssistantFragment extends Fragment {
             }
         }
         CharacterManager.getInstance().setSelectedCharacter(character);
+        requireActivity().invalidateOptionsMenu();
         updateUI();
 
         prevButton.setOnClickListener(v -> {
@@ -377,6 +378,7 @@ public class CharacterAssistantFragment extends Fragment {
                 generated = true;
             }
             CharacterManager.getInstance().setSelectedCharacter(character);
+            requireActivity().invalidateOptionsMenu();
             updateUI();
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Error finishing character", exception);
@@ -387,6 +389,7 @@ public class CharacterAssistantFragment extends Fragment {
     private void saveCharacter() {
         if (CharacterManager.getInstance().getSelectedCharacter() != character) {
             CharacterManager.getInstance().setSelectedCharacter(character);
+            requireActivity().invalidateOptionsMenu();
         }
         CharacterSaveHelper.save(requireContext());
     }

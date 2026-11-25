@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,8 +23,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.BuildConfig;
-import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.R;
+import com.softwaremagico.librodeesher.android.core.CharacterValidator;
+import com.softwaremagico.librodeesher.android.core.UnsavedChangesGuard;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
     private MenuItem developmentMenu;
+    private CharSequence currentTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +64,19 @@ public class MainActivity extends AppCompatActivity {
             navController = navHostFragment.getNavController();
             NavigationUI.setupActionBarWithNavController(this, navController);
             NavigationUI.setupWithNavController(navView, navController);
-            navController.addOnDestinationChangedListener(
-                    (controller, destination, arguments) -> updateDevelopmentMenu(destination));
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                updateDevelopmentMenu(destination);
+                currentTitle = destination != null && destination.getLabel() != null
+                        ? destination.getLabel() : getString(R.string.app_name);
+                updateUnsavedTitle();
+            });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUnsavedTitle();
     }
 
     @Override
@@ -79,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        updateUnsavedTitle();
         final boolean levelOne = CharacterManager.getInstance().getSelectedCharacter().getLevel() <= 1;
         for (final int id : new int[]{R.id.action_culture_details, R.id.action_profession_details,
                 R.id.action_perks}) {
@@ -94,19 +108,35 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_new_character) {
-            final CharacterManager manager = CharacterManager.getInstance();
-            manager.openCharacter(manager.newCharacter(), CharacterManager.NO_ID);
-            if (navController != null) {
-                navController.navigate(R.id.navigation_home);
-            }
+            UnsavedChangesGuard.run(this, () -> {
+                final CharacterManager manager = CharacterManager.getInstance();
+                manager.openCharacter(manager.newCharacter(), CharacterManager.NO_ID);
+                navigate(R.id.navigation_home);
+                invalidateOptionsMenu();
+            });
             return true;
         }
         if (id == R.id.action_switch_character) {
-            showSwitchCharacterDialog();
+            UnsavedChangesGuard.run(this, this::showSwitchCharacterDialog);
             return true;
         }
         if (id == R.id.action_close_character) {
-            showCloseCharacterDialog();
+            if (CharacterManager.getInstance().isDirty()) {
+                showCloseCharacterDialog();
+            } else {
+                closeSelectedCharacter();
+            }
+            return true;
+        }
+        if (id == R.id.action_clone_character) {
+            try {
+                CharacterManager.getInstance().cloneSelectedCharacter();
+                Toast.makeText(this, R.string.character_cloned, Toast.LENGTH_SHORT).show();
+                invalidateOptionsMenu();
+            } catch (Exception exception) {
+                AppLog.error("Cannot clone character", exception);
+                Toast.makeText(this, R.string.character_clone_error, Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         if (id == R.id.action_load_character) {
@@ -121,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, problem, Toast.LENGTH_SHORT).show();
             } else {
                 com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper.save(this);
+                invalidateOptionsMenu();
             }
             return true;
         }
@@ -186,8 +217,13 @@ public class MainActivity extends AppCompatActivity {
     /** The development screens hang off the sheet, so their menu is only shown there. */
     private void updateDevelopmentMenu(NavDestination destination) {
         if (developmentMenu != null) {
-            developmentMenu.setVisible(destination != null
-                    && destination.getId() == R.id.navigation_sheet);
+            final boolean visible = destination != null
+                    && destination.getId() == R.id.navigation_sheet;
+            if (developmentMenu.isVisible() != visible) {
+                developmentMenu.setVisible(visible);
+                // The ActionBar keeps a snapshot of the menu; refresh it after changing visibility.
+                invalidateOptionsMenu();
+            }
         }
     }
 
@@ -215,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 .setItems(labels, (dialog, which) -> {
                     CharacterManager.getInstance().switchTo(which);
                     navigate(R.id.navigation_home);
+                    invalidateOptionsMenu();
                 })
                 .show();
     }
@@ -223,12 +260,29 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.character_close)
                 .setMessage(R.string.character_close_confirm)
-                .setPositiveButton(R.string.close, (dialog, which) -> {
-                    CharacterManager.getInstance().closeSelected();
-                    navigate(R.id.navigation_home);
-                })
+                .setPositiveButton(R.string.close, (dialog, which) -> closeSelectedCharacter())
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void closeSelectedCharacter() {
+        CharacterManager.getInstance().closeSelected();
+        navigate(R.id.navigation_home);
+        invalidateOptionsMenu();
+    }
+
+    /** Shows the legacy-style marker while the session differs from the last saved state. */
+    private void updateUnsavedTitle() {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        final CharSequence label = currentTitle == null ? getString(R.string.app_name) : currentTitle;
+        final String title = label
+                + (CharacterManager.getInstance().isDirty() ? " " + getString(R.string.unsaved_marker) : "");
+        if (!title.contentEquals(actionBar.getTitle())) {
+            actionBar.setTitle(title);
+        }
     }
 
     /** Raises the final age after creation, warning when it exceeds the racial lifespan. */
@@ -272,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
                     .setView(content)
                     .setPositiveButton(R.string.age_apply, (dialog, which) -> {
                         character.setFinalAge(picker.getValue());
+                        invalidateOptionsMenu();
                         Toast.makeText(this, getString(R.string.age_updated, picker.getValue()),
                                 Toast.LENGTH_SHORT).show();
                     })

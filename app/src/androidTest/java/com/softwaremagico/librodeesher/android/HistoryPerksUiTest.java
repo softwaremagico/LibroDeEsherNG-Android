@@ -16,7 +16,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.Matchers.is;
 
 import android.view.View;
 import android.widget.TextView;
@@ -60,7 +59,6 @@ public class HistoryPerksUiTest {
         onView(withId(R.id.name_input)).check(matches(withText("Prueba Historial")));
 
         openTab("Dotes");
-        android.os.SystemClock.sleep(700);
         onView(withId(R.id.perks_remaining)).check(matches(withSubstring("Puntos de dotes")));
         onView(withId(R.id.perks_history_points)).check(matches(withSubstring("Puntos de Historial")));
         final String initialPoints = textOf(R.id.perks_history_points);
@@ -81,28 +79,21 @@ public class HistoryPerksUiTest {
     }
 
     private void createCharacterWithUi() {
-        onView(withId(R.id.action_new_character)).perform(click());
+        onView(withId(R.id.action_new_character)).perform(UiViews.clickDirectly());
+        UiDialogs.discardUnsavedChangesIfPrompted();
         onView(withId(R.id.name_input)).perform(replaceText("Prueba Historial"));
 
-        onView(withId(R.id.sex_spinner)).perform(click());
-        onData(is("Mujer")).perform(click());
+        onView(withId(R.id.sex_spinner)).perform(UiViews.selectSpinnerPosition(1));
 
-        onView(withId(R.id.race_spinner)).perform(click());
-        onData(hasToString("Race[laan]")).perform(click());
+        onView(withId(R.id.race_spinner)).perform(UiViews.selectSpinnerContaining("Race[laan]"));
 
-        onView(withId(R.id.culture_spinner)).perform(click());
-        onData(hasToString("Culture[coastalUrbanClassHigh]")).perform(click());
+        onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
 
-        onView(withId(R.id.profession_spinner)).perform(click());
-        onData(hasToString("Profession[lordOfTheChaos]")).perform(click());
+        onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
 
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
-        try {
-            onView(withId(R.id.characteristics_confirm)).perform(click());
-        } catch (Exception ignored) {
-            // Some builds confirm the characteristics automatically.
-        }
-        onView(withId(R.id.navigation_home)).perform(click());
+        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
     }
 
     private void openTab(String title) {
@@ -112,25 +103,18 @@ public class HistoryPerksUiTest {
     /** Random perks can now open the legacy weakness/choice dialogs; resolve them before checking the list. */
     private static void dismissPerkOptionDialogs() {
         for (int attempt = 0; attempt < 6; attempt++) {
-            try {
-                onView(allOf(withText(R.string.perks_no_weakness), isDisplayed()))
-                        .inRoot(isDialog()).perform(click());
+            if (UiDialogs.clickDialogButtonIfPresent(R.string.perks_no_weakness)) {
                 continue;
-            } catch (RuntimeException ignored) {
-                // Not a weakness dialog.
             }
-            try {
+            final boolean choiceDialog = UiDialogs.isDialogTextPresent(R.string.perks_choice_title)
+                    || UiDialogs.isDialogTextPresent(R.string.perks_choice_flexible_title);
+            if (choiceDialog) {
                 onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
-                onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
+                UiDialogs.clickDialogButtonIfPresent(R.string.accept);
                 continue;
-            } catch (RuntimeException ignored) {
-                // Not a choice dialog either.
             }
-            try {
-                onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
+            if (UiDialogs.clickDialogButtonIfPresent(R.string.accept)) {
                 continue;
-            } catch (RuntimeException ignored) {
-                // No dialogs left.
             }
             break;
         }

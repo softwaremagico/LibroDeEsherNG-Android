@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -86,7 +87,7 @@ public class RandomPreferencesUiTest {
 
     private void openPreferences() {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(R.string.random_config)).perform(click());
+        onView(withText(R.string.random_config)).inRoot(isPlatformPopup()).perform(click());
     }
 
     /** Toggles only when needed, so the test does not depend on preferences left by earlier runs. */

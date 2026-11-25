@@ -64,16 +64,20 @@ public class OptionsFragment extends Fragment {
         pdfMode = view.findViewById(R.id.option_pdf_mode);
 
         final OptionsHandler handler = OptionsHandler.getInstance(requireContext());
-        firearms.setChecked(handler.isFirearmsAllowed());
-        chi.setChecked(handler.isChiAllowed());
-        otherRealmTraining.setChecked(handler.isOtherRealmTrainingAllowed());
-        magic.setChecked(handler.isMagicAllowed());
-        darkSpells.setChecked(handler.isDarkSpellsAsBasic());
-        perksCostBackground.setChecked(handler.isPerksCostBackgroundPoints());
-        handwriting.setChecked(handler.isHandwritingFont());
-        sortPdfSkills.setChecked(handler.isSortPdfSkills());
+        // The legacy OptionsWindow reflected the open character, not just the global defaults, so
+        // an imported/edited sheet does not silently lose its own flags when options are saved.
+        final com.softwaremagico.librodeesher.character.CharacterPlayer character =
+                CharacterManager.getInstance().getSelectedCharacter();
+        firearms.setChecked(character.isFirearmsAllowed());
+        chi.setChecked(character.isChiPowersAllowed());
+        otherRealmTraining.setChecked(character.isOtherRealmTrainingSpellsAllowed());
+        magic.setChecked(character.isMagicAllowed());
+        darkSpells.setChecked(character.isDarkSpellsAsBasicListsAllowed());
+        perksCostBackground.setChecked(character.isPerksCostBackgroundPoints());
+        handwriting.setChecked(character.isHandWritingFont());
+        sortPdfSkills.setChecked(character.isSortPdfSkills());
         debugMode.setChecked(handler.isDebugMode());
-        categoryMaxCost.setText(String.valueOf(handler.getCategoryMaxCost()));
+        categoryMaxCost.setText(String.valueOf(character.getCategoryMaxCost()));
         pdfMode.setSelection(handler.getPdfMode());
 
         final LinearLayout modulesContainer = view.findViewById(R.id.option_modules_container);

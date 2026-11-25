@@ -18,6 +18,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_clone_character"
+        android:title="@string/character_clone"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_close_character"
         android:title="@string/character_close"
         app:showAsAction="never" />

@@ -1,5 +1,7 @@
 package com.softwaremagico.librodeesher.android.session;
 
+import com.softwaremagico.librodeesher.android.AppLog;
+import com.softwaremagico.librodeesher.android.persistence.CharacterFileHelper;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 
@@ -16,14 +18,16 @@ public final class CharacterManager {
     /** Sentinel returned when the current character has not been persisted yet. */
     public static final long NO_ID = -1;
 
-    /** One character open in this session, with its database id when it has been saved. */
+    /** One character open in this session, with its database id and the last saved snapshot. */
     public static final class OpenCharacter {
         private final CharacterPlayer character;
         private long id;
+        private String savedSnapshot;
 
         private OpenCharacter(CharacterPlayer character, long id) {
             this.character = character;
             this.id = id;
+            this.savedSnapshot = snapshot(character);
         }
 
         public CharacterPlayer getCharacter() {
@@ -37,6 +41,14 @@ public final class CharacterManager {
         public String displayName() {
             final String name = character.getName();
             return name == null || name.trim().isEmpty() ? "Sin nombre" : name;
+        }
+
+        private boolean isDirty() {
+            return !savedSnapshot.equals(snapshot(character));
+        }
+
+        private void markClean() {
+            savedSnapshot = snapshot(character);
         }
     }
 
@@ -60,6 +72,45 @@ public final class CharacterManager {
             }
         }
         return instance;
+    }
+
+    /**
+     * Serialized state used as the "last saved" baseline. The same mapper as the Room entity is
+     * used so any UI change that would be persisted also flips the dirty state.
+     */
+    private static String snapshot(CharacterPlayer character) {
+        if (character == null) {
+            return "";
+        }
+        try {
+            return CharacterFileHelper.toJson(character);
+        } catch (Exception exception) {
+            AppLog.error("Cannot snapshot character for dirty tracking", exception);
+            return "";
+        }
+    }
+
+    /** Whether the selected character differs from the last saved/loaded/generated state. */
+    public boolean isDirty() {
+        final OpenCharacter selected = selectedOpenCharacter();
+        return selected != null && selected.isDirty();
+    }
+
+    /** Marks the selected character as clean after a save, load or fresh generation. */
+    public void markClean() {
+        final OpenCharacter selected = selectedOpenCharacter();
+        if (selected != null) {
+            selected.markClean();
+        }
+    }
+
+    private OpenCharacter selectedOpenCharacter() {
+        for (final OpenCharacter open : openCharacters) {
+            if (open.getCharacter() == selectedCharacter) {
+                return open;
+            }
+        }
+        return null;
     }
 
     /** Called on startup so every newly generated character inherits the configured rules. */
@@ -97,6 +148,7 @@ public final class CharacterManager {
         if (!known) {
             openCharacters.add(new OpenCharacter(selectedCharacter, NO_ID));
         }
+        markClean();
     }
 
     /** Adds a character to the session (or replaces the same saved one) and selects it. */
@@ -155,6 +207,14 @@ public final class CharacterManager {
                 break;
             }
         }
+    }
+
+    /** Duplicates the selected character into the session as an unsaved copy (Advisor parity). */
+    public void cloneSelectedCharacter() throws Exception {
+        final CharacterPlayer current = getSelectedCharacter();
+        final CharacterPlayer clone =
+                CharacterFileHelper.importCharacterFromJson(CharacterFileHelper.toJson(current));
+        openCharacter(clone, NO_ID);
     }
 
     /** Replaces the current character with a brand new empty one. */
