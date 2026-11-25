@@ -198,7 +198,29 @@ public class DevelopmentScreensUiTest {
 
     private void menuItem(int title) {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        onView(withText(label(title))).inRoot(isPlatformPopup()).perform(click());
+        final String text = label(title);
+        final android.app.UiAutomation automation =
+                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getUiAutomation();
+        final long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
+        do {
+            final android.view.accessibility.AccessibilityNodeInfo root = automation.getRootInActiveWindow();
+            if (root != null) {
+                for (android.view.accessibility.AccessibilityNodeInfo node
+                        : root.findAccessibilityNodeInfosByText(text)) {
+                    if (text.contentEquals(node.getText()) && node.isVisibleToUser()) {
+                        for (android.view.accessibility.AccessibilityNodeInfo target = node;
+                             target != null; target = target.getParent()) {
+                            if (target.isClickable()
+                                    && target.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)) {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            android.os.SystemClock.sleep(200);
+        } while (android.os.SystemClock.uptimeMillis() < deadline);
+        throw new AssertionError("Overflow menu item not visible: " + text);
     }
 
     private void createCompleteCharacter() {
