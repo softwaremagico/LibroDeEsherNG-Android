@@ -226,6 +226,7 @@ public class PerksFragment extends Fragment {
     private void addPerk(String perkId) {
         try {
             if (CharacterManager.getInstance().getSelectedCharacter().addAvailablePerk(perkId)) {
+                requireActivity().invalidateOptionsMenu();
                 resolvePerkRequirements(perkId);
             } else {
                 Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
@@ -282,6 +283,7 @@ public class PerksFragment extends Fragment {
     }
 
     private void finishRequirements(Runnable onDone) {
+        requireActivity().invalidateOptionsMenu();
         if (onDone != null) {
             onDone.run();
         } else {
@@ -520,6 +522,9 @@ public class PerksFragment extends Fragment {
                     break;
                 }
             }
+            if (added > 0) {
+                requireActivity().invalidateOptionsMenu();
+            }
             render();
             if (added == 0) {
                 Toast.makeText(requireContext(), R.string.perks_error, Toast.LENGTH_SHORT).show();
@@ -562,6 +567,7 @@ public class PerksFragment extends Fragment {
     private void removePerk(String perkId) {
         try {
             CharacterManager.getInstance().getSelectedCharacter().removePerk(perkId);
+            requireActivity().invalidateOptionsMenu();
             render();
         } catch (RuntimeException exception) {
             AppLog.error("Cannot remove perk", exception);

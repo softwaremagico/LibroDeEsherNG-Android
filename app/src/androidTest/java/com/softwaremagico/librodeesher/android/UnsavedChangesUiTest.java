@@ -174,6 +174,18 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
+    public void perkUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Dotes");
+        onView(withId(R.id.perks_container)).perform(UiViews.clickRowActionContaining(
+                R.id.perks_container, R.id.item_perk_name, R.id.item_perk_action, "Adicción Mínima"));
+        assertTitleHasMarker(true);
+    }
+
+    @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         UiMenus.click(R.string.navigation_options);
         final AtomicReference<Boolean> previousMagic = new AtomicReference<>();
