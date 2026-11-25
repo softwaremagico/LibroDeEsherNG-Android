@@ -228,6 +228,7 @@ public class SkillsDetailedFragment extends Fragment {
         }
         try {
             if (CharacterManager.getInstance().getSelectedCharacter().setCurrentLevelSkillRanks(skill.getId(), ranks)) {
+                requireActivity().invalidateOptionsMenu();
                 render();
             } else {
                 Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();

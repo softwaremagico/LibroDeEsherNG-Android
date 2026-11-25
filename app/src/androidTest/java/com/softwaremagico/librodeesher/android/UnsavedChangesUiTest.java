@@ -150,13 +150,14 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
-    public void skillPreferenceUpdatesUnsavedMarkerWithoutOpeningMenu() {
+    public void skillRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         createCompleteCharacter();
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Habilidades");
-        onView(withId(R.id.skills_recommended)).perform(scrollTo(), click());
+        onView(withId(R.id.skills_container)).perform(
+                UiViews.clickFirstEnabled(R.id.skills_container, R.id.item_skill_minus));
         assertTitleHasMarker(true);
     }
 
