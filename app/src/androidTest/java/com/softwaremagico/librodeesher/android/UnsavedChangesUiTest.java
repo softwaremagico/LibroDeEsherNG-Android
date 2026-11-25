@@ -64,7 +64,8 @@ public class UnsavedChangesUiTest {
         renameSelectedCharacter("Cambios sin guardar");
         assertTitleHasMarker(true);
 
-        clickMenu(R.string.sheet_save);
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
         assertTitleHasMarker(false);
     }
 
