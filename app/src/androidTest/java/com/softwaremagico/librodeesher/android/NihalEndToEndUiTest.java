@@ -57,7 +57,7 @@ public class NihalEndToEndUiTest {
 
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         for (int level = 2; level <= 9; level++) {
-            onView(withId(R.id.sheet_level_up_button)).perform(scrollTo(), click());
+            onView(withId(R.id.sheet_level_up_button)).perform(click());
             onView(withText(R.string.sheet_level_up_auto)).inRoot(isDialog()).perform(click());
             onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level " + level)));
         }
