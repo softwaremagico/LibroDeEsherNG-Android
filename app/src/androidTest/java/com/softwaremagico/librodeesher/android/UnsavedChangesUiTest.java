@@ -176,8 +176,6 @@ public class UnsavedChangesUiTest {
     }
 
     private void clickMenu(int label) {
-        final String text = ApplicationProvider.getApplicationContext().getString(label);
-        openMenu();
-        onView(withText(text)).inRoot(isPlatformPopup()).perform(click());
+        UiMenus.click(label);
     }
 }
