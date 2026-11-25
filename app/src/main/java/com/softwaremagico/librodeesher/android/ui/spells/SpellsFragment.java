@@ -262,6 +262,7 @@ public class SpellsFragment extends Fragment {
         try {
             if (CharacterManager.getInstance().getSelectedCharacter()
                     .setCurrentLevelSpellListRanks(spellList.getId(), ranks)) {
+                requireActivity().invalidateOptionsMenu();
                 render();
             } else {
                 Toast.makeText(requireContext(), R.string.spells_error, Toast.LENGTH_SHORT).show();

@@ -173,6 +173,18 @@ public class UnsavedChangesUiTest {
         assertTitleHasMarker(true);
     }
 
+    @Test
+    public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Conjuros");
+        onView(withId(R.id.spells_type_spinner)).perform(
+                UiViews.selectCategoryAndClickEnabled(R.id.spells_container, R.id.item_spell_minus));
+        assertTitleHasMarker(true);
+    }
+
     private void makeSelectedCharacterDirty() {
         renameSelectedCharacter("Cambios sin guardar");
     }
