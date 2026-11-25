@@ -18,6 +18,9 @@ android {
         // Fail an individual stalled UI test instead of leaving the full suite running indefinitely.
         // Nihal has eight automatic level-ups and has taken over ten minutes on the emulator.
         testInstrumentationRunnerArgument "timeout_msec", "1200000"
+        // AGP 9 does not pass the coverage flag to AndroidJUnitRunner automatically; without it
+        // no execution data is written and jacocoTestReport only sees the JVM unit tests.
+        testInstrumentationRunnerArgument "coverage", "true"
     }
 
     buildTypes {
