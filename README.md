@@ -1,3 +1,5 @@
+<img src="./images/banner.png" width="800" alt="Libro de Esher" align="middle"> 
+
 # Libro de Esher NG — Android
 
 [![GNU GPL 3.0 License](https://img.shields.io/badge/license-GNU_GPL_3.0-brightgreen.svg)](LICENSE)
