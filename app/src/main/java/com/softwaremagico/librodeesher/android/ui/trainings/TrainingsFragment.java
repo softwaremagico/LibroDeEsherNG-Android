@@ -115,6 +115,7 @@ public class TrainingsFragment extends Fragment {
             action.setText(R.string.trainings_remove);
             action.setOnClickListener(v -> {
                 if (character.removeCurrentLevelTraining(trainingId)) {
+                    requireActivity().invalidateOptionsMenu();
                     render();
                 } else {
                     Toast.makeText(requireContext(), R.string.trainings_error, Toast.LENGTH_SHORT).show();
@@ -136,6 +137,7 @@ public class TrainingsFragment extends Fragment {
     private void addTraining(CharacterPlayer character, String trainingId, Button action) {
         try {
             if (character.addTraining(trainingId)) {
+                requireActivity().invalidateOptionsMenu();
                 showChoices(character, trainingId);
             } else {
                 Toast.makeText(requireContext(), R.string.trainings_error, Toast.LENGTH_SHORT).show();
@@ -316,6 +318,7 @@ public class TrainingsFragment extends Fragment {
             AppLog.error("Cannot apply training choices", exception);
             Toast.makeText(requireContext(), R.string.trainings_error, Toast.LENGTH_LONG).show();
         }
+        requireActivity().invalidateOptionsMenu();
         render();
     }
 

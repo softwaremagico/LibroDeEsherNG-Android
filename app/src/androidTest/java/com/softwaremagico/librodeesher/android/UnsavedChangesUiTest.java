@@ -199,6 +199,21 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
+    public void trainingUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter(1);
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_level_up_button)).perform(click());
+        onView(withText(R.string.sheet_level_up_manual)).inRoot(isDialog()).perform(click());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Adiestramientos");
+        onView(withId(R.id.trainings_container)).perform(
+                UiViews.clickFirstEnabled(R.id.trainings_container, R.id.item_training_action));
+        UiDialogs.clickDialogButtonIfPresent(R.string.accept);
+        assertTitleHasMarker(true);
+    }
+
+    @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         UiMenus.click(R.string.navigation_options);
         final AtomicReference<Boolean> previousMagic = new AtomicReference<>();
