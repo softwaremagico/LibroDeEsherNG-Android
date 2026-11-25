@@ -102,6 +102,21 @@ public class UnsavedChangesUiTest {
         onView(withText(R.string.character_close_confirm)).check(doesNotExist());
     }
 
+    @Test
+    public void loadingFromSheetConfirmsBeforeDiscardingEdits() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+
+        renameSelectedCharacter("Cambios que deben conservarse");
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_load_button)).perform(click());
+        onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
+        onView(withText(R.string.unsaved_changes_message)).inRoot(isDialog()).check(matches(isDisplayed()));
+        onView(withText(R.string.cancel)).inRoot(isDialog()).perform(click());
+        onView(withId(R.id.sheet_text)).check(matches(withSubstring("Cambios que deben conservarse")));
+    }
+
     private void makeSelectedCharacterDirty() {
         renameSelectedCharacter("Cambios sin guardar");
     }

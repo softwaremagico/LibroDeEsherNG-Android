@@ -27,6 +27,7 @@ import com.softwaremagico.librodeesher.android.persistence.CharacterFileHelper;
 import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.core.PdfSheetFactory;
+import com.softwaremagico.librodeesher.android.core.UnsavedChangesGuard;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
@@ -157,6 +158,14 @@ public class SheetFragment extends Fragment {
         if (uri == null) {
             return;
         }
+        if (character) {
+            UnsavedChangesGuard.run(requireContext(), () -> performImport(uri, true));
+        } else {
+            performImport(uri, false);
+        }
+    }
+
+    private void performImport(Uri uri, boolean character) {
         try {
             if (character) {
                 final CharacterPlayer imported = CharacterFileHelper.importCharacter(requireContext(), uri);
@@ -213,7 +222,8 @@ public class SheetFragment extends Fragment {
         }
         new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.sheet_load)
-                .setItems(labelsFor(characters), (dialog, which) -> loadCharacter(characters.get(which)))
+                .setItems(labelsFor(characters), (dialog, which) -> UnsavedChangesGuard.run(
+                        requireContext(), () -> loadCharacter(characters.get(which))))
                 .setNegativeButton(R.string.close, null)
                 .show();
     }
