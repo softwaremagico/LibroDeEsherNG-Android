@@ -97,7 +97,7 @@ public final class UiViews {
             public void perform(UiController controller, View view) {
                 final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
                 do {
-                    final View emptyView = view.getRootView().findViewById(emptyViewId);
+                    final View emptyView = findInAncestors(view, emptyViewId);
                     final boolean hasRows = ((ViewGroup) view).getChildCount() > 0;
                     final boolean emptyShown = emptyView != null
                             && emptyView.getVisibility() == View.VISIBLE;
@@ -109,6 +109,49 @@ public final class UiViews {
                 throw new AssertionError("Timed out waiting for rows or empty state " + emptyViewId);
             }
         };
+    }
+
+    /** Waits until the viewPager finishes scrolling and the view becomes visible on screen. */
+    public static ViewAction waitForDisplayed(long timeoutMillis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(View.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait until the view is displayed";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
+                final android.graphics.Rect rect = new android.graphics.Rect();
+                do {
+                    if (view.getVisibility() == View.VISIBLE && view.getGlobalVisibleRect(rect)) {
+                        return;
+                    }
+                    controller.loopMainThreadForAtLeast(100);
+                } while (android.os.SystemClock.uptimeMillis() < deadline);
+                throw new AssertionError("Timed out waiting for the view to be displayed");
+            }
+        };
+    }
+
+    /** Finds a sibling view in the closest ancestor, avoiding duplicates from other tabbed pages. */
+    private static View findInAncestors(View view, int viewId) {
+        View current = view;
+        while (current != null) {
+            if (current instanceof ViewGroup) {
+                final View found = ((ViewGroup) current).findViewById(viewId);
+                if (found != null) {
+                    return found;
+                }
+            }
+            current = current.getParent() instanceof View ? (View) current.getParent() : null;
+        }
+        return null;
     }
 
     /**

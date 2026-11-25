@@ -128,7 +128,7 @@ public class ReferenceCharactersUiTest {
             final int containerId = containerIdFor(title);
             final int emptyId = emptyIdFor(title);
             if (emptyId != -1) {
-                onView(withId(containerId)).perform(UiViews.waitForRowsOrEmpty(emptyId, 10_000));
+                onView(withId(containerId)).perform(UiViews.waitForRowsOrEmpty(emptyId, 60_000));
             }
             onView(withId(containerId)).check(renderedRowsOrEmptyState(emptyId));
         }

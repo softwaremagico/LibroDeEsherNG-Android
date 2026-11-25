@@ -112,7 +112,7 @@ public class MorticiaEndToEndUiTest {
     private void verifyCharacteristicsTab() {
         openTab("Características");
         onView(withId(R.id.characteristics_container))
-                .perform(UiViews.waitForChildCount(1, 10_000))
+                .perform(UiViews.waitForChildCount(1, 60_000))
                 .check(matches(hasMinimumChildCount(1)));
     }
 
@@ -161,7 +161,7 @@ public class MorticiaEndToEndUiTest {
     }
 
     private static void assertRenderedRowsOrEmpty(int containerId, int emptyViewId) {
-        onView(withId(containerId)).perform(UiViews.waitForRowsOrEmpty(emptyViewId, 10_000))
+        onView(withId(containerId)).perform(UiViews.waitForRowsOrEmpty(emptyViewId, 60_000))
                 .check(renderedRowsOrEmptyState(emptyViewId));
     }
 

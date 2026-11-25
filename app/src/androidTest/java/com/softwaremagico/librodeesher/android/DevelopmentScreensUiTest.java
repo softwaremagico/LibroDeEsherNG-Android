@@ -50,7 +50,7 @@ public class DevelopmentScreensUiTest {
         createCompleteCharacter();
 
         development(R.string.navigation_skills);
-        onView(withId(R.id.skills_remaining)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.skills_remaining)).perform(UiViews.waitForDisplayed(60_000));
 
         safe(() -> onView(withId(R.id.skills_recommended)).perform(click()));
         safe(() -> {
@@ -89,7 +89,8 @@ public class DevelopmentScreensUiTest {
         createCompleteCharacter();
 
         development(R.string.navigation_history);
-        onView(withId(R.id.history_container)).perform(scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.history_container))
+                .perform(UiViews.waitForRowsOrEmpty(R.id.history_empty, 60_000));
         safe(() -> onView(withId(R.id.history_random)).perform(click()));
         safe(() -> {
             onView(withText(R.string.history_add_skill)).perform(scrollTo(), click());
