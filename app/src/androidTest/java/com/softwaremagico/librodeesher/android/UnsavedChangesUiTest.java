@@ -186,6 +186,19 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
+    public void weaponTierUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Coste de armas");
+        onView(withId(R.id.weapon_tiers_container)).perform(
+                UiViews.clickFirstEnabled(R.id.weapon_tiers_container, R.id.item_weapon_tier_action));
+        onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
+        assertTitleHasMarker(true);
+    }
+
+    @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         UiMenus.click(R.string.navigation_options);
         final AtomicReference<Boolean> previousMagic = new AtomicReference<>();

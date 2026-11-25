@@ -161,6 +161,7 @@ public class WeaponTiersFragment extends Fragment {
                 .setItems(names, (dialog, which) -> {
                     try {
                         character.assignAvailableWeaponCategoryCostTier(tierIndex, available.get(which));
+                        requireActivity().invalidateOptionsMenu();
                     } catch (InvalidXmlElementException exception) {
                         AppLog.error("Cannot assign weapon category", exception);
                     }
