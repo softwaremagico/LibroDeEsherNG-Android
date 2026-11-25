@@ -123,6 +123,7 @@ public class CultureDetailsFragment extends Fragment {
                 }
                 try {
                     character.applyCultureAdolescenceRanks(culture, categories, null, null);
+                    requireActivity().invalidateOptionsMenu();
                     Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
                 } catch (InvalidXmlElementException exception) {
                     AppLog.error("Cannot apply adolescence ranks", exception);
@@ -191,6 +192,7 @@ public class CultureDetailsFragment extends Fragment {
         apply.setText(R.string.accept);
         apply.setOnClickListener(v -> {
             assignment.accept((String) spinner.getSelectedItem());
+            requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         });
         container.addView(apply);
@@ -238,6 +240,7 @@ public class CultureDetailsFragment extends Fragment {
         } else {
             character.setHobbySkillRank(hobbyId, Math.max(0, ranks));
         }
+        requireActivity().invalidateOptionsMenu();
     }
 
     private com.softwaremagico.librodeesher.Element resolve(String id, boolean spellList) {
@@ -341,6 +344,7 @@ public class CultureDetailsFragment extends Fragment {
                     changeHobby(character, hobbyId, isSpellList(hobbyId), maxRanks);
                 }
             }
+            requireActivity().invalidateOptionsMenu();
             render();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {

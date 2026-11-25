@@ -115,6 +115,7 @@ public class ProfessionDetailsFragment extends Fragment {
                 }
                 try {
                     character.applyProfessionMagicRealms(selections);
+                    requireActivity().invalidateOptionsMenu();
                     Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
                 } catch (InvalidXmlElementException exception) {
                     AppLog.error("Cannot apply magic realm", exception);
@@ -182,6 +183,7 @@ public class ProfessionDetailsFragment extends Fragment {
                             ProfessionSkillGrant grant, List<String> selected) {
         try {
             character.applyProfessionSkillGrant(character.getProfessionId(), kind, index, grant, selected);
+            requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         } catch (InvalidXmlElementException exception) {
             AppLog.error("Cannot apply profession skill choice", exception);
@@ -214,6 +216,7 @@ public class ProfessionDetailsFragment extends Fragment {
                     profession.getProfessionalSkillChoices());
             addRandomGrants(character, DecisionKind.PROFESSION_RESTRICTED_SKILL,
                     profession.getRestrictedSkillChoices());
+            requireActivity().invalidateOptionsMenu();
             render();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {

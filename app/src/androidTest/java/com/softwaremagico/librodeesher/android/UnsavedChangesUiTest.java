@@ -214,6 +214,18 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
+    public void cultureHobbyUpdatesUnsavedMarkerWithoutOpeningMenu() {
+        createCompleteCharacter();
+        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        openTab("Cultura detallada");
+        final String remove = ApplicationProvider.getApplicationContext().getString(R.string.trainings_remove);
+        onView(withId(R.id.culture_container)).perform(UiViews.clickEnabledButtonWithText(remove));
+        assertTitleHasMarker(true);
+    }
+
+    @Test
     public void spellRankUpdatesUnsavedMarkerWithoutOpeningMenu() {
         UiMenus.click(R.string.navigation_options);
         final AtomicReference<Boolean> previousMagic = new AtomicReference<>();

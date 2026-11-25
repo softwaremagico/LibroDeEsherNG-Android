@@ -349,6 +349,35 @@ public final class UiViews {
         };
     }
 
+    /** Clicks an enabled button with the requested label inside a dynamic container. */
+    public static ViewAction clickEnabledButtonWithText(String text) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "click enabled button labelled " + text;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> buttons = new ArrayList<>();
+                collectOfType(view, Button.class, buttons);
+                for (final View candidate : buttons) {
+                    final Button button = (Button) candidate;
+                    if (button.isEnabled() && button.getVisibility() == View.VISIBLE
+                            && text.contentEquals(button.getText()) && button.performClick()) {
+                        return;
+                    }
+                }
+                throw new AssertionError("No enabled button labelled " + text);
+            }
+        };
+    }
+
     /** Clicks the first Button inside a dynamically-populated container. */
     public static ViewAction clickFirstButton(int containerId) {
         return new ViewAction() {
