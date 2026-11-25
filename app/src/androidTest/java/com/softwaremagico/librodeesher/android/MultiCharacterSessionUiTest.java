@@ -61,6 +61,7 @@ public class MultiCharacterSessionUiTest {
         onView(withId(R.id.level_picker)).perform(scrollTo(), UiViews.setNumberPickerValue(2));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        Espresso.closeSoftKeyboard();
 
         clickMenu(R.string.character_clone);
         clickMenu(R.string.character_switch);

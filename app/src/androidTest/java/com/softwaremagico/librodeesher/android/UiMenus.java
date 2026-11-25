@@ -17,8 +17,17 @@ public final class UiMenus {
         final String overflowDescription = ApplicationProvider.getApplicationContext().getString(
                 androidx.appcompat.R.string.abc_action_menu_overflow_description);
         final UiAutomation automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
-        final AccessibilityNodeInfo initial = automation.getRootInActiveWindow();
-        if (initial == null || !clickOverflow(initial, overflowDescription)) {
+        boolean opened = false;
+        final long openDeadline = SystemClock.uptimeMillis() + 10_000;
+        do {
+            final AccessibilityNodeInfo initial = automation.getRootInActiveWindow();
+            if (initial != null && clickOverflow(initial, overflowDescription)) {
+                opened = true;
+                break;
+            }
+            SystemClock.sleep(200);
+        } while (SystemClock.uptimeMillis() < openDeadline);
+        if (!opened) {
             throw new AssertionError("Overflow menu button not visible");
         }
         final long deadline = SystemClock.uptimeMillis() + 10_000;
