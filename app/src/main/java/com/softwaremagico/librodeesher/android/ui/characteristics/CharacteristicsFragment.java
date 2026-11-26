@@ -131,7 +131,7 @@ public class CharacteristicsFragment extends Fragment {
             if (confirmButton != null) {
                 // Kept only as a test hook; creation completes as soon as the points are spent.
                 confirmButton.setVisibility(View.GONE);
-                confirmButton.setEnabled(spent <= total);
+                confirmButton.setEnabled(!character.isCharacteristicsConfirmed() && spent <= total);
             }
             if (randomButton != null) {
                 randomButton.setVisibility(View.VISIBLE);
