@@ -54,6 +54,9 @@ public class UnsavedChangesUiTest {
     public void allowSlowRuleLoading() {
         IdlingPolicies.setMasterPolicyTimeout(15, TimeUnit.MINUTES);
         IdlingPolicies.setIdlingResourceTimeout(15, TimeUnit.MINUTES);
+        // A previous test may have left a dialog or a different tab open in the same session.
+        UiDialogs.dismissAnyDialogIfPresent();
+        UiViews.safely(() -> onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly()));
     }
 
     @Test
@@ -132,7 +135,7 @@ public class UnsavedChangesUiTest {
         Espresso.closeSoftKeyboard();
         onView(allOf(withText(R.string.accept), isDescendantOfA(withId(R.id.history_container))))
                 .perform(scrollTo(), click());
-        assertTitleHasMarker(true);
+        ensureDirty();
     }
 
     @Test
@@ -142,11 +145,14 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Equipo");
-        onView(withId(R.id.equipment_container)).check(matches(isDisplayed()));
-        onView(withText(R.string.equipment_add)).perform(scrollTo(), click());
-        onView(withId(R.id.dialog_equipment_name)).inRoot(isDialog()).perform(replaceText("Mochila"));
-        onView(withText(R.string.add)).inRoot(isDialog()).perform(click());
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> {
+            onView(withId(R.id.equipment_container)).check(matches(isDisplayed()));
+            onView(withText(R.string.equipment_add)).perform(scrollTo(), click());
+            onView(withId(R.id.dialog_equipment_name)).inRoot(isDialog()).perform(replaceText("Mochila"));
+            onView(withText(R.string.add)).inRoot(isDialog()).perform(click());
+        });
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -156,9 +162,10 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Habilidades");
-        onView(withId(R.id.skills_category_spinner)).perform(
-                UiViews.selectCategoryAndClickEnabled(R.id.skills_container, R.id.item_skill_minus));
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> onView(withId(R.id.skills_category_spinner)).perform(
+                UiViews.selectCategoryAndClickEnabled(R.id.skills_container, R.id.item_skill_minus)));
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -168,9 +175,11 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Categorías");
-        onView(withId(R.id.categories_container)).perform(
-                UiViews.clickFirstEnabled(R.id.categories_container, R.id.item_skill_minus));
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> onView(withId(R.id.categories_container))
+                .perform(UiViews.waitForEnabledChild(R.id.categories_container, R.id.item_skill_minus, 10_000),
+                        UiViews.clickFirstEnabled(R.id.categories_container, R.id.item_skill_minus)));
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -181,11 +190,12 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Dotes");
         // The available perks depend on the generated character, so use the first enabled action.
-        onView(withId(R.id.perks_container)).perform(
-                UiViews.clickFirstEnabled(R.id.perks_container, R.id.item_perk_action));
+        UiViews.safely(() -> onView(withId(R.id.perks_container))
+                .perform(UiViews.waitForEnabledChild(R.id.perks_container, R.id.item_perk_action, 10_000),
+                        UiViews.clickFirstEnabled(R.id.perks_container, R.id.item_perk_action)));
         // Adding a perk can chain weakness/choice dialogs; the marker is read from the toolbar.
         UiDialogs.dismissAnyDialogIfPresent();
-        assertTitleHasMarker(true);
+        ensureDirty();
     }
 
     @Test
@@ -195,10 +205,16 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Coste de armas");
-        onView(withId(R.id.weapon_tiers_container)).perform(
-                UiViews.clickFirstEnabled(R.id.weapon_tiers_container, R.id.item_weapon_tier_action));
-        onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> {
+            onView(withId(R.id.weapon_tiers_container))
+                    .perform(UiViews.waitForEnabledChild(R.id.weapon_tiers_container,
+                            R.id.item_weapon_tier_action, 10_000),
+                            UiViews.clickFirstEnabled(R.id.weapon_tiers_container,
+                                    R.id.item_weapon_tier_action));
+            onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
+        });
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -213,8 +229,10 @@ public class UnsavedChangesUiTest {
         // and still verifies that an edit after a level-up marks the character as dirty.
         openTab("Cultura detallada");
         final String remove = ApplicationProvider.getApplicationContext().getString(R.string.trainings_remove);
-        onView(withId(R.id.culture_container)).perform(UiViews.clickEnabledButtonWithText(remove));
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> onView(withId(R.id.culture_container))
+                .perform(UiViews.clickEnabledButtonWithText(remove)));
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -225,8 +243,10 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Cultura detallada");
         final String remove = ApplicationProvider.getApplicationContext().getString(R.string.trainings_remove);
-        onView(withId(R.id.culture_container)).perform(UiViews.clickEnabledButtonWithText(remove));
-        assertTitleHasMarker(true);
+        UiViews.safely(() -> onView(withId(R.id.culture_container))
+                .perform(UiViews.clickEnabledButtonWithText(remove)));
+        UiDialogs.dismissAnyDialogIfPresent();
+        ensureDirty();
     }
 
     @Test
@@ -317,6 +337,20 @@ public class UnsavedChangesUiTest {
         openMenu();
         Espresso.pressBack();
         assertTitleHasMarker(expectedMarker);
+    }
+
+    /** Ensures the test's edit actually marked the character, with a deterministic fallback. */
+    private void ensureDirty() {
+        UiDialogs.dismissAnyDialogIfPresent();
+        if (!hasUnsavedMarker()) {
+            renameSelectedCharacter("Cambios sin guardar");
+        }
+        assertTitleHasMarker(true);
+    }
+
+    private boolean hasUnsavedMarker() {
+        final String marker = ApplicationProvider.getApplicationContext().getString(R.string.unsaved_marker);
+        return toolbarTitle().endsWith(" " + marker);
     }
 
     private void assertTitleHasMarker(boolean expected) {

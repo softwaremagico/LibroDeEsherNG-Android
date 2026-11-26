@@ -82,6 +82,38 @@ public final class UiViews {
         };
     }
 
+    /** Waits until a container has an enabled child with {@code childId}. */
+    public static ViewAction waitForEnabledChild(int containerId, int childId, long timeoutMillis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for enabled child " + childId + " in " + containerId;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final long deadline = android.os.SystemClock.uptimeMillis() + timeoutMillis;
+                final List<View> matches = new ArrayList<>();
+                do {
+                    matches.clear();
+                    collect(view, childId, matches);
+                    for (final View match : matches) {
+                        if (match.isEnabled()) {
+                            return;
+                        }
+                    }
+                    controller.loopMainThreadForAtLeast(100);
+                } while (android.os.SystemClock.uptimeMillis() < deadline);
+                throw new AssertionError("Timed out waiting for enabled child " + childId);
+            }
+        };
+    }
+
     /** Waits until a container shows rows or its explicit empty state. */
     public static ViewAction waitForRowsOrEmpty(int emptyViewId, long timeoutMillis) {
         return new ViewAction() {
