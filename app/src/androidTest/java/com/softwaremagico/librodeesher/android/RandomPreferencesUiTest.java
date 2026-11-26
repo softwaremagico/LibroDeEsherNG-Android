@@ -2,6 +2,7 @@ package com.softwaremagico.librodeesher.android;
 
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.SeekBar;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -21,8 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -54,12 +53,12 @@ public class RandomPreferencesUiTest {
     @Test
     public void fullPreferencesAreSavedAndShownAgain() {
         openPreferences();
-        onView(withId(R.id.random_final_level)).perform(scrollTo(), replaceText("5"));
-        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), setChecked(false));
-        onView(withId(R.id.random_category_ranks)).perform(scrollTo(), replaceText("arms:5,combat:3"));
-        onView(withId(R.id.random_skill_ranks)).perform(scrollTo(), replaceText("attack:4"));
-        onView(withId(R.id.random_trainings)).perform(scrollTo(), replaceText("trainingOne,trainingTwo"));
-        onView(withId(R.id.random_suggested_perks)).perform(scrollTo(), replaceText("ambidextrous"));
+        onView(withId(R.id.random_final_level)).perform(setText("5"));
+        onView(withId(R.id.random_perks_enabled)).perform(setChecked(false));
+        onView(withId(R.id.random_category_ranks)).perform(setText("arms:5,combat:3"));
+        onView(withId(R.id.random_skill_ranks)).perform(setText("attack:4"));
+        onView(withId(R.id.random_trainings)).perform(setText("trainingOne,trainingTwo"));
+        onView(withId(R.id.random_suggested_perks)).perform(setText("ambidextrous"));
         applyPreferences();
         onView(withId(R.id.random_progress)).check(matches(isDisplayed()));
         Espresso.pressBackUnconditionally();
@@ -71,7 +70,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_skill_ranks)).check(matches(withText("attack:4")));
         onView(withId(R.id.random_trainings)).check(matches(withText("trainingOne,trainingTwo")));
         onView(withId(R.id.random_suggested_perks)).check(matches(withText("ambidextrous")));
-        onView(withId(R.id.random_perks_enabled)).perform(scrollTo(), setChecked(true));
+        onView(withId(R.id.random_perks_enabled)).perform(setChecked(true));
         onView(withId(R.id.random_perks_enabled)).check(matches(isChecked()));
     }
 
@@ -82,6 +81,27 @@ public class RandomPreferencesUiTest {
 
     private void openPreferences() {
         UiMenus.click(R.string.random_config);
+    }
+
+    /** Sets text without scrolling: scrollTo() wakes animations that never let Espresso idle. */
+    private static ViewAction setText(String value) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(EditText.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "set text to " + value;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                ((EditText) view).setText(value);
+                uiController.loopMainThreadForAtLeast(50);
+            }
+        };
     }
 
     /** Toggles only when needed, so the test does not depend on preferences left by earlier runs. */
