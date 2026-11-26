@@ -358,7 +358,9 @@ public class SkillsFragment extends Fragment {
                                 .addSkillSpecialization(skill.getId(), specialization);
                         requireActivity().invalidateOptionsMenu();
                         render();
-                    } catch (InvalidXmlElementException exception) {
+                    } catch (InvalidXmlElementException | IllegalArgumentException exception) {
+                        // The rules engine rejects specialization identifiers that are not
+                        // defined for the skill; an invalid user input must not crash the app.
                         AppLog.error("Cannot specialize skill", exception);
                         Toast.makeText(requireContext(), R.string.skills_error, Toast.LENGTH_SHORT).show();
                     }
