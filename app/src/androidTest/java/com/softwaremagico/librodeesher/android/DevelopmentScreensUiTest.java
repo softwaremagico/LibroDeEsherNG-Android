@@ -153,7 +153,9 @@ public class DevelopmentScreensUiTest {
         development(R.string.navigation_profession_details);
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Habilidades");
-        onView(withId(R.id.skills_container)).check(matches(isDisplayed()));
+        // The tab's child views are populated asynchronously; wait for content before asserting.
+        onView(withId(R.id.skills_container)).perform(UiViews.waitForChildCount(1, 60_000))
+                .check(matches(isDisplayed()));
     }
 
     @Test
