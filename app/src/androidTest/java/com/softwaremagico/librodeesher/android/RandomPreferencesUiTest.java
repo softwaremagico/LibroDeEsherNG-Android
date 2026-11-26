@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
@@ -43,7 +42,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_specialization_seekbar)).perform(setProgress(5));
         onView(withId(R.id.random_specialization_value)).check(matches(withText("2")));
         applyPreferences();
-        Espresso.pressBackUnconditionally();
+        UiViews.pressBackDirectly();
 
         openPreferences();
         onView(withId(R.id.random_specialization_seekbar)).check(hasProgress(5));
@@ -61,7 +60,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_suggested_perks)).perform(setText("ambidextrous"));
         applyPreferences();
         onView(withId(R.id.random_progress)).check(matches(isDisplayed()));
-        Espresso.pressBackUnconditionally();
+        UiViews.pressBackDirectly();
 
         openPreferences();
         onView(withId(R.id.random_final_level)).check(matches(withText("5")));

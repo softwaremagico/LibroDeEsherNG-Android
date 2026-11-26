@@ -1,5 +1,6 @@
 package com.softwaremagico.librodeesher.android;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.Matcher;
 
@@ -169,6 +171,11 @@ public final class UiViews {
             IdlingPolicies.setMasterPolicyTimeout(15, TimeUnit.MINUTES);
             IdlingPolicies.setIdlingResourceTimeout(15, TimeUnit.MINUTES);
         }
+    }
+
+    /** Sends a real BACK key without waiting for Espresso's idle conditions. */
+    public static void pressBackDirectly() {
+        InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
     }
 
     /** Clicks a view directly, without requiring it to be scrolled into view first. */
