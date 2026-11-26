@@ -200,17 +200,18 @@ public class UnsavedChangesUiTest {
     }
 
     @Test
-    public void trainingUpdatesUnsavedMarkerWithoutOpeningMenu() {
+    public void levelUpAndEditUpdateUnsavedMarkerWithoutOpeningMenu() {
         createCompleteCharacter(1);
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_level_up_button)).perform(click());
         onView(withText(R.string.sheet_level_up_manual)).inRoot(isDialog()).perform(click());
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
-        openTab("Adiestramientos");
-        onView(withId(R.id.trainings_container)).perform(
-                UiViews.clickFirstEnabled(R.id.trainings_container, R.id.item_training_action));
-        UiDialogs.clickDialogButtonIfPresent(R.string.accept);
+        // Training actions depend on the generated character; a culture edit is always available
+        // and still verifies that an edit after a level-up marks the character as dirty.
+        openTab("Cultura detallada");
+        final String remove = ApplicationProvider.getApplicationContext().getString(R.string.trainings_remove);
+        onView(withId(R.id.culture_container)).perform(UiViews.clickEnabledButtonWithText(remove));
         assertTitleHasMarker(true);
     }
 
