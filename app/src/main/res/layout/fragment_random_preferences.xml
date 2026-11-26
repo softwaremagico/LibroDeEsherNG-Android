@@ -131,6 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:maxWidth="140dp"
                     android:labelFor="@id/random_category_ranks"
                     android:text="@string/random_category_ranks" />
 
@@ -159,6 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:maxWidth="140dp"
                     android:labelFor="@id/random_skill_ranks"
                     android:text="@string/random_skill_ranks" />
 
@@ -187,6 +189,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:maxWidth="140dp"
                     android:labelFor="@id/random_trainings"
                     android:text="@string/random_trainings" />
 
@@ -221,6 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:maxWidth="140dp"
                     android:labelFor="@id/random_suggested_perks"
                     android:text="@string/random_suggested_perks" />
 

@@ -84,11 +84,12 @@ public class AdditionalScreensUiTest {
     public void randomScreenGeneratesSavesAndExportsACharacter() {
         // Generation must work with whatever preferences a previous test persisted (issue #26).
         onView(withId(R.id.navigation_random)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.random_generate_button)).check(matches(isDisplayed()));
         onView(withId(R.id.random_generate_button)).perform(click());
         onView(withId(R.id.random_summary_text)).check(matches(withSubstring("Nombre:")));
-        onView(withId(R.id.random_save_button)).perform(click());
-        onView(withId(R.id.random_export_button)).perform(click());
-        onView(withId(R.id.random_share_button)).perform(click());
+        onView(withId(R.id.random_save_button)).perform(scrollTo(), click());
+        onView(withId(R.id.random_export_button)).perform(scrollTo(), click());
+        onView(withId(R.id.random_share_button)).perform(scrollTo(), click());
         // ACTION_SEND choosers may finish the single-activity task on a headless emulator.
         try {
             Espresso.pressBackUnconditionally();

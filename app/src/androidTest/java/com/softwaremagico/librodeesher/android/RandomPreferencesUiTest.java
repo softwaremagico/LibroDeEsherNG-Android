@@ -48,7 +48,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_specialization_value)).check(matches(withText("2")));
         scrollToApply();
         onView(withId(R.id.random_apply_prefs)).perform(click());
-        Espresso.pressBack();
+        Espresso.pressBackUnconditionally();
 
         openPreferences();
         onView(withId(R.id.random_specialization_seekbar)).check(hasProgress(5));
@@ -68,7 +68,7 @@ public class RandomPreferencesUiTest {
         scrollToApply();
         onView(withId(R.id.random_apply_prefs)).perform(click());
         onView(withId(R.id.random_progress)).check(matches(isDisplayed()));
-        Espresso.pressBack();
+        Espresso.pressBackUnconditionally();
 
         openPreferences();
         onView(withId(R.id.random_final_level)).check(matches(withText("5")));
