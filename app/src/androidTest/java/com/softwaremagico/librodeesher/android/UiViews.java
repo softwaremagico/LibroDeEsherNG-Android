@@ -261,6 +261,51 @@ public final class UiViews {
         };
     }
 
+    /** Clicks the first row of a dialog without emulating a motion event or waiting for idle. */
+    public static ViewAction clickFirstDialogRow() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "click first dialog row";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> rows = new ArrayList<>();
+                collect(view, android.R.id.text1, rows);
+                for (final View row : rows) {
+                    if (!row.isEnabled() || !row.getGlobalVisibleRect(new android.graphics.Rect())) {
+                        continue;
+                    }
+                    View child = row;
+                    while (child != null) {
+                        final android.view.ViewParent parent = child.getParent();
+                        if (parent instanceof android.widget.AdapterView) {
+                            final android.widget.AdapterView<?> list = (android.widget.AdapterView<?>) parent;
+                            final int position = list.indexOfChild(child);
+                            if (list.getAdapter() != null && position >= 0) {
+                                list.performItemClick(child, position, list.getAdapter().getItemId(position));
+                                return;
+                            }
+                        }
+                        if (child.isClickable() && child.performClick()) {
+                            return;
+                        }
+                        child = parent instanceof View ? (View) parent : null;
+                    }
+                    row.performClick();
+                    return;
+                }
+                throw new AssertionError("Dialog has no visible row to click");
+            }
+        };
+    }
+
     /** Sets text directly on an EditText, without depending on scroll position or the IME. */
     public static ViewAction setText(String value) {
         return new ViewAction() {

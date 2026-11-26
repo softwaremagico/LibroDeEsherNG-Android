@@ -1,8 +1,6 @@
 package com.softwaremagico.librodeesher.android;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
@@ -10,8 +8,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -65,28 +61,34 @@ public class StandaloneScreensUiTest {
         UiDialogs.dismissAnyDialogIfPresent();
 
         onView(withId(R.id.skills_favourites)).perform(UiViews.clickDirectly());
-        UiViews.safely(() -> onData(anything()).inRoot(isDialog()).atPosition(0).perform(click()));
-        UiViews.safely(() -> onView(withText(R.string.age_apply)).inRoot(isDialog()).perform(click()));
+        UiViews.safely(() -> onView(ViewMatchers.isRoot()).inRoot(isDialog())
+                .perform(UiViews.clickFirstDialogRow()));
+        UiViews.safely(() -> onView(withText(R.string.age_apply)).inRoot(isDialog())
+                .perform(UiViews.clickDirectly()));
         UiDialogs.dismissAnyDialogIfPresent();
 
         onView(withId(R.id.skills_recommended)).perform(UiViews.clickDirectly());
         onView(withId(R.id.skills_recommended)).perform(UiViews.clickDirectly());
 
         onView(withId(R.id.skills_generalize)).perform(UiViews.clickDirectly());
-        UiViews.safely(() -> onData(anything()).inRoot(isDialog()).atPosition(0).perform(click()));
+        UiViews.safely(() -> onView(ViewMatchers.isRoot()).inRoot(isDialog())
+                .perform(UiViews.clickFirstDialogRow()));
         UiDialogs.dismissAnyDialogIfPresent();
 
         onView(withId(R.id.skills_specialize)).perform(UiViews.clickDirectly());
-        UiViews.safely(() -> onData(anything()).inRoot(isDialog()).atPosition(0).perform(click()));
+        UiViews.safely(() -> onView(ViewMatchers.isRoot()).inRoot(isDialog())
+                .perform(UiViews.clickFirstDialogRow()));
         UiViews.safely(() -> onView(withHint(R.string.skills_specialization_hint))
                 .inRoot(isDialog()).perform(replaceText("Prueba")));
-        UiViews.safely(() -> onView(withText(R.string.add)).inRoot(isDialog()).perform(click()));
+        UiViews.safely(() -> onView(withText(R.string.add)).inRoot(isDialog())
+                .perform(UiViews.clickDirectly()));
         UiDialogs.dismissAnyDialogIfPresent();
 
         onView(withId(R.id.skills_bulk)).perform(UiViews.clickDirectly());
         UiViews.safely(() -> onView(withHint(R.string.skills_ranks_hint))
                 .inRoot(isDialog()).perform(replaceText("1")));
-        UiViews.safely(() -> onView(withText(R.string.add)).inRoot(isDialog()).perform(click()));
+        UiViews.safely(() -> onView(withText(R.string.add)).inRoot(isDialog())
+                .perform(UiViews.clickDirectly()));
         UiDialogs.dismissAnyDialogIfPresent();
 
         onView(withId(R.id.skills_random)).perform(UiViews.clickDirectly());
