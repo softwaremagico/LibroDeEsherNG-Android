@@ -180,8 +180,9 @@ public class UnsavedChangesUiTest {
         onView(withId(R.id.sheet_save_button)).perform(click());
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         openTab("Dotes");
-        onView(withId(R.id.perks_container)).perform(UiViews.clickRowActionContaining(
-                R.id.perks_container, R.id.item_perk_name, R.id.item_perk_action, "Adicción Mínima"));
+        // The available perks depend on the generated character, so use the first enabled action.
+        onView(withId(R.id.perks_container)).perform(
+                UiViews.clickFirstEnabled(R.id.perks_container, R.id.item_perk_action));
         assertTitleHasMarker(true);
     }
 
