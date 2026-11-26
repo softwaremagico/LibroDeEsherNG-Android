@@ -100,7 +100,9 @@ tasks.register('jacocoTestReport', JacocoReport) {
     classDirectories.setFrom(files(
             fileTree(dir: "$buildDir/intermediates/javac/debug/compileDebugJavaWithJavac/classes", exclude: [
                     '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-                    '**/databinding/**', '**/*_Factory.*', '**/*_ViewBinding.*'
+                    '**/databinding/**', '**/*_Factory.*', '**/*_ViewBinding.*',
+                    // Room's generated implementations (and their inner adapters) are not app code.
+                    '**/*_Impl*'
             ])
     ))
 }
