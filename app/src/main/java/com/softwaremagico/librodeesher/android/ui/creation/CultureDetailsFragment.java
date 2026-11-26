@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -108,29 +109,23 @@ public class CultureDetailsFragment extends Fragment {
                     container.addView(label(options.get(0)));
                 }
             }
-            final Button apply = new Button(requireContext());
-            apply.setText(R.string.accept);
-            apply.setOnClickListener(v -> {
-                final Map<Integer, String> categories = new HashMap<>();
-                int index = 0;
-                for (int i = 0; i < grants.size(); i++) {
-                    final List<String> options = grants.get(i).getCategoryOptions();
-                    if (options == null || options.isEmpty()) {
-                        continue;
+            // Advisor-like flow: selecting a spinner applies the decision immediately.
+            for (final Spinner spinner : spinners) {
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        applyAdolescence(character, culture, grants, spinners);
                     }
-                    categories.put(i, options.size() > 1 && index < spinners.size()
-                            ? (String) spinners.get(index++).getSelectedItem() : options.get(0));
-                }
-                try {
-                    character.applyCultureAdolescenceRanks(culture, categories, null, null);
-                    requireActivity().invalidateOptionsMenu();
-                    Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
-                } catch (InvalidXmlElementException exception) {
-                    AppLog.error("Cannot apply adolescence ranks", exception);
-                    Toast.makeText(requireContext(), R.string.creation_error, Toast.LENGTH_SHORT).show();
-                }
-            });
-            container.addView(apply);
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Keep the last applied selection.
+                    }
+                });
+            }
+            if (spinners.isEmpty()) {
+                applyAdolescence(character, culture, grants, spinners);
+            }
         }
 
         container.addView(header(getString(R.string.culture_languages)));
@@ -149,6 +144,28 @@ public class CultureDetailsFragment extends Fragment {
 
         container.addView(header(getString(R.string.culture_hobbies)));
         addHobbies(character, culture);
+    }
+
+    private void applyAdolescence(CharacterPlayer character, Culture culture,
+                                  List<TrainingCategoryGrant> grants, List<Spinner> spinners) {
+        final Map<Integer, String> categories = new HashMap<>();
+        int index = 0;
+        for (int i = 0; i < grants.size(); i++) {
+            final List<String> options = grants.get(i).getCategoryOptions();
+            if (options == null || options.isEmpty()) {
+                continue;
+            }
+            categories.put(i, options.size() > 1 && index < spinners.size()
+                    ? (String) spinners.get(index++).getSelectedItem() : options.get(0));
+        }
+        try {
+            character.applyCultureAdolescenceRanks(culture, categories, null, null);
+            requireActivity().invalidateOptionsMenu();
+            Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot apply adolescence ranks", exception);
+            Toast.makeText(requireContext(), R.string.creation_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addLanguageSpinners(CharacterPlayer character, Race race, Culture culture,
@@ -188,14 +205,19 @@ public class CultureDetailsFragment extends Fragment {
             spinner.setSelection(options.indexOf(current));
         }
         container.addView(spinner);
-        final Button apply = new Button(requireContext());
-        apply.setText(R.string.accept);
-        apply.setOnClickListener(v -> {
-            assignment.accept((String) spinner.getSelectedItem());
-            requireActivity().invalidateOptionsMenu();
-            Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                assignment.accept((String) spinner.getSelectedItem());
+                requireActivity().invalidateOptionsMenu();
+                Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Keep the last applied selection.
+            }
         });
-        container.addView(apply);
     }
 
     private void addHobbies(CharacterPlayer character, Culture culture) {

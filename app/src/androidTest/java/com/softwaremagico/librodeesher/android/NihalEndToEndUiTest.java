@@ -53,7 +53,7 @@ public class NihalEndToEndUiTest {
         onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
 
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
-        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
+        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(UiViews.clickDirectly()));
 
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         for (int level = 2; level <= 9; level++) {

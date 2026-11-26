@@ -134,8 +134,7 @@ public class UnsavedChangesUiTest {
                     isDescendantOfA(withId(R.id.history_container))))
                     .perform(scrollTo(), replaceText("Historia de prueba"));
             Espresso.closeSoftKeyboard();
-            onView(allOf(withText(R.string.accept), isDescendantOfA(withId(R.id.history_container))))
-                    .perform(scrollTo(), click());
+            onView(withId(R.id.history_apply)).perform(UiViews.clickDirectly());
         });
         UiDialogs.dismissAnyDialogIfPresent();
         ensureDirty();

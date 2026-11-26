@@ -24,6 +24,10 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   entregaba al generador un personaje sin raza/cultura/profesión, algo que AWT impedía con
   `isEverythingSelectedCorrectly()` y que NG documenta como requisito previo. Ahora se siembra la
   selección actual (o entradas aleatorias del catálogo) antes de `createRandomValues()`.
+- Las pantallas de generación y preferencias aleatorias se han rediseñado para parecerse a
+  `ThinkMachine-4E-Advisor`: cabecera con pestañas, títulos de sección, filas «etiqueta a la
+  izquierda / valor a la derecha», FAB con dado e `ExtendedFloatingActionButton`, y overlay de
+  progreso. La funcionalidad y todos los IDs usados por los tests UI-only se conservan.
 - El resto de diferencias son de plataforma/UX o funcionalidad **adicional** de Advisor; no implican
   pérdida de resultados AWT.
 
@@ -69,7 +73,7 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 | Guardar | `action_save_character` | Sin “Guardar como”; `Remove` solo quita de sesión, `Delete` sí borra de BD y su Undo no restaura Room |
 | Compartir | botones de compartir TXT/PDF | No existe en AWT; es una conveniencia móvil |
 | Asistente | `CharacterAssistantFragment` | Función adicional de Android |
-| Preferencias aleatorias | `action_random_preferences` | Función adicional de Android, persistida |
+| Preferencias aleatorias | `action_random_preferences` | Función adicional de Android, persistida; UI rediseñada con la gramática visual de Advisor |
 | Idioma | selector de idioma en ajustes | Función adicional de Android |
 | Clonación | `action_clone_character` (`#25`) | Copia sin guardar en la sesión, como en Advisor |
 | QR | no implementado en Android | Función de Advisor no presente en AWT; equivaldría a importar/exportar comprimido por imagen y no afecta a resultados AWT |
@@ -88,7 +92,20 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   esperas de render y un diálogo de ajustes pendiente, se publicaron `a594720` (esperas y cierre de
   diálogos), `312c740` (confirmación obligatoria en la preparación del test de cambios sin guardar)
   y `ddfb69b` (espera a que la pestaña termine de renderizar antes de verificarla).
-  La batería instrumentada completa con cobertura sigue pendiente de verificación.
+- `134c4fc` publica la política de privacidad en el repositorio; `880c994` y `b78720d` integran los
+  cambios remotos (banner y README). `9b29c98` configura JaCoCo y el timeout de instrumentación.
+- Rediseño Advisor-like de las pantallas aleatorias: `8d205cf` introduce el shell
+  CoordinatorLayout/AppBarLayout/TabLayout, los títulos `RandomSectionTitle`, las filas
+  etiqueta/valor, el FAB con `@drawable/ic_random_icon`, el `ExtendedFloatingActionButton` de
+  preferencias y el overlay de progreso; `f8ae6d1`, `562080a`, `3430db7` y `b131ff3` ajustan
+  el ancho y desplazamiento de etiquetas, la visibilidad del resumen y los botones, y las
+  interacciones de los tests afectadas por esperas de idle de Espresso. Se conservan los IDs de
+  los tests instrumentados; no se ha determinado de forma concluyente la causa de todas las esperas.
+- Tests focalizados del rediseño: `/tmp/opencode/random-ui-focused6.log` → `OK (3 tests)`,
+  `Time: 1.737,558 s` (`RandomPreferencesUiTest` completo y
+  `AdditionalScreensUiTest#randomScreenGeneratesSavesAndExportsACharacter`). Los logs intermedios
+  (`final-full-ui4.log`, `random-ui-focused.log` a `random-ui-focused5.log`) registran los fallos ya
+  corregidos.
 - Tests JVM añadidos: serialización JSON, entidad Room, manager de sesión (dirty tracking,
   clonación, cambio/cierre), validador, resumen y fechas. Tests instrumentados añadidos:
   `UnsavedChangesUiTest`, `AdditionalScreensUiTest` (asistente, wiki, aleatorio),
@@ -96,22 +113,68 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   `SheetActionsUiTest` (guardar, cargar, PDF, compartir, subir de nivel, importar/exportar) y
   `UiCoverageSweepTest` (lista de personajes, detalles, características, dotes, compartir/importar,
   idioma y wiki).
-- Cobertura: JaCoCo combinatorial (`testDebugUnitTest` + `createDebugCoverageReport`), informe en
+- Cobertura: JaCoCo combinatorial (`testDebugUnitTest` + `coverage.ec` de la batería con
+  `-e coverage true`), informe en
   `app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.csv`. Las clases generadas por
-  Android/Room se excluyen del denominador. La última medición disponible fue 2668/4589 líneas
-  (58,1 %); falta verificar una medición actualizada y alcanzar el objetivo del 80 %.
+  Android/Room se excluyen del denominador. La medición parcial intermedia fue 1992/4631 líneas
+  (43,0 %); la medición final tras la batería completa se documenta al cierre de esta sección.
 - Nihal: el test UI con ocho subidas automáticas y comprobación del PDF pasó en 616,6 segundos
   (`/tmp/opencode/nihal-optimized2.log`). La ejecución histórica de 887,5 segundos no es una
   comparación controlada. Las subidas requieren aproximadamente 56–67 segundos cada una.
-- Estado previo a la batería final: las incidencias `#24`–`#26` están cerradas tras las pruebas
-  focalizadas documentadas en sus comentarios; sigue pendiente una batería integrada verde y una
-  medición actualizada de cobertura. Existe el directorio no rastreado `images/`, que se ha
-  preservado. NG permanece sin cambios en `a29d114` (`origin/master`).
+- Estado: las incidencias `#24`–`#26` están cerradas tras las pruebas focalizadas documentadas en
+  sus comentarios. La batería integrada final y su medición de cobertura se registran al final de
+  esta sección. Existe el directorio no rastreado `images/`, preservado. NG permanece sin cambios
+  en `a29d114` (`origin/master`).
 - PDF: memories `.serena/memories/librodeesher-ng-pdf-parity.md` y
   `.serena/memories/android/nihal-e2e-verification.md`. Los artefactos crudos de `.parity/out/`
   están desactualizados y no deben usarse como evidencia.
 - Personajes de referencia cubiertos en NG: Nihal, Morticia, Ophiliaglii, Kara, Fthagtli, Gorju y
   Skaag.
+
+### Batería final y cobertura (pendiente de cierre)
+
+- La ejecución `/tmp/opencode/final-full-ui5.log` fue interrumpida para comparar aceleración gráfica.
+  La primera con GPU (`/tmp/opencode/final-full-gpu.log`) también se interrumpió al alcanzar el
+  proceso del emulador su límite de una hora. Ninguna constituye una batería completa válida.
+  `/tmp/opencode/final-full-gpu2.log` detectó una aserción prematura en la pestaña de habilidades;
+  `c1d4934` añade la espera a que se pueble y su test focalizado pasó (`OK (3 tests)`,
+  753,557 s). `/tmp/opencode/final-full-gpu3.log` terminó con `Tests run: 44, Failures: 2`: la dote
+  «Adicción Mínima» no siempre está disponible (`caa64ac` usa la primera acción habilitada) y las
+  acciones de adiestramiento dependen del personaje aleatorio (`dc317db` verifica el marcador con
+  una edición estable tras la subida de nivel). `365e989` excluye las clases generadas por Room del
+  denominador de JaCoCo, como indicaba esta auditoría. La repetición focalizada destapó diálogos
+  encadenados al añadir dotes y pantallas que se pueblan de forma asíncrona; `bb088d3` y `e1bc006`
+  cierran los diálogos, esperan las acciones habilitadas y usan una edición determinista como
+  reserva, sin llamar a APIs internas. `bb088d3` añade `StandaloneScreensUiTest`, que abre
+  `SkillsFragment` desde el submenú «Desarrollo», recorre sus botones y diálogos y verifica la
+  pantalla de carga de personajes guardados. `de58982` añade `CoverageExpansionUiTest` (controles
+  aleatorios, bonus de equipo y acciones de la hoja) y `667fc9b` corrige la edición de texto
+  cuando el campo está fuera de pantalla. La repetición de `StandaloneScreensUiTest` sufrió un ANR
+  al usar `onData(...).perform(click())` en una lista de diálogo; `4b3e2ec` sustituye esas pulsaciones
+  por `UiViews.clickFirstDialogRow()`, que dispara `performItemClick` directamente y evita eventos
+  táctiles y esperas de idle. La siguiente repetición destapó un fallo real: al introducir un
+  identificador de especialización no válido, `SkillsFragment` propagaba la
+  `IllegalArgumentException` del motor de reglas y cerraba la app; `1bc06a3` la captura y muestra
+  `skills_error`, como ya hacía con `InvalidXmlElementException`.
+- A petición del usuario se acerca la interacción a `ThinkMachine-4E-Advisor`: las acciones
+  aleatorias de `Características`, `Cultura detallada`, `Profesión detallada`, `Historial`, `Dotes`
+  y `Habilidades` son ahora un `FloatingActionButton` abajo a la derecha con `ic_random_icon` y
+  overlay de progreso, como en `random_preferences_fragment.xml` de Advisor. Se eliminan los
+  botones «Aceptar» de esas pantallas: las decisiones se aplican al seleccionar cada spinner
+  (`CultureDetailsFragment`, `ProfessionDetailsFragment`), el historial se guarda mientras se escribe
+  y las características se confirman automáticamente al agotar los puntos. Los identificadores
+  usados por los tests (`characteristics_random`, `culture_random`, `profession_random`,
+  `history_random`, `perks_random`, `skills_random`, `characteristics_confirm`, `history_apply`)
+  se conservan; los dos últimos quedan como hooks internos no visibles.
+- El emulador utiliza KVM (`-accel on`) y GPU NVIDIA RTX 4060 Ti (`-gpu host`), verificado mediante
+  `dumpsys SurfaceFlinger`. El test `specializationIsSavedAndShownAgain` pasó en 58,426 s con
+  SwiftShader y en 6,875 s y 5,382 s con GPU; esta comparación de un solo test no demuestra una
+  mejora equivalente para toda la batería.
+- Cobertura de la batería con dos fallos ya corregidos: 3080/4656 líneas (66,15 %) antes de
+  excluir Room; tras excluir las clases generadas, 2949/4331 (68,09 %). Se añaden tests UI-only
+  para las pantallas alcanzables solo por el submenú «Desarrollo», en particular `SkillsFragment`
+  (248 líneas sin cubrir) y la pantalla de carga de personajes. Cobertura global final: pendiente
+  de recalcular tras la última batería.
 
 ## 5. Diferencias no bloqueantes
 

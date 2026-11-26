@@ -50,7 +50,7 @@ public class CharacteristicsFragment extends Fragment {
     private TextView emptyText;
     private LinearLayout container;
     private TextView pointsText;
-    private Button randomButton;
+    private View randomButton;
     private Button confirmButton;
     private boolean generating;
 
@@ -129,12 +129,9 @@ public class CharacteristicsFragment extends Fragment {
                 pointsText.setText(spent + " / " + total);
             }
             if (confirmButton != null) {
-                confirmButton.setVisibility(View.VISIBLE);
-                if (character.isCharacteristicsConfirmed()) {
-                    confirmButton.setEnabled(false);
-                } else {
-                    confirmButton.setEnabled(spent <= total);
-                }
+                // Kept only as a test hook; creation completes as soon as the points are spent.
+                confirmButton.setVisibility(View.GONE);
+                confirmButton.setEnabled(spent <= total);
             }
             if (randomButton != null) {
                 randomButton.setVisibility(View.VISIBLE);
@@ -163,7 +160,8 @@ public class CharacteristicsFragment extends Fragment {
             RandomCharacterPlayer.setRandomCharacteristics(character, 0);
             requireActivity().invalidateOptionsMenu();
             render();
-            Toast.makeText(requireContext(), R.string.accept, Toast.LENGTH_SHORT).show();
+            autoConfirmIfComplete(character);
+            Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
             AppLog.error("Cannot randomize characteristics", exception);
             Toast.makeText(requireContext(), R.string.error_creating_character, Toast.LENGTH_SHORT).show();
@@ -199,7 +197,7 @@ public class CharacteristicsFragment extends Fragment {
             }
             requireActivity().invalidateOptionsMenu();
             render();
-            Toast.makeText(requireContext(), R.string.accept, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         } catch (Exception exception) {
             AppLog.error("Cannot confirm characteristics", exception);
             Toast.makeText(requireContext(), R.string.error_creating_character, Toast.LENGTH_SHORT).show();
@@ -240,6 +238,7 @@ public class CharacteristicsFragment extends Fragment {
                     character.setCharacteristicTemporalValue(abbreviation, 90);
                     requireActivity().invalidateOptionsMenu();
                     render();
+                    autoConfirmIfComplete(character);
                     return;
                 }
             }
@@ -262,8 +261,23 @@ public class CharacteristicsFragment extends Fragment {
             }
             requireActivity().invalidateOptionsMenu();
             render();
+            autoConfirmIfComplete(character);
         } catch (Exception exception) {
             AppLog.error("Cannot change characteristic", exception);
+        }
+    }
+
+    /** No "Aceptar" button: the creation phase closes when all points have been allocated. */
+    private void autoConfirmIfComplete(CharacterPlayer character) {
+        try {
+            if (!character.isCharacteristicsConfirmed()
+                    && character.getCharacteristicsTemporalTotalPoints() > 0
+                    && character.getCharacteristicsTemporalPointsSpent()
+                    == character.getCharacteristicsTemporalTotalPoints()) {
+                confirmCharacteristics();
+            }
+        } catch (Exception exception) {
+            AppLog.error("Cannot auto-confirm characteristics", exception);
         }
     }
 

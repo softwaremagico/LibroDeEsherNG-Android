@@ -1,7 +1,9 @@
 package com.softwaremagico.librodeesher.android.ui.history;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +59,7 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         emptyText = view.findViewById(R.id.history_empty);
         container = view.findViewById(R.id.history_container);
-        final Button randomButton = view.findViewById(R.id.history_random);
+        final View randomButton = view.findViewById(R.id.history_random);
         final CheckBox showAll = view.findViewById(R.id.history_show_all);
         randomButton.setOnClickListener(v -> generateRandom());
         showAll.setOnCheckedChangeListener((button, checked) -> {
@@ -342,15 +344,31 @@ public class HistoryFragment extends Fragment {
         final EditText text = new EditText(requireContext());
         text.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         text.setText(character.getHistoryText());
-        final Button apply = new Button(requireContext());
-        apply.setText(R.string.accept);
+        // No "Aceptar" button: the history is stored as the user types. The hidden button is kept
+        // as a compatibility hook for UI tests that exercise the same save path.
+        final Button apply = requireView().findViewById(R.id.history_apply);
         apply.setOnClickListener(v -> {
             character.setHistoryText(text.getText().toString());
             requireActivity().invalidateOptionsMenu();
             Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
         });
+        text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing to do.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Nothing to do.
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                apply.performClick();
+            }
+        });
         container.addView(text);
-        container.addView(apply);
     }
 
     private void generateRandom() {

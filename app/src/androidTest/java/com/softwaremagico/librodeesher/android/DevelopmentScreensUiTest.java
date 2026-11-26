@@ -113,7 +113,7 @@ public class DevelopmentScreensUiTest {
                     .perform(replaceText("+1 a todas las tiradas"));
             onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
         });
-        safe(() -> onView(withText(R.string.accept)).perform(scrollTo(), click()));
+        safe(() -> onView(withId(R.id.history_apply)).perform(UiViews.clickDirectly()));
 
         development(R.string.navigation_equipment);
         safe(() -> {
@@ -263,7 +263,7 @@ public class DevelopmentScreensUiTest {
         onView(withId(R.id.culture_spinner)).perform(UiViews.selectSpinnerContaining("Culture[coastalUrbanClassHigh]"));
         onView(withId(R.id.profession_spinner)).perform(UiViews.selectSpinnerContaining("Profession[lordOfTheChaos]"));
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
-        safe(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
+        safe(() -> onView(withId(R.id.characteristics_confirm)).perform(UiViews.clickDirectly()));
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
     }
 

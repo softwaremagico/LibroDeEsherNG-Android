@@ -1,72 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/perks_remaining"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/perks_history_points"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin" />
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/perks_sort_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/perks_sort_name" />
-
-        <Button
-            android:id="@+id/perks_sort_cost"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/perks_sort_cost" />
-
-        <Button
-            android:id="@+id/perks_random"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/perks_add_random" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/md_theme_outlineVariant" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/perks_container"
+        <TextView
+            android:id="@+id/perks_remaining"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/perks_history_points"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingStart="@dimen/activity_vertical_margin"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:paddingBottom="@dimen/activity_vertical_margin" />
-    </ScrollView>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin">
+
+            <Button
+                android:id="@+id/perks_sort_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/perks_sort_name" />
+
+            <Button
+                android:id="@+id/perks_sort_cost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/perks_sort_cost" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/md_theme_outlineVariant" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="72dp">
+
+            <LinearLayout
+                android:id="@+id/perks_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingEnd="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin" />
+        </ScrollView>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/perks_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/md_theme_primaryContainer"
+        android:contentDescription="@string/perks_add_random"
+        android:scaleType="center"
+        android:src="@drawable/ic_random_icon"
+        android:tint="@color/md_theme_onPrimaryContainer"
+        app:fabSize="auto"
+        app:maxImageSize="32dp" />
+</FrameLayout>

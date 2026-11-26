@@ -102,7 +102,7 @@ public class AwtParityUiTest {
         onView(withId(R.id.name_input)).perform(replaceText("Prueba Auditoría"));
         selectRaceCultureProfession();
         onView(withId(R.id.generate_button)).perform(scrollTo(), click());
-        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(click()));
+        UiViews.safely(() -> onView(withId(R.id.characteristics_confirm)).perform(UiViews.clickDirectly()));
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
         android.os.SystemClock.sleep(300);
     }

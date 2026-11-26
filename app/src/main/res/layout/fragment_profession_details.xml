@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/activity_vertical_margin">
-
-        <Button
-            android:id="@+id/profession_random"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/character_random" />
-    </LinearLayout>
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="72dp">
 
         <LinearLayout
             android:id="@+id/profession_container"
@@ -29,6 +16,21 @@
             android:orientation="vertical"
             android:paddingStart="@dimen/activity_vertical_margin"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingBottom="@dimen/activity_vertical_margin" />
     </ScrollView>
-</LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profession_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/md_theme_primaryContainer"
+        android:contentDescription="@string/character_random"
+        android:scaleType="center"
+        android:src="@drawable/ic_random_icon"
+        android:tint="@color/md_theme_onPrimaryContainer"
+        app:fabSize="auto"
+        app:maxImageSize="32dp" />
+</FrameLayout>

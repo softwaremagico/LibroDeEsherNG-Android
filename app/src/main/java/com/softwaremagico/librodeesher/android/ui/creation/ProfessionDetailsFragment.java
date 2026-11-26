@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -102,27 +103,22 @@ public class ProfessionDetailsFragment extends Fragment {
                     container.addView(label(names.get(0)));
                 }
             }
-            final Button applyRealms = new Button(requireContext());
-            applyRealms.setText(R.string.accept);
-            applyRealms.setOnClickListener(v -> {
-                final Map<Integer, RealmOfMagic> selections = new HashMap<>();
-                int index = 0;
-                for (int i = 0; i < realms.size(); i++) {
-                    if (realms.get(i).getOptions().size() > 1 && index < realmSpinners.size()) {
-                        final String selected = (String) realmSpinners.get(index++).getSelectedItem();
-                        selections.put(i, RealmOfMagic.valueOf(selected));
+            for (final Spinner spinner : realmSpinners) {
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        applyRealms(character, realms, realmSpinners);
                     }
-                }
-                try {
-                    character.applyProfessionMagicRealms(selections);
-                    requireActivity().invalidateOptionsMenu();
-                    Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
-                } catch (InvalidXmlElementException exception) {
-                    AppLog.error("Cannot apply magic realm", exception);
-                    Toast.makeText(requireContext(), R.string.creation_error, Toast.LENGTH_SHORT).show();
-                }
-            });
-            container.addView(applyRealms);
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Keep the last applied selection.
+                    }
+                });
+            }
+            if (realmSpinners.isEmpty()) {
+                applyRealms(character, realms, realmSpinners);
+            }
         }
 
         addSkillSection(character, getString(R.string.profession_common),
@@ -131,6 +127,26 @@ public class ProfessionDetailsFragment extends Fragment {
                 DecisionKind.PROFESSION_PROFESSIONAL_SKILL, profession.getProfessionalSkillChoices());
         addSkillSection(character, getString(R.string.profession_restricted),
                 DecisionKind.PROFESSION_RESTRICTED_SKILL, profession.getRestrictedSkillChoices());
+    }
+
+    private void applyRealms(CharacterPlayer character, List<RealmOfMagicGrant> realms,
+                             List<Spinner> realmSpinners) {
+        final Map<Integer, RealmOfMagic> selections = new HashMap<>();
+        int index = 0;
+        for (int i = 0; i < realms.size(); i++) {
+            if (realms.get(i).getOptions().size() > 1 && index < realmSpinners.size()) {
+                final String selected = (String) realmSpinners.get(index++).getSelectedItem();
+                selections.put(i, RealmOfMagic.valueOf(selected));
+            }
+        }
+        try {
+            character.applyProfessionMagicRealms(selections);
+            requireActivity().invalidateOptionsMenu();
+            Toast.makeText(requireContext(), R.string.creation_applied, Toast.LENGTH_SHORT).show();
+        } catch (InvalidXmlElementException exception) {
+            AppLog.error("Cannot apply magic realm", exception);
+            Toast.makeText(requireContext(), R.string.creation_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addSkillSection(CharacterPlayer character, String title, DecisionKind kind,

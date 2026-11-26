@@ -1,57 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingEnd="@dimen/activity_vertical_margin"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/characteristics_points"
             style="@style/TextSubtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/characteristics_random"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/characteristics_random" />
-
-        <Button
-            android:id="@+id/characteristics_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/accept" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/characteristics_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/sheet_no_character"
-        android:textAlignment="center"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:id="@+id/characteristics_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/characteristics_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_margin"
+            android:text="@string/sheet_no_character"
+            android:textAlignment="center"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="72dp">
+
+            <LinearLayout
+                android:id="@+id/characteristics_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Advisor-style random action: a floating button, not a text button in the header. -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/characteristics_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/md_theme_primaryContainer"
+        android:contentDescription="@string/characteristics_random"
+        android:scaleType="center"
+        android:src="@drawable/ic_random_icon"
+        android:tint="@color/md_theme_onPrimaryContainer"
+        app:fabSize="auto"
+        app:maxImageSize="32dp" />
+
+    <!-- Compatibility hook: the creation flow confirms automatically when points are spent. -->
+    <Button
+        android:id="@+id/characteristics_confirm"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:alpha="0"
+        android:text="@string/accept"
+        android:visibility="gone" />
+</FrameLayout>
