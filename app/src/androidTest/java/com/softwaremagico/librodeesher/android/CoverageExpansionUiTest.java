@@ -42,6 +42,7 @@ public class CoverageExpansionUiTest {
     @Test
     public void randomControlsAndSheetActionsAreUsable() {
         createLevelOneCharacterWithoutConfirming();
+        onView(withId(R.id.navigation_characteristics)).perform(UiViews.clickDirectly());
         onView(withId(R.id.characteristics_points)).perform(UiViews.waitForDisplayed(60_000));
         UiViews.safely(() -> onView(withId(R.id.characteristics_container))
                 .perform(UiViews.clickFirstVisible(R.id.characteristics_container,
