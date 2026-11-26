@@ -261,6 +261,26 @@ public final class UiViews {
         };
     }
 
+    /** Sets text directly on an EditText, without depending on scroll position or the IME. */
+    public static ViewAction setText(String value) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(android.widget.EditText.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "set text to " + value;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                ((android.widget.EditText) view).setText(value);
+            }
+        };
+    }
+
     /** Sets a NumberPicker value without emulating many scroll gestures. */
     public static ViewAction setNumberPickerValue(int value) {
         return new ViewAction() {
