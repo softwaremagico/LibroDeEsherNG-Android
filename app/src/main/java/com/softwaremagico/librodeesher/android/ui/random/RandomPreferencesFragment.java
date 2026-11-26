@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
@@ -34,6 +36,8 @@ public class RandomPreferencesFragment extends Fragment {
     private EditText trainingsField;
     private EditText perksField;
     private TextView progressText;
+    private View generationOverlay;
+    private ProgressBar generationProgress;
     private RandomPreferencesHandler preferences;
 
     @Nullable
@@ -56,7 +60,9 @@ public class RandomPreferencesFragment extends Fragment {
         trainingsField = view.findViewById(R.id.random_trainings);
         perksField = view.findViewById(R.id.random_suggested_perks);
         progressText = view.findViewById(R.id.random_progress);
-        final Button applyButton = view.findViewById(R.id.random_apply_prefs);
+        generationOverlay = view.findViewById(R.id.random_generation_overlay);
+        generationProgress = view.findViewById(R.id.random_generation_progress);
+        final ExtendedFloatingActionButton applyButton = view.findViewById(R.id.random_apply_prefs);
 
         specializationSeekBar.setProgress(preferences.getSpecializationLevel() + 3);
         specializationValue.setText(String.valueOf(preferences.getSpecializationLevel()));
@@ -84,6 +90,8 @@ public class RandomPreferencesFragment extends Fragment {
         });
 
         applyButton.setOnClickListener(v -> {
+            generationOverlay.setVisibility(View.VISIBLE);
+            generationProgress.setVisibility(View.VISIBLE);
             try {
                 preferences.setSpecializationLevel(specializationSeekBar.getProgress() - 3);
                 final String level = finalLevelField.getText().toString().trim();
@@ -99,6 +107,9 @@ public class RandomPreferencesFragment extends Fragment {
                 Toast.makeText(getContext(), R.string.random_preferences_saved, Toast.LENGTH_SHORT).show();
             } catch (Exception exception) {
                 Toast.makeText(getContext(), R.string.random_preferences_error, Toast.LENGTH_SHORT).show();
+            } finally {
+                generationOverlay.setVisibility(View.GONE);
+                generationProgress.setVisibility(View.GONE);
             }
         });
     }

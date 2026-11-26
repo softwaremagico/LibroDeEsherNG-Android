@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
@@ -40,10 +45,12 @@ import java.util.Random;
 public class RandomCharacterEnhancedFragment extends Fragment {
 
     private TextView summaryText;
-    private Button generateButton;
-    private Button saveButton;
-    private Button exportButton;
-    private Button shareButton;
+    private FloatingActionButton generateButton;
+    private ImageButton saveButton;
+    private ImageButton exportButton;
+    private ImageButton shareButton;
+    private View generationOverlay;
+    private ProgressBar generationProgress;
     private CharacterPlayer lastCharacter;
     private File lastPdfFile;
     private final Random random = new Random();
@@ -63,14 +70,39 @@ public class RandomCharacterEnhancedFragment extends Fragment {
         saveButton = view.findViewById(R.id.random_save_button);
         exportButton = view.findViewById(R.id.random_export_button);
         shareButton = view.findViewById(R.id.random_share_button);
+        generationOverlay = view.findViewById(R.id.random_generation_overlay);
+        generationProgress = view.findViewById(R.id.random_generation_progress);
 
         generateButton.setOnClickListener(v -> generateRandomCharacter());
         saveButton.setOnClickListener(v -> saveCharacter());
         exportButton.setOnClickListener(v -> exportPdf());
         shareButton.setOnClickListener(v -> sharePdf());
+
+        // Same shell as ThinkMachine-Advisor: a primary tab bar above the scrollable content.
+        final TabLayout tabs = view.findViewById(R.id.random_tabs);
+        tabs.addTab(tabs.newTab().setText(R.string.random_tab_generation));
+        tabs.addTab(tabs.newTab().setText(R.string.random_tab_preferences));
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1) {
+                    Navigation.findNavController(view).navigate(R.id.navigation_random_preferences);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
     private void generateRandomCharacter() {
+        generationOverlay.setVisibility(View.VISIBLE);
+        generationProgress.setVisibility(View.VISIBLE);
         try {
             final CharacterPlayer character = CharacterManager.getInstance().newCharacter();
             // The AWT Controller only enabled "Aleatorio" once race, culture and profession were
@@ -94,6 +126,9 @@ public class RandomCharacterEnhancedFragment extends Fragment {
         } catch (Exception exception) {
             AppLog.error("Cannot generate random character", exception);
             summaryText.setText(getString(R.string.error_creating_character, String.valueOf(exception.getMessage())));
+        } finally {
+            generationOverlay.setVisibility(View.GONE);
+            generationProgress.setVisibility(View.GONE);
         }
     }
 

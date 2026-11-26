@@ -343,5 +343,16 @@
     <string name="random_progress_summary">Nivel %1$d · especialización %2$d · dotes %3$s</string>
     <string name="random_yes">sí</string>
     <string name="random_no">no</string>
+    <string name="random_tab_generation">Generación</string>
+    <string name="random_tab_preferences">Preferencias</string>
+    <string name="random_generate_description">Generar personaje aleatorio</string>
+    <string name="random_apply_description">Aplicar preferencias aleatorias</string>
+    <string name="random_section_generation">Creación aleatoria</string>
+    <string name="random_section_result">Resultado</string>
+    <string name="random_generation_hint">Pulsa el dado para crear un personaje con las preferencias guardadas.</string>
+    <string name="random_section_development">Desarrollo</string>
+    <string name="random_section_training">Habilidades y adiestramientos</string>
+    <string name="random_section_perks">Dotes</string>
+    <string name="random_section_summary">Resumen</string>
     <string name="character_new">Nuevo Personaje</string>
 </resources>

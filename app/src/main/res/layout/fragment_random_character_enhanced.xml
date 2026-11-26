@@ -1,61 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:paddingTop="@dimen/appbar_padding_top">
 
-        <TextView
-            android:id="@+id/random_title"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/random_tabs"
+            style="@style/RandomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generación Aleatoria"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="16dp" />
+            android:background="?attr/colorPrimary"
+            app:tabMode="scrollable" />
 
-        <Button
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
+            android:id="@+id/random_summary_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="96dp"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                style="@style/RandomPreferencesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/RandomSectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/random_section_generation" />
+
+                <TextView
+                    style="@style/RandomRowLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/random_generation_hint" />
+
+                <TextView
+                    style="@style/RandomSectionTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/random_section_result" />
+
+                <TextView
+                    android:id="@+id/random_summary_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/md_theme_surfaceContainerLow"
+                    android:minHeight="96dp"
+                    android:padding="12dp"
+                    android:textIsSelectable="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/random_save_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/save_character"
+                        android:src="@drawable/ic_character_save"
+                        android:tint="@color/md_theme_primary"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/random_export_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/export_pdf"
+                        android:src="@drawable/ic_sheet_icon"
+                        android:tint="@color/md_theme_primary"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/random_share_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/share_pdf"
+                        android:src="@drawable/ic_character_load"
+                        android:tint="@color/md_theme_primary"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/random_generate_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generar personaje" />
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:backgroundTint="@color/md_theme_primaryContainer"
+            android:contentDescription="@string/random_generate_description"
+            android:src="@drawable/ic_random_icon"
+            android:tint="@color/md_theme_onPrimaryContainer"
+            app:fabSize="auto"
+            app:maxImageSize="32dp"
+            android:scaleType="center" />
 
-        <Button
-            android:id="@+id/random_save_button"
+        <FrameLayout
+            android:id="@+id/random_generation_overlay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save_character"
-            android:layout_marginTop="8dp"
-            android:visibility="gone" />
+            android:layout_height="match_parent"
+            android:background="#66000000"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
 
-        <Button
-            android:id="@+id/random_export_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/export_pdf"
-            android:layout_marginTop="8dp"
-            android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/random_generation_progress"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
 
-        <Button
-            android:id="@+id/random_share_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/share_pdf"
-            android:layout_marginTop="8dp"
-            android:visibility="gone" />
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/random_summary_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="14sp"
-            android:textIsSelectable="true" />
+    </FrameLayout>
 
-    </LinearLayout>
-
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

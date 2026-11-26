@@ -1,126 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/random_preferences_scroll"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/random_preferences_scroll"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="96dp"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:id="@+id/random_preferences_container"
+            style="@style/RandomPreferencesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/RandomSectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/random_section_development" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_specialization_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/random_specialization" />
+
+                <TextView
+                    android:id="@+id/random_specialization_value"
+                    style="@style/RandomRowValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:minWidth="32dp"
+                    android:text="0" />
+
+                <SeekBar
+                    android:id="@+id/random_specialization_seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_specialization_label"
+                    android:layout_toStartOf="@id/random_specialization_value"
+                    android:max="6"
+                    android:progress="3" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_final_level_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_final_level"
+                    android:text="@string/random_final_level" />
+
+                <EditText
+                    android:id="@+id/random_final_level"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_final_level_label"
+                    android:hint="@string/random_final_level_hint"
+                    android:inputType="number" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_perks_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_perks_enabled"
+                    android:text="@string/random_perks_enabled" />
+
+                <CheckBox
+                    android:id="@+id/random_perks_enabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:minWidth="48dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/RandomSectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/random_section_training" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_category_ranks_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_category_ranks"
+                    android:text="@string/random_category_ranks" />
+
+                <EditText
+                    android:id="@+id/random_category_ranks"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_category_ranks_label"
+                    android:hint="@string/random_ranks_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_skill_ranks_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_skill_ranks"
+                    android:text="@string/random_skill_ranks" />
+
+                <EditText
+                    android:id="@+id/random_skill_ranks"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_skill_ranks_label"
+                    android:hint="@string/random_ranks_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_trainings_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_trainings"
+                    android:text="@string/random_trainings" />
+
+                <EditText
+                    android:id="@+id/random_trainings"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_trainings_label"
+                    android:hint="@string/random_list_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/RandomSectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/random_section_perks" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_suggested_perks_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_suggested_perks"
+                    android:text="@string/random_suggested_perks" />
+
+                <EditText
+                    android:id="@+id/random_suggested_perks"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_suggested_perks_label"
+                    android:hint="@string/random_list_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/RandomSectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/random_section_summary" />
+
+            <TextView
+                android:id="@+id/random_progress"
+                style="@style/RandomRowLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/random_apply_prefs"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:backgroundTint="@color/md_theme_primaryContainer"
+        android:contentDescription="@string/random_apply_description"
+        android:text="@string/random_apply_preferences"
+        android:textColor="@color/md_theme_onPrimaryContainer"
+        app:icon="@drawable/ic_character_save"
+        app:iconTint="@color/md_theme_onPrimaryContainer" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/random_preferences"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="16dp" />
+    <FrameLayout
+        android:id="@+id/random_generation_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/random_specialization"
-            android:paddingTop="8dp" />
+        <ProgressBar
+            android:id="@+id/random_generation_progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
 
-        <SeekBar
-            android:id="@+id/random_specialization_seekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="6"
-            android:progress="3" />
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/random_specialization_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/random_final_level" />
-
-        <EditText
-            android:id="@+id/random_final_level"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/random_final_level_hint"
-            android:inputType="number" />
-
-        <CheckBox
-            android:id="@+id/random_perks_enabled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/random_perks_enabled" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/random_category_ranks" />
-
-        <EditText
-            android:id="@+id/random_category_ranks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/random_ranks_hint"
-            android:inputType="text" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/random_skill_ranks" />
-
-        <EditText
-            android:id="@+id/random_skill_ranks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/random_ranks_hint"
-            android:inputType="text" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/random_trainings" />
-
-        <EditText
-            android:id="@+id/random_trainings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/random_list_hint"
-            android:inputType="text" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/random_suggested_perks" />
-
-        <EditText
-            android:id="@+id/random_suggested_perks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/random_list_hint"
-            android:inputType="text" />
-
-        <TextView
-            android:id="@+id/random_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
-
-        <Button
-            android:id="@+id/random_apply_prefs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/random_apply_preferences"
-            android:layout_marginTop="16dp" />
-
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>
