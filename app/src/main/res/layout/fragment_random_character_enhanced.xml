@@ -78,8 +78,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/save_character"
                         android:src="@drawable/ic_character_save"
-                        android:tint="@color/md_theme_primary"
-                        android:visibility="gone" />
+                        android:tint="@color/md_theme_primary" />
 
                     <ImageButton
                         android:id="@+id/random_export_button"
@@ -88,8 +87,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/export_pdf"
                         android:src="@drawable/ic_sheet_icon"
-                        android:tint="@color/md_theme_primary"
-                        android:visibility="gone" />
+                        android:tint="@color/md_theme_primary" />
 
                     <ImageButton
                         android:id="@+id/random_share_button"
@@ -98,8 +96,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/share_pdf"
                         android:src="@drawable/ic_character_load"
-                        android:tint="@color/md_theme_primary"
-                        android:visibility="gone" />
+                        android:tint="@color/md_theme_primary" />
 
                 </LinearLayout>
 

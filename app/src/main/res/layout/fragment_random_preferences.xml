@@ -22,6 +22,21 @@
                 style="@style/RandomSectionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/random_section_summary" />
+
+            <TextView
+                android:id="@+id/random_progress"
+                style="@style/RandomRowLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/md_theme_surfaceContainerLow"
+                android:padding="8dp"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                style="@style/RandomSectionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/random_section_development" />
 
             <RelativeLayout
@@ -240,19 +255,6 @@
                     android:inputType="text" />
 
             </RelativeLayout>
-
-            <TextView
-                style="@style/RandomSectionTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/random_section_summary" />
-
-            <TextView
-                android:id="@+id/random_progress"
-                style="@style/RandomRowLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="8dp" />
 
         </LinearLayout>
 

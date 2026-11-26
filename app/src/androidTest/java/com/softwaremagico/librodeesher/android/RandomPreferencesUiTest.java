@@ -21,11 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -46,14 +43,12 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_apply_prefs)).check(matches(withText(R.string.random_apply_preferences)));
         onView(withId(R.id.random_specialization_seekbar)).perform(setProgress(5));
         onView(withId(R.id.random_specialization_value)).check(matches(withText("2")));
-        scrollToApply();
-        onView(withId(R.id.random_apply_prefs)).perform(click());
+        applyPreferences();
         Espresso.pressBackUnconditionally();
 
         openPreferences();
         onView(withId(R.id.random_specialization_seekbar)).check(hasProgress(5));
-        scrollToApply();
-        onView(withId(R.id.random_apply_prefs)).perform(click());
+        applyPreferences();
     }
 
     @Test
@@ -65,8 +60,7 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_skill_ranks)).perform(scrollTo(), replaceText("attack:4"));
         onView(withId(R.id.random_trainings)).perform(scrollTo(), replaceText("trainingOne,trainingTwo"));
         onView(withId(R.id.random_suggested_perks)).perform(scrollTo(), replaceText("ambidextrous"));
-        scrollToApply();
-        onView(withId(R.id.random_apply_prefs)).perform(click());
+        applyPreferences();
         onView(withId(R.id.random_progress)).check(matches(isDisplayed()));
         Espresso.pressBackUnconditionally();
 
@@ -81,8 +75,9 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_perks_enabled)).check(matches(isChecked()));
     }
 
-    private void scrollToApply() {
-        onView(withId(R.id.random_preferences_scroll)).perform(swipeUp(), swipeUp(), swipeUp(), swipeUp());
+    /** The Material FAB is pinned to the bottom; click it directly instead of scrolling. */
+    private void applyPreferences() {
+        onView(withId(R.id.random_apply_prefs)).perform(UiViews.clickDirectly());
     }
 
     private void openPreferences() {

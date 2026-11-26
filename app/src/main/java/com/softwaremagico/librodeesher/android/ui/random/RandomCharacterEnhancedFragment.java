@@ -151,22 +151,32 @@ public class RandomCharacterEnhancedFragment extends Fragment {
         return items.get(random.nextInt(items.size()));
     }
 
+    /** Survives fragment recreation: the session still holds the character we generated. */
+    private CharacterPlayer characterForActions() {
+        if (lastCharacter != null) {
+            return lastCharacter;
+        }
+        return CharacterManager.getInstance().getSelectedCharacter();
+    }
+
     private void saveCharacter() {
-        if (lastCharacter == null) {
+        final CharacterPlayer character = characterForActions();
+        if (character == null) {
             return;
         }
-        if (CharacterManager.getInstance().getSelectedCharacter() != lastCharacter) {
-            CharacterManager.getInstance().setSelectedCharacter(lastCharacter);
+        if (CharacterManager.getInstance().getSelectedCharacter() != character) {
+            CharacterManager.getInstance().setSelectedCharacter(character);
         }
         CharacterSaveHelper.save(requireContext());
     }
 
     private void exportPdf() {
-        if (lastCharacter == null) {
+        final CharacterPlayer character = characterForActions();
+        if (character == null) {
             return;
         }
         try {
-            final CharacterData data = CharacterDataMapper.toData(lastCharacter);
+            final CharacterData data = CharacterDataMapper.toData(character);
             final String json = CharacterJsonManager.toJson(data);
             final File pdfDir = new File(requireContext().getCacheDir(), "pdf");
             if (!pdfDir.exists()) {

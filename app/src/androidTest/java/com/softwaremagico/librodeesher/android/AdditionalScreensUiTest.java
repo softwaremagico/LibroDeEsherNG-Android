@@ -29,7 +29,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -87,9 +86,9 @@ public class AdditionalScreensUiTest {
         onView(withId(R.id.random_generate_button)).check(matches(isDisplayed()));
         onView(withId(R.id.random_generate_button)).perform(click());
         onView(withId(R.id.random_summary_text)).check(matches(withSubstring("Nombre:")));
-        onView(withId(R.id.random_save_button)).perform(scrollTo(), click());
-        onView(withId(R.id.random_export_button)).perform(scrollTo(), click());
-        onView(withId(R.id.random_share_button)).perform(scrollTo(), click());
+        onView(withId(R.id.random_save_button)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.random_export_button)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.random_share_button)).perform(UiViews.clickDirectly());
         // ACTION_SEND choosers may finish the single-activity task on a headless emulator.
         try {
             Espresso.pressBackUnconditionally();
