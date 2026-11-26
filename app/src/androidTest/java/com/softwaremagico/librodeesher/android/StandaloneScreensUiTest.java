@@ -99,6 +99,21 @@ public class StandaloneScreensUiTest {
         onView(withId(R.id.characters_list)).check(matches(isDisplayed()));
         UiViews.safely(() -> onView(withId(R.id.character_card)).perform(UiViews.clickDirectly()));
         UiDialogs.discardUnsavedChangesIfPrompted();
+
+        // Every development entry is handled by MainActivity, while the tab bar uses different
+        // fragments. Visiting them from the submenu covers both navigation paths.
+        final int[] children = {
+                R.string.navigation_culture_details, R.string.navigation_profession_details,
+                R.string.navigation_trainings, R.string.navigation_skills, R.string.navigation_spells,
+                R.string.navigation_perks, R.string.navigation_resistances, R.string.navigation_history,
+                R.string.navigation_equipment, R.string.navigation_categories, R.string.navigation_weapon_tiers
+        };
+        for (final int child : children) {
+            UiDialogs.dismissAnyDialogIfPresent();
+            onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+            UiViews.safely(() -> UiMenus.clickNested(R.string.development, child));
+        }
+        UiDialogs.dismissAnyDialogIfPresent();
     }
 
     private void openLoadScreen() {
