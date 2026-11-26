@@ -46,23 +46,25 @@ public class SheetActionsUiTest {
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
         onView(withId(R.id.sheet_text)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.sheet_save_button)).perform(click());
+        onView(withId(R.id.sheet_save_button)).perform(UiViews.clickDirectly());
         safe(() -> {
-            onView(withId(R.id.sheet_load_button)).perform(click());
-            onData(anything()).inRoot(isDialog()).atPosition(0).perform(click());
+            onView(withId(R.id.sheet_load_button)).perform(UiViews.clickDirectly());
+            onView(androidx.test.espresso.matcher.ViewMatchers.isRoot()).inRoot(isDialog())
+                    .perform(UiViews.clickFirstDialogRow());
         });
         safe(() -> {
-            onView(withId(R.id.sheet_level_up_button)).perform(click());
-            onView(withText(R.string.sheet_level_up_manual)).inRoot(isDialog()).perform(click());
+            onView(withId(R.id.sheet_level_up_button)).perform(UiViews.clickDirectly());
+            onView(withText(R.string.sheet_level_up_manual)).inRoot(isDialog())
+                    .perform(UiViews.clickDirectly());
         });
-        safe(() -> onView(withId(R.id.sheet_export_pdf_button)).perform(click()));
+        safe(() -> onView(withId(R.id.sheet_export_pdf_button)).perform(UiViews.clickDirectly()));
         safe(shareAndReturn(R.id.sheet_share_pdf_button));
         safe(shareAndReturn(R.id.sheet_share_abbreviated_button));
         safe(shareAndReturn(R.id.sheet_share_button));
 
         safe(() -> {
-            onView(withId(R.id.sheet_delete_button)).perform(click());
-            onView(withText(R.string.cancel)).inRoot(isDialog()).perform(click());
+            onView(withId(R.id.sheet_delete_button)).perform(UiViews.clickDirectly());
+            onView(withText(R.string.cancel)).inRoot(isDialog()).perform(UiViews.clickDirectly());
         });
     }
 
@@ -91,8 +93,8 @@ public class SheetActionsUiTest {
 
     private static Runnable shareAndReturn(int buttonId) {
         return () -> {
-            onView(withId(buttonId)).perform(click());
-            Espresso.pressBackUnconditionally();
+            onView(withId(buttonId)).perform(UiViews.clickDirectly());
+            UiViews.pressBackDirectly();
         };
     }
 

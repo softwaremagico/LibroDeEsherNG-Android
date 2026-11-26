@@ -61,7 +61,29 @@ public class CoverageExpansionUiTest {
         randomControlInTab("Dotes", R.id.perks_sort_name);
         randomControlInTab("Dotes", R.id.perks_sort_cost);
 
+        openTab("Adiestramientos");
+        UiViews.safely(() -> onView(withId(R.id.trainings_remaining))
+                .perform(UiViews.waitForDisplayed(60_000)));
+        UiViews.safely(() -> onView(withId(R.id.trainings_container)).perform(
+                UiViews.waitForEnabledChild(R.id.trainings_container, R.id.item_training_action, 10_000),
+                UiViews.clickFirstEnabled(R.id.trainings_container, R.id.item_training_action)));
+        UiDialogs.clickDialogButtonIfPresent(R.string.accept);
+        UiDialogs.dismissAnyDialogIfPresent();
+        UiViews.safely(() -> onView(withId(R.id.trainings_container))
+                .perform(UiViews.clickFirst(R.id.trainings_container, R.id.item_training_action)));
+        UiDialogs.dismissAnyDialogIfPresent();
+
         openTab("Equipo");
+        UiViews.safely(() -> {
+            onView(withText(R.string.equipment_add)).perform(UiViews.clickDirectly());
+            onView(withId(R.id.dialog_equipment_name)).inRoot(isDialog()).perform(replaceText("Mochila"));
+            onView(withId(R.id.dialog_equipment_description)).inRoot(isDialog())
+                    .perform(replaceText("Equipo de prueba"));
+            onView(withText(R.string.add)).inRoot(isDialog()).perform(UiViews.clickDirectly());
+        });
+        UiDialogs.dismissAnyDialogIfPresent();
+        UiViews.safely(() -> onView(withId(R.id.equipment_container))
+                .perform(UiViews.clickFirst(R.id.equipment_container, R.id.item_equipment_action)));
         UiViews.safely(() -> {
             onView(withText(R.string.equipment_add_magic)).perform(UiViews.clickDirectly());
             onView(withId(R.id.dialog_equipment_name)).inRoot(isDialog()).perform(replaceText("Amuleto"));
