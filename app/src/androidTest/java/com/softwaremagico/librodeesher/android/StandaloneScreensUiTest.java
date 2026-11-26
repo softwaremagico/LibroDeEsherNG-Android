@@ -94,7 +94,9 @@ public class StandaloneScreensUiTest {
         onView(withId(R.id.skills_random)).perform(UiViews.clickDirectly());
         onView(withId(R.id.skills_remaining)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        // The standalone skills destination is not in the bottom bar: pressing BACK returns to the
+        // selected sheet tab, while clicking the already-selected tab would be a no-op.
+        UiViews.pressBackDirectly();
         onView(withId(R.id.sheet_save_button)).perform(UiViews.clickDirectly());
         openLoadScreen();
         onView(withId(R.id.characters_list)).perform(UiViews.waitForChildCount(1, 60_000));
@@ -114,6 +116,7 @@ public class StandaloneScreensUiTest {
             UiDialogs.dismissAnyDialogIfPresent();
             onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
             UiViews.safely(() -> UiMenus.clickNested(R.string.development, child));
+            UiViews.pressBackDirectly();
         }
         UiDialogs.dismissAnyDialogIfPresent();
     }
