@@ -13,7 +13,22 @@ public final class UiMenus {
     }
 
     public static void click(int title) {
-        final String text = ApplicationProvider.getApplicationContext().getString(title);
+        openOverflow();
+        selectVisible(label(title));
+    }
+
+    /** Opens the overflow menu, selects a submenu and then one of its items. */
+    public static void clickNested(int parentTitle, int childTitle) {
+        openOverflow();
+        selectVisible(label(parentTitle));
+        selectVisible(label(childTitle));
+    }
+
+    private static String label(int title) {
+        return ApplicationProvider.getApplicationContext().getString(title);
+    }
+
+    private static void openOverflow() {
         final String overflowDescription = ApplicationProvider.getApplicationContext().getString(
                 androidx.appcompat.R.string.abc_action_menu_overflow_description);
         final UiAutomation automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
@@ -30,6 +45,10 @@ public final class UiMenus {
         if (!opened) {
             throw new AssertionError("Overflow menu button not visible");
         }
+    }
+
+    private static void selectVisible(String text) {
+        final UiAutomation automation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
         final long deadline = SystemClock.uptimeMillis() + 10_000;
         do {
             final AccessibilityNodeInfo root = automation.getRootInActiveWindow();

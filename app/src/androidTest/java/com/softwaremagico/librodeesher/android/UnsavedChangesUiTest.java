@@ -183,6 +183,8 @@ public class UnsavedChangesUiTest {
         // The available perks depend on the generated character, so use the first enabled action.
         onView(withId(R.id.perks_container)).perform(
                 UiViews.clickFirstEnabled(R.id.perks_container, R.id.item_perk_action));
+        // Adding a perk can chain weakness/choice dialogs; the marker is read from the toolbar.
+        UiDialogs.dismissAnyDialogIfPresent();
         assertTitleHasMarker(true);
     }
 
