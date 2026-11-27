@@ -4,6 +4,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -15,6 +16,9 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.hamcrest.Matcher;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -403,6 +407,66 @@ public final class UiViews {
                 throw new AssertionError("Spinner entry not found: " + text);
             }
         };
+    }
+
+    /** Sets a rule-module checkbox by its visible label without depending on a scroll position. */
+    public static ViewAction setModuleChecked(final String label, final boolean checked) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "set module " + label + " checked=" + checked;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> boxes = new ArrayList<>();
+                collectOfType(view, CheckBox.class, boxes);
+                for (final View box : boxes) {
+                    if (label.equals(((CheckBox) box).getText().toString())) {
+                        if (((CheckBox) box).isChecked() != checked) {
+                            box.performClick();
+                        }
+                        return;
+                    }
+                }
+                throw new AssertionError("Module checkbox not found: " + label);
+            }
+        };
+    }
+
+    /** Reads a rule-module checkbox by its visible label (UI state only). */
+    public static boolean isModuleChecked(final String label) {
+        final java.util.concurrent.atomic.AtomicBoolean checked = new java.util.concurrent.atomic.AtomicBoolean(false);
+        onView(withId(R.id.option_modules_container)).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "read module " + label;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> boxes = new ArrayList<>();
+                collectOfType(view, CheckBox.class, boxes);
+                for (final View box : boxes) {
+                    if (label.equals(((CheckBox) box).getText().toString())) {
+                        checked.set(((CheckBox) box).isChecked());
+                        return;
+                    }
+                }
+                throw new AssertionError("Module checkbox not found: " + label);
+            }
+        });
+        return checked.get();
     }
 
     /** Selects an adapter position on a Spinner without opening the system popup. */
