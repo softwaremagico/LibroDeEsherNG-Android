@@ -257,9 +257,10 @@ posteriores:
   asistente guiado ampliado, [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
   preferencias aleatorias adicionales,
   [#29](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/29) Guardar como/Undo,
-  [#30](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/30) prueba SAF `content://`,
   [#31](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/31) política de backup,
   [#32](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/32) prueba de módulos
   desactivados y [#33](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/33)
-  documentación/memorias obsoletas. Todas están abiertas con contexto y evidencia.
+  documentación/memorias obsoletas. Todas están abiertas con contexto y evidencia. El
+  [#30](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/30) (prueba SAF con URIs
+  `content://`) quedó cubierto por `SheetFileResultsUiTest` y se cerró en `8cb647b`.
 - El QR de Advisor queda fuera de alcance por acuerdo: no existe en AWT y no altera resultados.
