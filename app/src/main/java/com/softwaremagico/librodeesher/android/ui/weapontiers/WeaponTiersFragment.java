@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -130,13 +130,14 @@ public class WeaponTiersFragment extends Fragment {
                 .inflate(R.layout.item_weapon_tier, container, false);
         final TextView nameView = row.findViewById(R.id.item_weapon_tier_name);
         final TextView infoView = row.findViewById(R.id.item_weapon_tier_info);
-        final Button action = row.findViewById(R.id.item_weapon_tier_action);
+        final ImageButton action = row.findViewById(R.id.item_weapon_tier_action);
 
-        nameView.setText(getString(R.string.weapon_tiers_level, tierIndex + 1));
-        infoView.setText(getString(R.string.weapon_tiers_cost, formatCosts(tier)));
-        action.setText(assignedCategoryId == null
+        final String assignment = assignedCategoryId == null
                 ? getString(R.string.weapon_tiers_unassigned)
-                : categoryName(assignedCategoryId));
+                : categoryName(assignedCategoryId);
+        nameView.setText(getString(R.string.weapon_tiers_level, tierIndex + 1));
+        infoView.setText(getString(R.string.weapon_tiers_cost, formatCosts(tier)) + " · " + assignment);
+        action.setContentDescription(getString(R.string.weapon_tiers_choose, assignment));
         action.setOnClickListener(v -> showPickDialog(character, tierIndex));
         container.addView(row);
     }

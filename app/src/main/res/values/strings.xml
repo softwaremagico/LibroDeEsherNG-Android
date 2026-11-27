@@ -239,12 +239,14 @@
     <string name="equipment_bonus_value">Valor del bono</string>
     <string name="equipment_add_bonus">Añadir bono</string>
     <string name="add">Añadir</string>
+    <string name="remove">Quitar</string>
 
     <!-- Weapon cost tiers -->
     <string name="weapon_tiers_help">Asigna cada nivel de coste, del más barato al más caro, a una categoría de arma.</string>
     <string name="weapon_tiers_level">Nivel %1$d</string>
     <string name="weapon_tiers_cost">Coste: %1$s</string>
     <string name="weapon_tiers_unassigned">Sin asignar</string>
+    <string name="weapon_tiers_choose">Elegir categoría: %1$s</string>
     <string name="weapon_tiers_none">La profesión no tiene niveles de coste de armas.</string>
 
     <!-- Errors -->

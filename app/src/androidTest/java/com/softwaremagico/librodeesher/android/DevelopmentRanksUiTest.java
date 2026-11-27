@@ -1,5 +1,7 @@
 package com.softwaremagico.librodeesher.android;
 
+import android.widget.ImageButton;
+
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -18,8 +20,10 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -43,6 +47,7 @@ public class DevelopmentRanksUiTest {
 
         openTab("Habilidades");
         onView(withId(R.id.skills_container)).perform(UiViews.waitForChildCount(1, 60_000));
+        assertRankIcons(R.id.skills_container);
         UiViews.safely(() -> onView(withId(R.id.skills_container))
                 .perform(UiViews.clickFirstEnabled(R.id.skills_container, R.id.item_skill_plus)));
         UiViews.safely(() -> onView(withId(R.id.skills_container))
@@ -64,6 +69,7 @@ public class DevelopmentRanksUiTest {
 
         openTab("Categorías");
         onView(withId(R.id.categories_container)).perform(UiViews.waitForChildCount(1, 60_000));
+        assertRankIcons(R.id.categories_container);
         UiViews.safely(() -> onView(withId(R.id.categories_container))
                 .perform(UiViews.clickFirstEnabled(R.id.categories_container, R.id.item_skill_plus)));
         UiViews.safely(() -> onView(withId(R.id.categories_container))
@@ -96,6 +102,14 @@ public class DevelopmentRanksUiTest {
         UiViews.safely(() -> onView(withId(R.id.equipment_container))
                 .perform(UiViews.clickFirst(R.id.equipment_container, R.id.item_equipment_action)));
         onView(withId(R.id.equipment_container)).check(matches(isDisplayed()));
+    }
+
+    /** Row controls must be icon-only, matching the Advisor add/remove buttons. */
+    private static void assertRankIcons(int containerId) {
+        UiViews.assertFirstChild(containerId, R.id.item_skill_plus,
+                allOf(isAssignableFrom(ImageButton.class), withContentDescription(R.string.add)));
+        UiViews.assertFirstChild(containerId, R.id.item_skill_minus,
+                allOf(isAssignableFrom(ImageButton.class), withContentDescription(R.string.remove)));
     }
 
     private void createAndLevelUp() {

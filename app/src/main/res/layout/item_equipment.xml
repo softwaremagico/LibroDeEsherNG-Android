@@ -25,11 +25,14 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/item_equipment_action"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:text="-" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/remove"
+        android:scaleType="fitCenter"
+        android:src="@drawable/remove"
+        android:tint="@color/md_theme_primary" />
 
 </LinearLayout>

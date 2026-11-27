@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -214,11 +215,10 @@ public class EquipmentFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_equipment, container, false);
         final TextView nameView = row.findViewById(R.id.item_equipment_name);
         final TextView infoView = row.findViewById(R.id.item_equipment_info);
-        final Button action = row.findViewById(R.id.item_equipment_action);
+        final ImageButton action = row.findViewById(R.id.item_equipment_action);
         nameView.setText(name);
         infoView.setText(info);
         infoView.setVisibility(info.isEmpty() ? View.GONE : View.VISIBLE);
-        action.setText("-");
         action.setOnClickListener(remove);
         container.addView(row);
     }

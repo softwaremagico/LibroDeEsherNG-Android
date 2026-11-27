@@ -143,12 +143,14 @@ public class DevelopmentScreensUiTest {
         });
         development(R.string.navigation_trainings);
         safe(() -> {
-            onView(withId(R.id.trainings_container))
-                    .perform(UiViews.clickFirstEnabled(R.id.trainings_container, R.id.item_training_action));
+            onView(withId(R.id.trainings_container)).perform(
+                    UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                            R.id.item_training_action, label(R.string.add)));
             onView(withText(R.string.accept)).inRoot(isDialog()).perform(click());
         });
-        safe(() -> onView(withId(R.id.trainings_container))
-                .perform(UiViews.clickFirst(R.id.trainings_container, R.id.item_training_action)));
+        safe(() -> onView(withId(R.id.trainings_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                        R.id.item_training_action, label(R.string.remove))));
         development(R.string.navigation_culture_details);
         development(R.string.navigation_profession_details);
         onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());

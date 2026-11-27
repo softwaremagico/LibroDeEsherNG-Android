@@ -25,19 +25,25 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/item_perk_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:text="@string/perks_options"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/perks_options"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_settings"
+        android:tint="@color/md_theme_primary"
         android:visibility="gone" />
 
-    <Button
+    <ImageButton
         android:id="@+id/item_perk_action"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:text="+" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/add"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add"
+        android:tint="@color/md_theme_primary" />
 
 </LinearLayout>

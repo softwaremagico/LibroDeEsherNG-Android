@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -108,11 +108,12 @@ public class TrainingsFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_training, container, false);
         final TextView name = row.findViewById(R.id.item_training_name);
         final TextView info = row.findViewById(R.id.item_training_info);
-        final Button action = row.findViewById(R.id.item_training_action);
+        final ImageButton action = row.findViewById(R.id.item_training_action);
         name.setText(trainingName(trainingId));
         info.setText(trainingInfo(character, trainingId));
         if (removable) {
-            action.setText(R.string.trainings_remove);
+            action.setImageResource(R.drawable.remove);
+            action.setContentDescription(getString(R.string.remove));
             action.setOnClickListener(v -> {
                 if (character.removeCurrentLevelTraining(trainingId)) {
                     requireActivity().invalidateOptionsMenu();
@@ -122,7 +123,8 @@ public class TrainingsFragment extends Fragment {
                 }
             });
         } else {
-            action.setText(R.string.trainings_add);
+            action.setImageResource(R.drawable.add);
+            action.setContentDescription(getString(R.string.add));
             action.setEnabled(false);
             action.setOnClickListener(v -> addTraining(character, trainingId, action));
             try {
@@ -134,7 +136,7 @@ public class TrainingsFragment extends Fragment {
         container.addView(row);
     }
 
-    private void addTraining(CharacterPlayer character, String trainingId, Button action) {
+    private void addTraining(CharacterPlayer character, String trainingId, ImageButton action) {
         try {
             if (character.addTraining(trainingId)) {
                 requireActivity().invalidateOptionsMenu();

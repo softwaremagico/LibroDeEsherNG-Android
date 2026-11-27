@@ -121,13 +121,14 @@ public class CoverageTopUpUiTest {
 
         openTab("Adiestramientos");
         onView(withId(R.id.trainings_remaining)).perform(UiViews.waitForDisplayed(60_000));
-        UiViews.safely(() -> onView(withId(R.id.trainings_container))
-                .perform(UiViews.clickFirstEnabled(R.id.trainings_container, R.id.item_training_action)));
+        UiViews.safely(() -> onView(withId(R.id.trainings_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                        R.id.item_training_action, label(R.string.add))));
         UiDialogs.clickDialogButtonIfPresent(R.string.accept);
         UiDialogs.dismissAnyDialogIfPresent();
-        UiViews.safely(() -> onView(withId(R.id.trainings_container))
-                .perform(UiViews.clickNthButtonWithText(R.id.trainings_container,
-                        label(R.string.trainings_remove), 0)));
+        UiViews.safely(() -> onView(withId(R.id.trainings_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                        R.id.item_training_action, label(R.string.remove))));
         onView(withId(R.id.trainings_remaining)).check(matches(isDisplayed()));
     }
 

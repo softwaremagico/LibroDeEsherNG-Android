@@ -1,5 +1,7 @@
 package com.softwaremagico.librodeesher.android;
 
+import android.widget.ImageButton;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingPolicies;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -17,9 +19,11 @@ import java.util.concurrent.TimeUnit;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -74,14 +78,16 @@ public class CoveragePushUiTest {
         onView(withId(R.id.trainings_container)).perform(UiViews.waitForChildCount(1, 60_000));
 
         for (int attempt = 0; attempt < 6; attempt++) {
-            UiViews.safely(() -> onView(withId(R.id.trainings_container))
-                    .perform(UiViews.clickNthButtonWithText(R.id.trainings_container, "+", 0)));
+            UiViews.safely(() -> onView(withId(R.id.trainings_container)).perform(
+                    UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                            R.id.item_training_action, label(R.string.add))));
             UiDialogs.clickDialogButtonIfPresent(R.string.accept);
             UiDialogs.clickDialogButtonIfPresent(R.string.cancel);
             UiDialogs.dismissAnyDialogIfPresent();
         }
-        UiViews.safely(() -> onView(withId(R.id.trainings_container))
-                .perform(UiViews.clickNthButtonWithText(R.id.trainings_container, "−", 0)));
+        UiViews.safely(() -> onView(withId(R.id.trainings_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.trainings_container,
+                        R.id.item_training_action, label(R.string.remove))));
         onView(withId(R.id.trainings_container)).check(matches(isDisplayed()));
     }
 
@@ -117,11 +123,17 @@ public class CoveragePushUiTest {
 
         openTab("Características");
         onView(withId(R.id.characteristics_container)).perform(UiViews.waitForChildCount(1, 60_000));
-        // The header row hides its buttons; pick the first real listener instead of a scroll position.
-        onView(withId(R.id.characteristics_container))
-                .perform(UiViews.clickButtonWithListener(R.id.characteristics_container, "+"));
-        onView(withId(R.id.characteristics_container))
-                .perform(UiViews.clickButtonWithListener(R.id.characteristics_container, "-"));
+        UiViews.assertFirstChild(R.id.characteristics_container, R.id.item_characteristic_plus,
+                allOf(isAssignableFrom(ImageButton.class), withContentDescription(R.string.add)));
+        UiViews.assertFirstChild(R.id.characteristics_container, R.id.item_characteristic_minus,
+                allOf(isAssignableFrom(ImageButton.class), withContentDescription(R.string.remove)));
+        // Header rows hide their icons; pick the first visible row control by description.
+        onView(withId(R.id.characteristics_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.characteristics_container,
+                        R.id.item_characteristic_plus, label(R.string.add)));
+        onView(withId(R.id.characteristics_container)).perform(
+                UiViews.clickFirstEnabledWithDescription(R.id.characteristics_container,
+                        R.id.item_characteristic_minus, label(R.string.remove)));
         onView(withId(R.id.characteristics_container)).check(matches(isDisplayed()));
     }
 

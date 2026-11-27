@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -241,8 +240,8 @@ public class SpellsFragment extends Fragment {
         final TextView nameView = row.findViewById(R.id.item_spell_name);
         final TextView infoView = row.findViewById(R.id.item_spell_info);
         final TextView ranksView = row.findViewById(R.id.item_spell_ranks);
-        final Button minus = row.findViewById(R.id.item_spell_minus);
-        final Button plus = row.findViewById(R.id.item_spell_plus);
+        final View minus = row.findViewById(R.id.item_spell_minus);
+        final View plus = row.findViewById(R.id.item_spell_plus);
 
         nameView.setText(ElementAdapter.displayName(spellList));
         infoView.setText(getString(R.string.spells_rank_cost, ranks, cost == null ? "-" : String.valueOf(cost)));

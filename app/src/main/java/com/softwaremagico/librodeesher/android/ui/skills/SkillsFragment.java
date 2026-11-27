@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -225,8 +224,8 @@ public class SkillsFragment extends Fragment {
         final TextView nameView = row.findViewById(R.id.item_skill_name);
         final TextView infoView = row.findViewById(R.id.item_skill_info);
         final TextView ranksView = row.findViewById(R.id.item_skill_ranks);
-        final Button minus = row.findViewById(R.id.item_skill_minus);
-        final Button plus = row.findViewById(R.id.item_skill_plus);
+        final View minus = row.findViewById(R.id.item_skill_minus);
+        final View plus = row.findViewById(R.id.item_skill_plus);
 
         nameView.setText(ElementAdapter.displayName(skill));
         infoView.setText(getString(R.string.skills_rank_cost, ranks, cost == null ? "-" : String.valueOf(cost)));

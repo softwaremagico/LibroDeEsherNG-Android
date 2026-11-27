@@ -772,6 +772,62 @@ public final class UiViews {
         };
     }
 
+    /** Asserts that the first matching child in a dynamic container satisfies {@code matcher}. */
+    public static void assertFirstChild(int containerId, int childId, Matcher<View> matcher) {
+        onView(withId(containerId)).perform(new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "first child " + childId + " matches expected design";
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> matches = new ArrayList<>();
+                collect(view, childId, matches);
+                if (matches.isEmpty()) {
+                    throw new AssertionError("No child " + childId + " in container " + containerId);
+                }
+                if (!matcher.matches(matches.get(0))) {
+                    throw new AssertionError("First child " + childId + " does not match: " + matches.get(0));
+                }
+            }
+        });
+    }
+
+    /** Clicks the first visible, enabled child with the given child ID and content description. */
+    public static ViewAction clickFirstEnabledWithDescription(int containerId, int childId, String description) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "first enabled child " + childId + " described as " + description;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> matches = new ArrayList<>();
+                collect(view, childId, matches);
+                for (final View match : matches) {
+                    if (match.isEnabled() && match.getVisibility() == View.VISIBLE
+                            && description.contentEquals(match.getContentDescription())) {
+                        match.performClick();
+                        return;
+                    }
+                }
+                throw new AssertionError("No enabled child " + childId + " described as " + description);
+            }
+        };
+    }
+
     /** Clicks the first child with {@code childId} inside {@code containerId}. */
     public static ViewAction clickFirst(int containerId, int childId) {
         return clickChild(containerId, childId, false);

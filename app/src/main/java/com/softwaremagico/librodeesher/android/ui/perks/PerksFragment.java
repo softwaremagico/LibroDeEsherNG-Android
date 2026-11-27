@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -160,8 +160,8 @@ public class PerksFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_perk, container, false);
         final TextView nameView = row.findViewById(R.id.item_perk_name);
         final TextView infoView = row.findViewById(R.id.item_perk_info);
-        final Button optionsButton = row.findViewById(R.id.item_perk_options);
-        final Button action = row.findViewById(R.id.item_perk_action);
+        final ImageButton optionsButton = row.findViewById(R.id.item_perk_options);
+        final ImageButton action = row.findViewById(R.id.item_perk_action);
         final Perk perk = RulesCatalog.getInstance().getPerk(selectedPerk.getPerkId());
 
         String info = perkInfo(selectedPerk.getPerkId(), selectedPerk.isRandom());
@@ -180,7 +180,8 @@ public class PerksFragment extends Fragment {
             optionsButton.setOnClickListener(v -> resolvePerkRequirements(selectedPerk.getPerkId()));
         }
 
-        action.setText("-");
+        action.setImageResource(R.drawable.remove);
+        action.setContentDescription(getString(R.string.remove));
         action.setEnabled(!selectedPerk.isRandom());
         action.setOnClickListener(v -> removePerk(selectedPerk.getPerkId()));
         container.addView(row);
@@ -191,8 +192,8 @@ public class PerksFragment extends Fragment {
         final View row = LayoutInflater.from(requireContext()).inflate(R.layout.item_perk, container, false);
         final TextView nameView = row.findViewById(R.id.item_perk_name);
         final TextView infoView = row.findViewById(R.id.item_perk_info);
-        final Button optionsButton = row.findViewById(R.id.item_perk_options);
-        final Button action = row.findViewById(R.id.item_perk_action);
+        final ImageButton optionsButton = row.findViewById(R.id.item_perk_options);
+        final ImageButton action = row.findViewById(R.id.item_perk_action);
         optionsButton.setVisibility(View.GONE);
 
         final Integer cost = perkCost(perkId);
@@ -201,7 +202,8 @@ public class PerksFragment extends Fragment {
         nameView.setOnClickListener(v -> showDescription(perkId));
         infoView.setOnClickListener(v -> showDescription(perkId));
 
-        action.setText("+");
+        action.setImageResource(R.drawable.add);
+        action.setContentDescription(getString(R.string.add));
         action.setEnabled(cost == null || cost <= remaining);
         action.setOnClickListener(v -> addPerk(perkId));
         container.addView(row);

@@ -211,8 +211,8 @@ public class CharacteristicsFragment extends Fragment {
         final TextView potentialView = row.findViewById(R.id.item_characteristic_potential);
         final TextView raceView = row.findViewById(R.id.item_characteristic_race);
         final TextView totalView = row.findViewById(R.id.item_characteristic_total);
-        final Button minus = row.findViewById(R.id.item_characteristic_minus);
-        final Button plus = row.findViewById(R.id.item_characteristic_plus);
+        final View minus = row.findViewById(R.id.item_characteristic_minus);
+        final View plus = row.findViewById(R.id.item_characteristic_plus);
         nameView.setText(name);
 
         minus.setOnClickListener(v -> change(character, abbreviation, -1));
@@ -299,8 +299,8 @@ public class CharacteristicsFragment extends Fragment {
         final TextView potentialView = row.findViewById(R.id.item_characteristic_potential);
         final TextView raceView = row.findViewById(R.id.item_characteristic_race);
         final TextView totalView = row.findViewById(R.id.item_characteristic_total);
-        final Button minus = row.findViewById(R.id.item_characteristic_minus);
-        final Button plus = row.findViewById(R.id.item_characteristic_plus);
+        final View minus = row.findViewById(R.id.item_characteristic_minus);
+        final View plus = row.findViewById(R.id.item_characteristic_plus);
         if (minus != null) minus.setVisibility(View.INVISIBLE);
         if (plus != null) plus.setVisibility(View.INVISIBLE);
         nameView.setText(name);

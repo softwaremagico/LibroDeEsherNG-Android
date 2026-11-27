@@ -27,12 +27,15 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/item_skill_minus"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:text="-" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/remove"
+        android:scaleType="fitCenter"
+        android:src="@drawable/remove"
+        android:tint="@color/md_theme_primary" />
 
     <TextView
         android:id="@+id/item_skill_ranks"
@@ -40,11 +43,14 @@
         android:layout_height="wrap_content"
         android:gravity="center" />
 
-    <Button
+    <ImageButton
         android:id="@+id/item_skill_plus"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:minWidth="0dp"
-        android:text="+" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/add"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add"
+        android:tint="@color/md_theme_primary" />
 
 </LinearLayout>
