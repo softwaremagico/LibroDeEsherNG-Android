@@ -373,7 +373,7 @@
 
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/random_apply_prefs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -381,10 +381,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:backgroundTint="@color/md_theme_primaryContainer"
         android:contentDescription="@string/random_apply_description"
-        android:text="@string/random_apply_preferences"
-        android:textColor="@color/md_theme_onPrimaryContainer"
-        app:icon="@drawable/ic_character_save"
-        app:iconTint="@color/md_theme_onPrimaryContainer" />
+        android:src="@drawable/ic_character_save"
+        android:tint="@color/md_theme_onPrimaryContainer"
+        app:fabSize="auto"
+        app:maxImageSize="32dp" />
 
     <FrameLayout
         android:id="@+id/random_generation_overlay"

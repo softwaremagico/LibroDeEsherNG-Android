@@ -1,6 +1,8 @@
 package com.softwaremagico.librodeesher.android.ui.random;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
@@ -70,7 +72,7 @@ public class RandomPreferencesFragment extends Fragment {
         progressText = view.findViewById(R.id.random_progress);
         generationOverlay = view.findViewById(R.id.random_generation_overlay);
         generationProgress = view.findViewById(R.id.random_generation_progress);
-        final ExtendedFloatingActionButton applyButton = view.findViewById(R.id.random_apply_prefs);
+        final FloatingActionButton applyButton = view.findViewById(R.id.random_apply_prefs);
 
         specializationSeekBar.setProgress(preferences.getSpecializationLevel() + 3);
         specializationValue.setText(String.valueOf(preferences.getSpecializationLevel()));
@@ -86,10 +88,12 @@ public class RandomPreferencesFragment extends Fragment {
         perksField.setText(String.join(",", preferences.getSuggestedPerks()));
         showProgress();
 
+        // Advisor-style: every change is stored immediately, with no explicit Accept button.
         specializationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 specializationValue.setText(String.valueOf(progress - 3));
+                savePreferences(false);
             }
 
             @Override
@@ -101,33 +105,67 @@ public class RandomPreferencesFragment extends Fragment {
             }
         });
 
+        final TextWatcher autoSaveWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                savePreferences(false);
+            }
+        };
+        finalLevelField.addTextChangedListener(autoSaveWatcher);
+        raceField.addTextChangedListener(autoSaveWatcher);
+        cultureField.addTextChangedListener(autoSaveWatcher);
+        professionField.addTextChangedListener(autoSaveWatcher);
+        categoryRanksField.addTextChangedListener(autoSaveWatcher);
+        skillRanksField.addTextChangedListener(autoSaveWatcher);
+        characteristicRanksField.addTextChangedListener(autoSaveWatcher);
+        trainingsField.addTextChangedListener(autoSaveWatcher);
+        perksField.addTextChangedListener(autoSaveWatcher);
+        perksEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> savePreferences(false));
+
+        // Kept as a small icon-only FAB so existing UI flows and screen readers still have a
+        // stable target; the values themselves are already persisted by the listeners above.
         applyButton.setOnClickListener(v -> {
             generationOverlay.setVisibility(View.VISIBLE);
             generationProgress.setVisibility(View.VISIBLE);
-            try {
-                preferences.setSpecializationLevel(specializationSeekBar.getProgress() - 3);
-                final String level = finalLevelField.getText().toString().trim();
-                if (!level.isEmpty()) {
-                    preferences.setFinalLevel(Integer.parseInt(level));
-                }
-                preferences.setRaceId(raceField.getText().toString());
-                preferences.setCultureId(cultureField.getText().toString());
-                preferences.setProfessionId(professionField.getText().toString());
-                preferences.setPerksEnabled(perksEnabled.isChecked());
-                preferences.setCategoryRanks(parseRanks(categoryRanksField.getText().toString()));
-                preferences.setSkillRanks(parseRanks(skillRanksField.getText().toString()));
-                preferences.setCharacteristicRanks(parseRanks(characteristicRanksField.getText().toString()));
-                preferences.setTrainings(parseList(trainingsField.getText().toString()));
-                preferences.setSuggestedPerks(parseList(perksField.getText().toString()));
-                showProgress();
-                Toast.makeText(getContext(), R.string.random_preferences_saved, Toast.LENGTH_SHORT).show();
-            } catch (Exception exception) {
-                Toast.makeText(getContext(), R.string.random_preferences_error, Toast.LENGTH_SHORT).show();
-            } finally {
-                generationOverlay.setVisibility(View.GONE);
-                generationProgress.setVisibility(View.GONE);
-            }
+            savePreferences(true);
+            generationOverlay.setVisibility(View.GONE);
+            generationProgress.setVisibility(View.GONE);
         });
+    }
+
+    private void savePreferences(boolean notify) {
+        try {
+            preferences.setSpecializationLevel(specializationSeekBar.getProgress() - 3);
+            final String level = finalLevelField.getText().toString().trim();
+            if (!level.isEmpty()) {
+                preferences.setFinalLevel(Integer.parseInt(level));
+            }
+            preferences.setRaceId(raceField.getText().toString());
+            preferences.setCultureId(cultureField.getText().toString());
+            preferences.setProfessionId(professionField.getText().toString());
+            preferences.setPerksEnabled(perksEnabled.isChecked());
+            preferences.setCategoryRanks(parseRanks(categoryRanksField.getText().toString()));
+            preferences.setSkillRanks(parseRanks(skillRanksField.getText().toString()));
+            preferences.setCharacteristicRanks(parseRanks(characteristicRanksField.getText().toString()));
+            preferences.setTrainings(parseList(trainingsField.getText().toString()));
+            preferences.setSuggestedPerks(parseList(perksField.getText().toString()));
+            showProgress();
+            if (notify) {
+                Toast.makeText(getContext(), R.string.random_preferences_saved, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception exception) {
+            if (notify) {
+                Toast.makeText(getContext(), R.string.random_preferences_error, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showProgress() {

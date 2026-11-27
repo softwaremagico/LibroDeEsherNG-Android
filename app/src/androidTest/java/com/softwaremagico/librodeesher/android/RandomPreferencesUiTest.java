@@ -25,6 +25,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -38,7 +39,8 @@ public class RandomPreferencesUiTest {
     @Test
     public void specializationIsSavedAndShownAgain() {
         openPreferences();
-        onView(withId(R.id.random_apply_prefs)).check(matches(withText(R.string.random_apply_preferences)));
+        onView(withId(R.id.random_apply_prefs))
+                .check(matches(withContentDescription(R.string.random_apply_description)));
         onView(withId(R.id.random_specialization_seekbar)).perform(setProgress(5));
         onView(withId(R.id.random_specialization_value)).check(matches(withText("2")));
         applyPreferences();
@@ -71,6 +73,19 @@ public class RandomPreferencesUiTest {
         onView(withId(R.id.random_suggested_perks)).check(matches(withText("ambidextrous")));
         onView(withId(R.id.random_perks_enabled)).perform(setChecked(true));
         onView(withId(R.id.random_perks_enabled)).check(matches(isChecked()));
+    }
+
+    @Test
+    public void changesAreSavedWithoutExplicitApply() {
+        openPreferences();
+        onView(withId(R.id.random_final_level)).perform(setText("7"));
+        onView(withId(R.id.random_perks_enabled)).perform(setChecked(false));
+        UiViews.pressBackDirectly();
+
+        openPreferences();
+        onView(withId(R.id.random_final_level)).check(matches(withText("7")));
+        onView(withId(R.id.random_perks_enabled)).check(matches(isNotChecked()));
+        onView(withId(R.id.random_perks_enabled)).perform(setChecked(true));
     }
 
     /** The Material FAB is pinned to the bottom; click it directly instead of scrolling. */

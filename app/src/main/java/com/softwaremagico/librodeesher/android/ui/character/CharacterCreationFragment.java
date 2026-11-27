@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -56,10 +55,10 @@ public class CharacterCreationFragment extends Fragment {
     private Spinner professionSpinner;
     private NumberPicker levelPicker;
     private TextView summaryText;
-    private Button generateButton;
-    private Button randomButton;
-    private Button randomNameButton;
-    private Button resetButton;
+    private View generateButton;
+    private View randomButton;
+    private View randomNameButton;
+    private View resetButton;
 
     private List<SexType> sexes = new ArrayList<>();
     private final List<Race> races = new ArrayList<>();
