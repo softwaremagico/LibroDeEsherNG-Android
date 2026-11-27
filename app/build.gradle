@@ -74,6 +74,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.espresso.intents
 }
 
 // JVM unit-test coverage. Generated Android classes are excluded so the ratio reflects the code

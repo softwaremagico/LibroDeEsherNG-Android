@@ -554,6 +554,36 @@ public final class UiViews {
         };
     }
 
+    /** Clicks the first labelled button that has a listener, even if a render moved it off-screen. */
+    public static ViewAction clickButtonWithListener(int containerId, String text) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isAssignableFrom(ViewGroup.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "button with listener labelled " + text;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> buttons = new ArrayList<>();
+                collectOfType(view, Button.class, buttons);
+                for (final View button : buttons) {
+                    if (text.equals(((Button) button).getText().toString())
+                            && button.isEnabled() && button.hasOnClickListeners()) {
+                        button.performClick();
+                        return;
+                    }
+                }
+                throw new AssertionError("No enabled button with listener " + text
+                        + " in container " + containerId);
+            }
+        };
+    }
+
     /** Clicks an enabled button with the requested label inside a dynamic container. */
     public static ViewAction clickEnabledButtonWithText(String text) {
         return new ViewAction() {

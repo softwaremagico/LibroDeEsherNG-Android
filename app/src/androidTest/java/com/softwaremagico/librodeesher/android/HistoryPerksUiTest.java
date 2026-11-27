@@ -65,8 +65,8 @@ public class HistoryPerksUiTest {
         final String initialPoints = textOf(R.id.perks_history_points);
 
         openTab("Historial");
-        onView(allOf(withText("Mejorar AG"), isDescendantOfA(withId(R.id.history_container))))
-                .perform(scrollTo(), click());
+        UiViews.safely(() -> onView(allOf(withText("Mejorar AG"),
+                isDescendantOfA(withId(R.id.history_container)))).perform(UiViews.clickDirectly()));
 
         openTab("Dotes");
         final String afterUpgrade = textOf(R.id.perks_history_points);

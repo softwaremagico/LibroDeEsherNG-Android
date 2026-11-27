@@ -76,7 +76,17 @@ public class AdditionalScreensUiTest {
         onView(withId(R.id.assistant_summary_text)).check(matches(withSubstring("Asistente Test")));
         onView(withId(R.id.assistant_export_button)).perform(click());
         onView(withId(R.id.assistant_save_button)).perform(click());
-        onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.assistant_share_button)).perform(click());
+        try {
+            Espresso.pressBackUnconditionally();
+        } catch (RuntimeException ignored) {
+            // The chooser may finish the single-activity task on a headless emulator.
+        }
+        try {
+            onView(withId(R.id.navigation_home)).perform(UiViews.clickDirectly());
+        } catch (RuntimeException ignored) {
+            // Already back at the launcher after the chooser.
+        }
     }
 
     @Test

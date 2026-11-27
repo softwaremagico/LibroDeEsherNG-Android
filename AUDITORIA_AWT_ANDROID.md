@@ -30,6 +30,11 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   progreso. La funcionalidad y todos los IDs usados por los tests UI-only se conservan.
 - El resto de diferencias son de plataforma/UX o funcionalidad **adicional** de Advisor; no implican
   pérdida de resultados AWT.
+- Auditoría de rendimiento: la librería releía el catálogo XML en cada acceso (2832 lecturas por
+  generación aleatoria) y Espresso esperaba 60 s por cada búsqueda de diálogo inexistente. `edf5b34`
+  (NG) cachea los elementos hasta el cambio de módulos y `474183d` (Android) sustituye esa búsqueda
+  por una inspección rápida de ventanas; la generación baja de 12,475 s a 1,969 s en JVM y el barrido
+  `CoverageExpansionUiTest` de 1009 s a 110 s.
 
 ## 2. Matriz AWT ⇄ Android
 
@@ -87,6 +92,11 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   la librería se movieron al source set JVM (`app/src/test`), y las comprobaciones de persistencia y
   PDF ya presentes en `SheetActionsUiTest` y los E2E se eliminaron de `app/src/androidTest`. Tras este
   cambio, los tests instrumentados solo impulsan la interfaz y validan ficheros exportados.
+- La librería NG pasa de `a29d114` a `edf5b34` (`origin/master`): `XmlFactory.readXml()` sirve una
+  copia de la caché de elementos fusionados y solo la reconstruye tras
+  `ModuleManager.resetModules()`. `mvn test` pasó con 92 tests (incluido el nuevo test de caché) y
+  la regresión PDF se ejecutó en la misma corrida. Android consume esa versión instalada vía
+  `mavenLocal` y sus APK se recompilaron con `--refresh-dependencies`.
 - `#24`/`#25`/`#26`: `assembleDebug`, `testDebugUnitTest`, `assembleDebugAndroidTest` y
   `lintDebug` completados correctamente. Tras la batería completa que detectó diez fallos por
   esperas de render y un diálogo de ajustes pendiente, se publicaron `a594720` (esperas y cierre de
@@ -100,7 +110,9 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   preferencias y el overlay de progreso; `f8ae6d1`, `562080a`, `3430db7` y `b131ff3` ajustan
   el ancho y desplazamiento de etiquetas, la visibilidad del resumen y los botones, y las
   interacciones de los tests afectadas por esperas de idle de Espresso. Se conservan los IDs de
-  los tests instrumentados; no se ha determinado de forma concluyente la causa de todas las esperas.
+  los tests instrumentados; la causa de las esperas largas se determinó después: el `RootViewPicker` de Espresso aguarda 60 s
+   cuando `inRoot(isDialog())` no encuentra ningún diálogo; `474183d` evita esa búsqueda comprobando
+   el tipo de ventana de cada root.
 - Tests focalizados del rediseño: `/tmp/opencode/random-ui-focused6.log` → `OK (3 tests)`,
   `Time: 1.737,558 s` (`RandomPreferencesUiTest` completo y
   `AdditionalScreensUiTest#randomScreenGeneratesSavesAndExportsACharacter`). Los logs intermedios
@@ -123,15 +135,38 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   comparación controlada. Las subidas requieren aproximadamente 56–67 segundos cada una.
 - Estado: las incidencias `#24`–`#26` están cerradas tras las pruebas focalizadas documentadas en
   sus comentarios. La batería integrada final y su medición de cobertura se registran al final de
-  esta sección. Existe el directorio no rastreado `images/`, preservado. NG permanece sin cambios
-  en `a29d114` (`origin/master`).
+  esta sección. Existe el directorio no rastreado `images/`, preservado. NG quedó en `edf5b34`
+  (`origin/master`) tras corregir la caché del catálogo.
 - PDF: memories `.serena/memories/librodeesher-ng-pdf-parity.md` y
   `.serena/memories/android/nihal-e2e-verification.md`. Los artefactos crudos de `.parity/out/`
   están desactualizados y no deben usarse como evidencia.
 - Personajes de referencia cubiertos en NG: Nihal, Morticia, Ophiliaglii, Kara, Fthagtli, Gorju y
   Skaag.
 
-### Batería final y cobertura (pendiente de cierre)
+### Auditoría de rendimiento (cerrada)
+
+- El cuello de botella del catálogo estaba en `XmlFactory.readXml()`: cada `getElements()` volvía a
+  abrir y parsear los XML de todos los módulos. Una generación aleatoria JVM hacía 2832 lecturas
+  (`skills.xml` 2764 veces) y tardaba 12,475 s. `edf5b34` cachea los elementos fusionados, devuelve
+  una lista nueva a cada llamador y solo invalida la caché desde `ModuleManager.resetModules()`; la
+  misma generación tardó 1,969 s con 9 lecturas
+  (`/tmp/opencode/random-generation.log` ⇄ `/tmp/opencode/random-generation-committed.log`).
+- `mvn test` en NG: 92 tests verdes, incluido `repeatedGetElementsReusesTheCachedElements`, que
+  comprueba listas distintas con elementos compartidos. La batería genera los siete PDF de
+  referencia en la misma ejecución, sin diferencias de paridad.
+- Con las APK recompiladas contra la librería corregida, la pantalla aleatoria bajó de 279 s a 95 s
+  y el asistente de 47 s a 12 s (`/tmp/opencode/focused-after-cache.log`). El barrido
+  `CoverageExpansionUiTest` aún tardaba 1009 s: el coste ya no era XML sino Espresso.
+- El desglose mostró ~60 s por acción aleatoria a pesar de que el código de la pantalla terminaba en
+  207 ms. `UiDialogs.dismissAnyDialogIfPresent()` usaba `inRoot(isDialog())`; el `RootViewPicker` de
+  Espresso 3.7.0 espera 60 s cuando no hay ningún root de diálogo. `474183d` inspecciona el tipo de
+  las ventanas raíz (diálogo = `TYPE_APPLICATION`) con el root matcher por defecto y solo acude a
+  Espresso cuando existe un diálogo. El barrido pasó en 109,825 s
+  (`/tmp/opencode/coverage-after-dialog-fix.log`) y los 18 tests focalizados
+  (`StandaloneScreensUiTest`, `UnsavedChangesUiTest`, `CoverageExpansionUiTest` y
+  `SheetActionsUiTest`) en 592,163 s (`/tmp/opencode/focused-dialog-root.log`).
+
+### Batería final y cobertura (cerrada)
 
 - La ejecución `/tmp/opencode/final-full-ui5.log` fue interrumpida para comparar aceleración gráfica.
   La primera con GPU (`/tmp/opencode/final-full-gpu.log`) también se interrumpió al alcanzar el
@@ -165,7 +200,15 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   y las características se confirman automáticamente al agotar los puntos. Los identificadores
   usados por los tests (`characteristics_random`, `culture_random`, `profession_random`,
   `history_random`, `perks_random`, `skills_random`, `characteristics_confirm`, `history_apply`)
-  se conservan; los dos últimos quedan como hooks internos no visibles.
+  se conservan; los dos últimos quedan como hooks internos no visibles. El barrido aleatorio debía
+  abrir además el destino `Características` antes de esperar sus controles (`3d58b0e`). Con el
+  rediseño, `StandaloneScreensUiTest` y las 14 pruebas de `UnsavedChangesUiTest` pasaron
+  (`/tmp/opencode/focused-advisor-style.log`). El barrido `CoverageExpansionUiTest` pasó aislado
+  en 879,396 s (`/tmp/opencode/coverage-expansion-focused2.log`). La batería completa
+  `/tmp/opencode/final-full-advisor.log` terminó con `Tests run: 46, Failures: 1`: el hook oculto
+  `characteristics_confirm` seguía habilitado después de la confirmación automática; `9cdcc5a` lo
+  deshabilita. `7d26a5f` refuerza los recorridos UI-only de hoja, adiestramientos y equipo para
+  reducir líneas sin cubrir.
 - El emulador utiliza KVM (`-accel on`) y GPU NVIDIA RTX 4060 Ti (`-gpu host`), verificado mediante
   `dumpsys SurfaceFlinger`. El test `specializationIsSavedAndShownAgain` pasó en 58,426 s con
   SwiftShader y en 6,875 s y 5,382 s con GPU; esta comparación de un solo test no demuestra una
@@ -173,8 +216,22 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 - Cobertura de la batería con dos fallos ya corregidos: 3080/4656 líneas (66,15 %) antes de
   excluir Room; tras excluir las clases generadas, 2949/4331 (68,09 %). Se añaden tests UI-only
   para las pantallas alcanzables solo por el submenú «Desarrollo», en particular `SkillsFragment`
-  (248 líneas sin cubrir) y la pantalla de carga de personajes. Cobertura global final: pendiente
-  de recalcular tras la última batería.
+  (248 líneas sin cubrir) y la pantalla de carga de personajes.
+- Con la caché XML publicada y el arreglo de diálogos, `/tmp/opencode/final-full-after-cache.log`
+  cerró `OK (46 tests)` en 1385,392 s, frente a 10.893 s antes de ambas correcciones. Se añadieron
+  `CoverageTopUpUiTest`, `SheetFileResultsUiTest` (SAF con `espresso-intents`),
+  `DevelopmentRanksUiTest`, `AdditionalScreensUiTest` y `CoveragePushUiTest` (generación aleatoria
+  desde creación, dotes con opciones, adiestramientos, objeto mágico y edición de características).
+  `MainActivityMenuUiTest` se descartó: abrir el menú overflow derribaba el emulador con
+  `gfxstream ... error null ctx` bajo `-gpu host` y además usaba una API no disponible de
+  `ActivityScenarioRule`.
+- Batería final definitiva `/tmp/opencode/final-full-verified.log`: `OK (64 tests)` en 2003,241 s
+  con `Motoroal_G73` (`-accel on -gpu host`). El `coverage.ec` resultante
+  (`/tmp/opencode/final-full-verified.ec`) y `./gradlew jacocoTestReport` dan
+  **3507/4354 líneas (80,55 %)**, 16035/19428 instrucciones (82,54 %) y 1030/1603 ramas (64,25 %).
+  Se supera el objetivo de ≥80 % de líneas con tests exclusivamente UI-only: ningún test invoca
+  APIs internas de la librería; se validan los siete personajes de referencia, los PDF exportados y
+  la regresión PDF legacy⇄NG.
 
 ## 5. Diferencias no bloqueantes
 
@@ -195,7 +252,7 @@ posteriores:
 - Librería `LibroDeEsherNG`: [#1](https://github.com/softwaremagico/LibroDeEsherNG/issues/1)
   decide el catálogo de categorías para paridad byte a byte del PDF legacy;
   [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2) actualiza Javadoc y comentarios
-  obsoletos. La librería permanece sin cambios en `a29d114` (`origin/master`).
+  obsoletos. La librería quedó en `edf5b34` (`origin/master`) con la caché corregida.
 - App Android: [#27](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/27)
   asistente guiado ampliado, [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
   preferencias aleatorias adicionales,
