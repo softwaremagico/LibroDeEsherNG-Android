@@ -255,11 +255,11 @@ posteriores:
   (catálogo de categorías) y [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2)
   (Javadoc/comentarios obsoletos) quedaron cerrados como trabajo documental; la librería sigue en
   `edf5b34` (`origin/master`) con la caché corregida y `mvn test` verde (458/92/92).
-- App Android: [#27](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/27)
-  asistente guiado ampliado, [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
-  preferencias aleatorias adicionales,
+- App Android: [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
+  preferencias aleatorias adicionales y
   [#29](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/29) Guardar como/Undo
-  siguen abiertos con contexto y evidencia. Cerrados: #30 (SAF `content://`,
+  siguen abiertos con contexto y evidencia. Cerrados: #27 (asistente con pantalla de revisión,
+  validación y resumen de equipo; `AssistantReviewUiTest`), #30 (SAF `content://`,
   `SheetFileResultsUiTest`), #31 (política de backup explícita, `f6ebd85`), #32 (prueba UI-only
   `DisabledModulesUiTest` de módulos desactivados) y #33 (memorias históricas corregidas).
 - El QR de Advisor queda fuera de alcance por acuerdo: no existe en AWT y no altera resultados.

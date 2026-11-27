@@ -3,12 +3,17 @@ package com.softwaremagico.librodeesher.android.core;
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
 import com.softwaremagico.librodeesher.characteristic.CharacteristicAbbreviation;
 import com.softwaremagico.librodeesher.culture.Culture;
+import com.softwaremagico.librodeesher.equipment.Equipment;
+import com.softwaremagico.librodeesher.equipment.MagicObject;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
+import com.softwaremagico.librodeesher.language.TranslatedText;
 import com.softwaremagico.librodeesher.profession.Profession;
 import com.softwaremagico.librodeesher.race.Race;
 import com.softwaremagico.librodeesher.skill.Skill;
 import com.softwaremagico.librodeesher.rules.RulesCatalog;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,6 +47,7 @@ public final class CharacterSummaryBuilder {
         appendIdentity(builder, character);
         appendCharacteristics(builder, character);
         appendSkills(builder, character);
+        appendEquipment(builder, character);
         return builder.toString().trim();
     }
 
@@ -82,6 +88,35 @@ public final class CharacterSummaryBuilder {
         }
         builder.append('\n').append("Habilidades (").append(total).append("):").append('\n');
         builder.append(skillsBuilder);
+    }
+
+    private static void appendEquipment(StringBuilder builder, CharacterPlayer character) {
+        final List<String> names = new ArrayList<>();
+        for (final Equipment item : character.getStandardEquipment()) {
+            names.add(text(item.getName()));
+        }
+        appendSection(builder, "Equipo:", names);
+        names.clear();
+        for (final MagicObject item : character.getAllMagicItems()) {
+            names.add(text(item.getName()));
+        }
+        appendSection(builder, "Objetos mágicos:", names);
+    }
+
+    private static void appendSection(StringBuilder builder, String heading, List<String> names) {
+        Collections.sort(names);
+        builder.append('\n').append(heading).append('\n');
+        if (names.isEmpty()) {
+            builder.append("  -").append('\n');
+            return;
+        }
+        for (final String name : names) {
+            builder.append("  ").append(name).append('\n');
+        }
+    }
+
+    private static String text(TranslatedText value) {
+        return value == null || value.getTranslatedText() == null ? "-" : value.getTranslatedText();
     }
 
     private static String resolveRace(CharacterPlayer character) {

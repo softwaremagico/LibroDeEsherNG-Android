@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.core.CharacterSummaryBuilder;
+import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.core.PdfSheetFactory;
 import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.persistence.RandomPreferencesHandler;
@@ -71,6 +72,7 @@ public class CharacterAssistantFragment extends Fragment {
     private Button shareButton;
 
     private int currentStep;
+    private int finalLevel;
     private CharacterPlayer character;
     private boolean generated;
     private File lastPdfFile;
@@ -121,6 +123,7 @@ public class CharacterAssistantFragment extends Fragment {
             return;
         }
 
+        finalLevel = RandomPreferencesHandler.getInstance(requireContext()).getFinalLevel();
         if (savedInstanceState == null) {
             character = CharacterManager.getInstance().newCharacter();
         } else {
@@ -200,14 +203,13 @@ public class CharacterAssistantFragment extends Fragment {
                         }, advance);
                 break;
             case 6:
-                showNumberDialog(R.string.assistant_step_level, 1, MAX_LEVEL,
-                        RandomPreferencesHandler.getInstance(requireContext()).getFinalLevel(), level -> {
-                            generated = false;
-                            finishCharacter(level);
-                        }, false);
+                showNumberDialog(R.string.assistant_step_level, 1, MAX_LEVEL, finalLevel, level -> {
+                    generated = false;
+                    finalLevel = Math.max(1, level);
+                }, true);
                 break;
             default:
-                finishCharacter(Math.max(1, character.getLevel()));
+                finishCharacter(finalLevel);
                 break;
         }
     }
@@ -332,6 +334,7 @@ public class CharacterAssistantFragment extends Fragment {
         append(builder, R.string.character_culture, idName(character.getCultureId(), cultureOptions));
         append(builder, R.string.character_profession, idName(character.getProfessionId(), professionOptions));
         append(builder, R.string.character_age, String.valueOf(character.getCurrentAge()));
+        append(builder, R.string.assistant_step_level, String.valueOf(finalLevel));
         return builder.toString();
     }
 
@@ -375,6 +378,11 @@ public class CharacterAssistantFragment extends Fragment {
                 preferences.configure(generator);
                 generator.createRandomValues();
                 preferences.afterGeneration(character);
+                final int problem = CharacterValidator.problem(character);
+                if (problem != 0) {
+                    Toast.makeText(requireContext(), problem, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 generated = true;
             }
             CharacterManager.getInstance().setSelectedCharacter(character);

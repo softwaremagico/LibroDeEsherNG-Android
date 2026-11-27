@@ -72,6 +72,11 @@ public class AdditionalScreensUiTest {
         onView(withId(R.id.assistant_next_button)).perform(click());
         applyDialog();
 
+        // The last step is a review screen; the character is generated on "Finalizar".
+        onView(withId(R.id.assistant_step_label))
+                .check(matches(withSubstring("Revisar y finalizar")));
+        onView(withId(R.id.assistant_finish_button)).perform(UiViews.clickDirectly());
+
         onView(withId(R.id.assistant_save_button)).check(matches(isDisplayed()));
         onView(withId(R.id.assistant_summary_text)).check(matches(withSubstring("Asistente Test")));
         onView(withId(R.id.assistant_export_button)).perform(click());
