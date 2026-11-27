@@ -241,8 +241,10 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   se hace mediante ficheros `.rlm` y el sistema de compartir de Android.
 - La paginación/orden por defecto de algunos PDFs depende del flag `sortPdfSkills` guardado en el
   personaje; no es un defecto de render.
-- El catálogo NG tiene 65 categorías frente a 58 del legacy; la última fila de la tabla de valores
-  puede diferir por recorte de catálogo, no por el exportador.
+- El catálogo NG tiene 65 categorías frente a 58 efectivas del legacy; la última fila de la tabla
+  de valores puede diferir por divergencia de datos, no por el exportador. Decisión #1: conservar
+  el catálogo NG completo; se acepta esa diferencia de fila y no se recorta ni fusiona ninguna
+  categoría al renderizar. La paridad byte a byte de esa fila queda fuera de alcance.
 
 ## 6. Trabajo futuro documentado
 
@@ -250,9 +252,9 @@ No afecta a la equivalencia AWT/Android ya verificada y queda registrado para im
 posteriores:
 
 - Librería `LibroDeEsherNG`: [#1](https://github.com/softwaremagico/LibroDeEsherNG/issues/1)
-  decide el catálogo de categorías para paridad byte a byte del PDF legacy;
-  [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2) actualiza Javadoc y comentarios
-  obsoletos. La librería quedó en `edf5b34` (`origin/master`) con la caché corregida.
+  (catálogo de categorías) y [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2)
+  (Javadoc/comentarios obsoletos) quedaron cerrados como trabajo documental; la librería sigue en
+  `edf5b34` (`origin/master`) con la caché corregida y `mvn test` verde (458/92/92).
 - App Android: [#27](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/27)
   asistente guiado ampliado, [#28](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/28)
   preferencias aleatorias adicionales,
