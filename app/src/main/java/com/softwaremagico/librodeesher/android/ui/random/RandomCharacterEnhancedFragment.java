@@ -111,6 +111,8 @@ public class RandomCharacterEnhancedFragment extends Fragment {
             seedSelections(character);
             final RandomPreferencesHandler preferences =
                     RandomPreferencesHandler.getInstance(requireContext());
+            // Explicit preferences win over the session values seeded above; blank ones inherit them.
+            preferences.applyOrigin(character);
             final RandomCharacterPlayer generator =
                     new RandomCharacterPlayer(character, preferences.getFinalLevel());
             preferences.configure(generator);

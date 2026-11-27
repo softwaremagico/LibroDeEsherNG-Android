@@ -374,6 +374,7 @@ public class CharacterAssistantFragment extends Fragment {
             if (!generated) {
                 final RandomPreferencesHandler preferences =
                         RandomPreferencesHandler.getInstance(requireContext());
+                preferences.applyOrigin(character);
                 final RandomCharacterPlayer generator = new RandomCharacterPlayer(character, finalLevel);
                 preferences.configure(generator);
                 generator.createRandomValues();

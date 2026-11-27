@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.softwaremagico.librodeesher.character.CharacterPlayer;
+import com.softwaremagico.librodeesher.characteristic.CharacteristicAbbreviation;
 import com.softwaremagico.librodeesher.exceptions.InvalidXmlElementException;
 import com.softwaremagico.librodeesher.perk.SelectedPerk;
 import com.softwaremagico.librodeesher.random.RandomCharacterPlayer;
@@ -25,6 +26,10 @@ public final class RandomPreferencesHandler {
     private static final String SKILL_RANKS = "skillRanks";
     private static final String TRAININGS = "trainings";
     private static final String SUGGESTED_PERKS = "suggestedPerks";
+    private static final String RACE_ID = "raceId";
+    private static final String CULTURE_ID = "cultureId";
+    private static final String PROFESSION_ID = "professionId";
+    private static final String CHARACTERISTIC_RANKS = "characteristicRanks";
 
     private static volatile RandomPreferencesHandler instance;
 
@@ -105,6 +110,69 @@ public final class RandomPreferencesHandler {
         preferences.edit().putString(SUGGESTED_PERKS, join(perks)).apply();
     }
 
+    /**
+     * Preferred race id. An empty value (the default) means the generation inherits the race
+     * selected in the session, exactly as the legacy "Aleatorio" action did.
+     */
+    public String getRaceId() {
+        return preferences.getString(RACE_ID, "");
+    }
+
+    public void setRaceId(String raceId) {
+        preferences.edit().putString(RACE_ID, valueOrEmpty(raceId)).apply();
+    }
+
+    /** Preferred culture id; empty inherits the culture selected in the session. */
+    public String getCultureId() {
+        return preferences.getString(CULTURE_ID, "");
+    }
+
+    public void setCultureId(String cultureId) {
+        preferences.edit().putString(CULTURE_ID, valueOrEmpty(cultureId)).apply();
+    }
+
+    /** Preferred profession id; empty inherits the profession selected in the session. */
+    public String getProfessionId() {
+        return preferences.getString(PROFESSION_ID, "");
+    }
+
+    public void setProfessionId(String professionId) {
+        preferences.edit().putString(PROFESSION_ID, valueOrEmpty(professionId)).apply();
+    }
+
+    /** Desired characteristic temporal ranks as {@code code:rank}, e.g. {@code AG:90,ST:85}. */
+    public Map<String, Integer> getCharacteristicRanks() {
+        return parseRanks(preferences.getString(CHARACTERISTIC_RANKS, ""));
+    }
+
+    public void setCharacteristicRanks(Map<String, Integer> ranks) {
+        preferences.edit().putString(CHARACTERISTIC_RANKS, formatRanks(ranks)).apply();
+    }
+
+    /**
+     * Seeds the configured race, culture and profession before random generation. Ids that are no
+     * longer present in the enabled modules are ignored; blank preferences leave the values
+     * inherited from the current session untouched.
+     */
+    public void applyOrigin(CharacterPlayer character) {
+        if (character == null) {
+            return;
+        }
+        final RulesCatalog catalog = RulesCatalog.getInstance();
+        final String raceId = getRaceId().trim();
+        if (!raceId.isEmpty() && exists(catalog, raceId, 4)) {
+            character.setRaceId(raceId);
+        }
+        final String cultureId = getCultureId().trim();
+        if (!cultureId.isEmpty() && exists(catalog, cultureId, 5)) {
+            character.setCultureId(cultureId);
+        }
+        final String professionId = getProfessionId().trim();
+        if (!professionId.isEmpty() && exists(catalog, professionId, 6)) {
+            character.setProfessionId(professionId);
+        }
+    }
+
     /** Applies every persisted preference to a fresh generator before calling createRandomValues. */
     public void configure(RandomCharacterPlayer generator) {
         generator.setSpecializationLevel(getSpecializationLevel());
@@ -145,8 +213,14 @@ public final class RandomPreferencesHandler {
                     return catalog.getSkill(id) != null;
                 case 2:
                     return catalog.getTraining(id) != null;
-                default:
+                case 3:
                     return catalog.getPerk(id) != null;
+                case 4:
+                    return catalog.getRace(id) != null;
+                case 5:
+                    return catalog.getCulture(id) != null;
+                default:
+                    return catalog.getProfession(id) != null;
             }
         } catch (InvalidXmlElementException exception) {
             return false;
@@ -161,6 +235,31 @@ public final class RandomPreferencesHandler {
                 character.removePerk(perk.getPerkId());
             }
         }
+        for (final Map.Entry<String, Integer> entry : getCharacteristicRanks().entrySet()) {
+            final CharacteristicAbbreviation abbreviation = characteristic(entry.getKey());
+            if (abbreviation != null) {
+                character.setCharacteristicTemporalValue(abbreviation, entry.getValue());
+            }
+        }
+    }
+
+    /** Accepts the English code printed on the sheet (e.g. {@code AG}) and ignores unknown ones. */
+    private static CharacteristicAbbreviation characteristic(String code) {
+        if (code == null) {
+            return null;
+        }
+        for (final CharacteristicAbbreviation abbreviation : CharacteristicAbbreviation.values()) {
+            if (abbreviation != CharacteristicAbbreviation.NONE
+                    && abbreviation != CharacteristicAbbreviation.REALM_OF_MAGIC
+                    && abbreviation.getCode().equalsIgnoreCase(code.trim())) {
+                return abbreviation;
+            }
+        }
+        return null;
+    }
+
+    private static String valueOrEmpty(String value) {
+        return value == null ? "" : value.trim();
     }
 
     private static Map<String, Integer> parseRanks(String raw) {

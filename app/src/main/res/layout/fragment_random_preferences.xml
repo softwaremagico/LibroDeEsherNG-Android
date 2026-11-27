@@ -109,6 +109,90 @@
                 android:minHeight="48dp">
 
                 <TextView
+                    android:id="@+id/random_race_preference_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_race_preference"
+                    android:text="@string/random_race_preference" />
+
+                <EditText
+                    android:id="@+id/random_race_preference"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_race_preference_label"
+                    android:hint="@string/random_id_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_culture_preference_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_culture_preference"
+                    android:text="@string/random_culture_preference" />
+
+                <EditText
+                    android:id="@+id/random_culture_preference"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_culture_preference_label"
+                    android:hint="@string/random_id_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_profession_preference_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:labelFor="@id/random_profession_preference"
+                    android:text="@string/random_profession_preference" />
+
+                <EditText
+                    android:id="@+id/random_profession_preference"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_profession_preference_label"
+                    android:hint="@string/random_id_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
                     android:id="@+id/random_perks_label"
                     style="@style/RandomRowLabel"
                     android:layout_width="wrap_content"
@@ -188,6 +272,35 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/random_skill_ranks_label"
                     android:hint="@string/random_ranks_hint"
+                    android:inputType="text" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/random_characteristic_ranks_label"
+                    style="@style/RandomRowLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:maxWidth="140dp"
+                    android:labelFor="@id/random_characteristic_ranks"
+                    android:text="@string/random_characteristic_ranks" />
+
+                <EditText
+                    android:id="@+id/random_characteristic_ranks"
+                    style="@style/RandomRowValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/random_characteristic_ranks_label"
+                    android:hint="@string/random_characteristic_ranks_hint"
                     android:inputType="text" />
 
             </RelativeLayout>

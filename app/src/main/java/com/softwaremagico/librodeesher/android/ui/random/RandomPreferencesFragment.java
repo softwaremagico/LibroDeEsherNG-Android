@@ -30,9 +30,13 @@ public class RandomPreferencesFragment extends Fragment {
     private SeekBar specializationSeekBar;
     private TextView specializationValue;
     private EditText finalLevelField;
+    private EditText raceField;
+    private EditText cultureField;
+    private EditText professionField;
     private CheckBox perksEnabled;
     private EditText categoryRanksField;
     private EditText skillRanksField;
+    private EditText characteristicRanksField;
     private EditText trainingsField;
     private EditText perksField;
     private TextView progressText;
@@ -54,9 +58,13 @@ public class RandomPreferencesFragment extends Fragment {
         specializationSeekBar = view.findViewById(R.id.random_specialization_seekbar);
         specializationValue = view.findViewById(R.id.random_specialization_value);
         finalLevelField = view.findViewById(R.id.random_final_level);
+        raceField = view.findViewById(R.id.random_race_preference);
+        cultureField = view.findViewById(R.id.random_culture_preference);
+        professionField = view.findViewById(R.id.random_profession_preference);
         perksEnabled = view.findViewById(R.id.random_perks_enabled);
         categoryRanksField = view.findViewById(R.id.random_category_ranks);
         skillRanksField = view.findViewById(R.id.random_skill_ranks);
+        characteristicRanksField = view.findViewById(R.id.random_characteristic_ranks);
         trainingsField = view.findViewById(R.id.random_trainings);
         perksField = view.findViewById(R.id.random_suggested_perks);
         progressText = view.findViewById(R.id.random_progress);
@@ -67,9 +75,13 @@ public class RandomPreferencesFragment extends Fragment {
         specializationSeekBar.setProgress(preferences.getSpecializationLevel() + 3);
         specializationValue.setText(String.valueOf(preferences.getSpecializationLevel()));
         finalLevelField.setText(String.valueOf(preferences.getFinalLevel()));
+        raceField.setText(preferences.getRaceId());
+        cultureField.setText(preferences.getCultureId());
+        professionField.setText(preferences.getProfessionId());
         perksEnabled.setChecked(preferences.isPerksEnabled());
         categoryRanksField.setText(formatRanks(preferences.getCategoryRanks()));
         skillRanksField.setText(formatRanks(preferences.getSkillRanks()));
+        characteristicRanksField.setText(formatRanks(preferences.getCharacteristicRanks()));
         trainingsField.setText(String.join(",", preferences.getTrainings()));
         perksField.setText(String.join(",", preferences.getSuggestedPerks()));
         showProgress();
@@ -98,9 +110,13 @@ public class RandomPreferencesFragment extends Fragment {
                 if (!level.isEmpty()) {
                     preferences.setFinalLevel(Integer.parseInt(level));
                 }
+                preferences.setRaceId(raceField.getText().toString());
+                preferences.setCultureId(cultureField.getText().toString());
+                preferences.setProfessionId(professionField.getText().toString());
                 preferences.setPerksEnabled(perksEnabled.isChecked());
                 preferences.setCategoryRanks(parseRanks(categoryRanksField.getText().toString()));
                 preferences.setSkillRanks(parseRanks(skillRanksField.getText().toString()));
+                preferences.setCharacteristicRanks(parseRanks(characteristicRanksField.getText().toString()));
                 preferences.setTrainings(parseList(trainingsField.getText().toString()));
                 preferences.setSuggestedPerks(parseList(perksField.getText().toString()));
                 showProgress();

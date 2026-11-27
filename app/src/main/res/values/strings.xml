@@ -333,6 +333,12 @@
     <string name="random_preferences_error">No se pudieron guardar las preferencias</string>
     <string name="random_final_level">Nivel final</string>
     <string name="random_final_level_hint">1–20</string>
+    <string name="random_race_preference">Raza preferida (id; vacío = de la sesión)</string>
+    <string name="random_culture_preference">Cultura preferida (id; vacío = de la sesión)</string>
+    <string name="random_profession_preference">Profesión preferida (id; vacío = de la sesión)</string>
+    <string name="random_id_hint">id (vacío = heredar)</string>
+    <string name="random_characteristic_ranks">Rangos de características (código:rango,…)</string>
+    <string name="random_characteristic_ranks_hint">ej.AG:90,ST:85</string>
     <string name="random_perks_enabled">Generar dotes aleatorias</string>
     <string name="random_category_ranks">Rangos deseados por categoría (id:rangos,…)</string>
     <string name="random_skill_ranks">Rangos deseados por habilidad (id:rangos,…)</string>
