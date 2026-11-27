@@ -135,8 +135,9 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   comparación controlada. Las subidas requieren aproximadamente 56–67 segundos cada una.
 - Estado: las incidencias `#24`–`#26` están cerradas tras las pruebas focalizadas documentadas en
   sus comentarios. La batería integrada final y su medición de cobertura se registran al final de
-  esta sección. Existe el directorio no rastreado `images/`, preservado. NG quedó en `edf5b34`
-  (`origin/master`) tras corregir la caché del catálogo.
+  esta sección. Existe el directorio no rastreado `images/`, preservado. NG cerró en `cb72356`
+  (`origin/master`) tras corregir la caché del catálogo (`edf5b34`) y los ajustes documentales
+  de #1/#2.
 - PDF: memories `.serena/memories/librodeesher-ng-pdf-parity.md` y
   `.serena/memories/android/nihal-e2e-verification.md`. Los artefactos crudos de `.parity/out/`
   están desactualizados y no deben usarse como evidencia.
@@ -225,13 +226,17 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
   `MainActivityMenuUiTest` se descartó: abrir el menú overflow derribaba el emulador con
   `gfxstream ... error null ctx` bajo `-gpu host` y además usaba una API no disponible de
   `ActivityScenarioRule`.
-- Batería final definitiva `/tmp/opencode/final-full-verified.log`: `OK (64 tests)` en 2003,241 s
-  con `Motoroal_G73` (`-accel on -gpu host`). El `coverage.ec` resultante
-  (`/tmp/opencode/final-full-verified.ec`) y `./gradlew jacocoTestReport` dan
-  **3507/4354 líneas (80,55 %)**, 16035/19428 instrucciones (82,54 %) y 1030/1603 ramas (64,25 %).
-  Se supera el objetivo de ≥80 % de líneas con tests exclusivamente UI-only: ningún test invoca
-  APIs internas de la librería; se validan los siete personajes de referencia, los PDF exportados y
-  la regresión PDF legacy⇄NG.
+- Batería final definitiva `/tmp/opencode/final-full-414d95d-coverage.log`: `OK (68 tests)` en
+  2160,882 s con `Motoroal_G73` (`-accel on -gpu host`). La instrumentación manual **debe** pasar
+  `-e coverage true`: los `testInstrumentationRunnerArgument` de `build.gradle` solo se aplican
+  cuando ejecuta Gradle, y sin esa opción el `coverage.ec` del dispositivo queda sin actualizar.
+  El `coverage.ec` resultante (`/tmp/opencode/final-full-414d95d-coverage.ec`) y
+  `./gradlew jacocoTestReport` dan **3596/4465 líneas (80,54 %)**, 16538/20010 instrucciones
+  (82,65 %) y 1079/1670 ramas (64,61 %). Se supera el objetivo de ≥80 % de líneas con tests
+  exclusivamente UI-only: ningún test invoca APIs internas de la librería; se validan los siete
+  personajes de referencia, los PDF exportados y la regresión PDF legacy⇄NG. Los cuatro tests
+  añadidos tras la medición anterior (`AssistantReviewUiTest`, `DisabledModulesUiTest`,
+  `RandomPreferenceOriginUiTest` y `SaveAsUndoUiTest`) quedan incluidos en esta medición.
 
 ## 5. Diferencias no bloqueantes
 
@@ -253,8 +258,8 @@ posteriores:
 
 - Librería `LibroDeEsherNG`: [#1](https://github.com/softwaremagico/LibroDeEsherNG/issues/1)
   (catálogo de categorías) y [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2)
-  (Javadoc/comentarios obsoletos) quedaron cerrados como trabajo documental; la librería sigue en
-  `edf5b34` (`origin/master`) con la caché corregida y `mvn test` verde (458/92/92).
+  (Javadoc/comentarios obsoletos) quedaron cerrados como trabajo documental; la librería cerró en
+  `cb72356` (`origin/master`; la caché se introdujo en `edf5b34`) con `mvn test` verde (458/92/92).
 - App Android: todos los issues de la auditoría están cerrados. #27 (asistente con pantalla de
   revisión, validación y resumen de equipo; `AssistantReviewUiTest`), #28 (raza, cultura, profesión
   y rangos de características configurables; `RandomPreferenceOriginUiTest`), #29 (Guardar como y
