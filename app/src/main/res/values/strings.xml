@@ -83,6 +83,11 @@
 
     <!-- Character sheet -->
     <string name="sheet_save">Guardar</string>
+    <string name="sheet_save_as">Guardar como…</string>
+    <string name="sheet_save_as_hint">Nombre del nuevo personaje</string>
+    <string name="sheet_saved_as">Personaje guardado como «%1$s».</string>
+    <string name="sheet_restored">Personaje restaurado.</string>
+    <string name="undo">Deshacer</string>
     <string name="sheet_load">Cargar</string>
     <string name="sheet_saved">Personaje guardado.</string>
     <string name="sheet_save_error">No se pudo guardar el personaje.</string>

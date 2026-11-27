@@ -13,6 +13,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_save_as_character"
+        android:title="@string/sheet_save_as"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_switch_character"
         android:title="@string/character_switch"
         app:showAsAction="never" />

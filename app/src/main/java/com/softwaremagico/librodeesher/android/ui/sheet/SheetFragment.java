@@ -18,6 +18,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import com.softwaremagico.librodeesher.android.AppLog;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.persistence.AppDatabase;
@@ -267,9 +269,22 @@ public class SheetFragment extends Fragment {
             if (CharacterManager.getInstance().getSelectedCharacterId() == entity.getId()) {
                 CharacterManager.getInstance().setSelectedCharacterId(CharacterManager.NO_ID);
             }
-            Toast.makeText(requireContext(), R.string.sheet_deleted, Toast.LENGTH_SHORT).show();
+            // Advisor keeps the deleted row available for one undo action instead of a bare Toast.
+            Snackbar.make(requireView(), R.string.sheet_deleted, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.undo, v -> restoreCharacter(entity))
+                    .show();
         } catch (Exception exception) {
             AppLog.error("Cannot delete character", exception);
+            Toast.makeText(requireContext(), R.string.sheet_delete_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void restoreCharacter(CharacterEntity entity) {
+        try {
+            characterDao.insert(entity);
+            Toast.makeText(requireContext(), R.string.sheet_restored, Toast.LENGTH_SHORT).show();
+        } catch (Exception exception) {
+            AppLog.error("Cannot restore deleted character", exception);
             Toast.makeText(requireContext(), R.string.sheet_delete_error, Toast.LENGTH_SHORT).show();
         }
     }

@@ -75,7 +75,7 @@ no invocan APIs internas de la librería desde el test; verifican pantallas, bot
 | --- | --- | --- |
 | Cargar fichero de personaje | `action_load_character` | Advisor usa `uri.getPath()`, Android tiene el mismo riesgo con `content://` |
 | Nuevo personaje | asistente de creación | Android añade asistente guiado |
-| Guardar | `action_save_character` | Sin “Guardar como”; `Remove` solo quita de sesión, `Delete` sí borra de BD y su Undo no restaura Room |
+| Guardar | `action_save_character`, `action_save_as_character` (#29) | Guardar como crea una copia con nombre sin cambiar la selección; `Remove` solo quita de sesión y `Delete` ofrece `Deshacer` que reinserta la fila Room |
 | Compartir | botones de compartir TXT/PDF | No existe en AWT; es una conveniencia móvil |
 | Asistente | `CharacterAssistantFragment` | Función adicional de Android |
 | Preferencias aleatorias | `action_random_preferences` | Función adicional de Android, persistida; UI rediseñada con la gramática visual de Advisor |
@@ -255,11 +255,10 @@ posteriores:
   (catálogo de categorías) y [#2](https://github.com/softwaremagico/LibroDeEsherNG/issues/2)
   (Javadoc/comentarios obsoletos) quedaron cerrados como trabajo documental; la librería sigue en
   `edf5b34` (`origin/master`) con la caché corregida y `mvn test` verde (458/92/92).
-- App Android: [#29](https://github.com/softwaremagico/LibrodeesherNG-Android/issues/29)
-  Guardar como/Undo sigue abierto con contexto y evidencia. Cerrados: #27 (asistente con pantalla
-  de revisión, validación y resumen de equipo; `AssistantReviewUiTest`), #28 (raza, cultura,
-  profesión y rangos de características configurables; `RandomPreferenceOriginUiTest`),
-  #30 (SAF `content://`,
+- App Android: todos los issues de la auditoría están cerrados. #27 (asistente con pantalla de
+  revisión, validación y resumen de equipo; `AssistantReviewUiTest`), #28 (raza, cultura, profesión
+  y rangos de características configurables; `RandomPreferenceOriginUiTest`), #29 (Guardar como y
+  `Deshacer` del borrado; `SaveAsUndoUiTest`), #30 (SAF `content://`,
   `SheetFileResultsUiTest`), #31 (política de backup explícita, `f6ebd85`), #32 (prueba UI-only
   `DisabledModulesUiTest` de módulos desactivados) y #33 (memorias históricas corregidas).
 - El QR de Advisor queda fuera de alcance por acuerdo: no existe en AWT y no altera resultados.

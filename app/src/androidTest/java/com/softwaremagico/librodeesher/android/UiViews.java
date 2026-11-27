@@ -310,6 +310,50 @@ public final class UiViews {
         };
     }
 
+    /** Clicks the dialog list row whose label contains {@code text}, using the AdapterView callback. */
+    public static ViewAction clickDialogRow(String text) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return ViewMatchers.isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "click dialog row containing " + text;
+            }
+
+            @Override
+            public void perform(UiController controller, View view) {
+                final List<View> rows = new ArrayList<>();
+                collect(view, android.R.id.text1, rows);
+                for (final View row : rows) {
+                    if (!(row instanceof android.widget.TextView)
+                            || !((android.widget.TextView) row).getText().toString().contains(text)) {
+                        continue;
+                    }
+                    View child = row;
+                    while (child != null) {
+                        final android.view.ViewParent parent = child.getParent();
+                        if (parent instanceof android.widget.AdapterView) {
+                            final android.widget.AdapterView<?> list =
+                                    (android.widget.AdapterView<?>) parent;
+                            final int position = list.indexOfChild(child);
+                            if (list.getAdapter() != null && position >= 0
+                                    && position < list.getAdapter().getCount()) {
+                                list.performItemClick(child, position,
+                                        list.getAdapter().getItemId(position));
+                                return;
+                            }
+                        }
+                        child = parent instanceof View ? (View) parent : null;
+                    }
+                }
+                throw new AssertionError("No dialog row contains: " + text);
+            }
+        };
+    }
+
     /** Sets text directly on an EditText, without depending on scroll position or the IME. */
     public static ViewAction setText(String value) {
         return new ViewAction() {

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.softwaremagico.librodeesher.android.BuildConfig;
 import com.softwaremagico.librodeesher.android.R;
 import com.softwaremagico.librodeesher.android.core.CharacterValidator;
 import com.softwaremagico.librodeesher.android.core.UnsavedChangesGuard;
+import com.softwaremagico.librodeesher.android.persistence.CharacterSaveHelper;
 import com.softwaremagico.librodeesher.android.persistence.OptionsHandler;
 import com.softwaremagico.librodeesher.android.persistence.SettingsHandler;
 import com.softwaremagico.librodeesher.android.session.CharacterManager;
@@ -114,6 +116,26 @@ public class MainActivity extends AppCompatActivity {
                 navigate(R.id.navigation_home);
                 invalidateOptionsMenu();
             });
+            return true;
+        }
+        if (id == R.id.action_save_as_character) {
+            final int problem = CharacterValidator.problem(CharacterManager.getInstance().getSelectedCharacter());
+            if (problem != 0) {
+                Toast.makeText(this, problem, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            final EditText input = new EditText(this);
+            input.setHint(R.string.sheet_save_as_hint);
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.sheet_save_as)
+                    .setView(input)
+                    .setPositiveButton(R.string.sheet_save, (dialog, which) -> {
+                        if (CharacterSaveHelper.saveAs(this, input.getText().toString())) {
+                            invalidateOptionsMenu();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
             return true;
         }
         if (id == R.id.action_switch_character) {
