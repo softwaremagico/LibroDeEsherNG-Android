@@ -206,54 +206,7 @@ public class DevelopmentScreensUiTest {
     }
 
     private void menuItem(int title) {
-        final String text = label(title);
-        final android.app.UiAutomation automation =
-                androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().getUiAutomation();
-        final android.view.accessibility.AccessibilityNodeInfo initial = automation.getRootInActiveWindow();
-        final String overflowDescription = ApplicationProvider.getApplicationContext().getString(
-                androidx.appcompat.R.string.abc_action_menu_overflow_description);
-        if (initial == null || !clickOverflow(initial, overflowDescription)) {
-            throw new AssertionError("Overflow menu button not visible");
-        }
-        final long deadline = android.os.SystemClock.uptimeMillis() + 10_000;
-        do {
-            final android.view.accessibility.AccessibilityNodeInfo root = automation.getRootInActiveWindow();
-            if (root != null) {
-                for (android.view.accessibility.AccessibilityNodeInfo node
-                        : root.findAccessibilityNodeInfosByText(text)) {
-                    if (text.contentEquals(node.getText()) && node.isVisibleToUser()) {
-                        for (android.view.accessibility.AccessibilityNodeInfo target = node;
-                             target != null; target = target.getParent()) {
-                            if (target.isClickable()
-                                    && target.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            android.os.SystemClock.sleep(200);
-        } while (android.os.SystemClock.uptimeMillis() < deadline);
-        throw new AssertionError("Overflow menu item not visible: " + text);
-    }
-
-    private static boolean clickOverflow(android.view.accessibility.AccessibilityNodeInfo node,
-                                         String overflowDescription) {
-        final CharSequence className = node.getClassName();
-        final CharSequence description = node.getContentDescription();
-        if ((overflowDescription.contentEquals(description == null ? "" : description)
-                || (className != null && className.toString().endsWith("OverflowMenuButton")))
-                && node.isVisibleToUser()
-                && node.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK)) {
-            return true;
-        }
-        for (int i = 0; i < node.getChildCount(); i++) {
-            final android.view.accessibility.AccessibilityNodeInfo child = node.getChild(i);
-            if (child != null && clickOverflow(child, overflowDescription)) {
-                return true;
-            }
-        }
-        return false;
+        UiMenus.click(title);
     }
 
     private void createCompleteCharacter() {
