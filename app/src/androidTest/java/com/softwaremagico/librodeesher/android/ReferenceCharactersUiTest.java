@@ -105,6 +105,7 @@ public class ReferenceCharactersUiTest {
         onView(withId(R.id.summary_text)).check(matches(withSubstring("Nivel: " + character.level)));
 
         onView(withId(R.id.navigation_sheet)).perform(UiViews.clickDirectly());
+        onView(withId(R.id.sheet_text)).perform(UiViews.waitForText(character.name, 60_000));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring(character.name)));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring("Level " + character.level)));
         onView(withId(R.id.sheet_text)).check(matches(withSubstring(character.raceName)));
